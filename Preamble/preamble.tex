@@ -105,6 +105,9 @@
 
 %\usepackage[perpage]{footmisc} %Range of footnote options
 
+% Write markdown in overleaf - https://www.overleaf.com/learn/latex/Articles/How_to_write_in_Markdown_on_Overleaf
+\usepackage[footnotes,definitionLists,hashEnumerators,smartEllipses,hybrid]{markdown}
+
 
 % *****************************************************************************
 % *************************** Bibliography  and References ********************
@@ -149,6 +152,17 @@
 
 %\renewcommand{\nomname}{Symbols}
 
+\newcommand{\dbg}{dBG}
+\nomenclature[z-dBG]{\dbg}{de Bruijn Graph}
+\newcommand{\ont}{ONT}
+\nomenclature[z-ONT]{\ont}{Oxford Nanopore Technologies}
+\newcommand{\pb}{PB}
+\nomenclature[z-PB]{\pb}{Pacific Biosciences}
+\newcommand{\prg}{PRG}
+\nomenclature[z-PRG]{\prg}{Population Reference Graph}
+\newcommand{\snp}{SNP}
+\nomenclature[z-SNP]{\snp}{Single Nucleotide Polymorphism}
+
 
 % ********************************* Appendix ***********************************
 
@@ -164,10 +178,10 @@
 
 % These options are active only during the draft mode
 % Default text is "Draft"
-%\SetDraftText{DRAFT}
+% \SetDraftText{DRAFT}
 
 % Default Watermark location is top. Location (top/bottom)
-%\SetDraftWMPosition{bottom}
+% \SetDraftWMPosition{bottom}
 
 % Draft Version - default is v1.0
 %\SetDraftVersion{v1.1}
@@ -180,12 +194,7 @@
 % ******************************** Todo Notes **********************************
 %% Uncomment the following lines to have todonotes.
 
-%\ifsetDraft
-%	\usepackage[colorinlistoftodos]{todonotes}
-%	\newcommand{\mynote}[1]{\todo[author=kks32,size=\small,inline,color=green!40]{#1}}
-%\else
-%	\newcommand{\mynote}[1]{}
-%	\newcommand{\listoftodos}{}
-%\fi
+\usepackage[colorinlistoftodos,textsize=small]{todonotes}
+% \newcommand{\mynote}[1]{\todo[size=\small,color=yellow!40]{#1}}
 
 % Example todo: \mynote{Hey! I have a note}
