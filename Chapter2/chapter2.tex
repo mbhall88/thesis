@@ -32,7 +32,10 @@ For both polished and unpolished assemblies, we annotate using Prokka(CITE). We 
 
 \subsection{Nanopore basecall model training}
 Species-specific \ont{} basecalling models have been shown to provide increased read accuracy(CITE). The most challenging aspect of training such a model though is providing a truth sequence. Given we have three sequencing technologies with good coverage for nine samples, we decided to train an \mtb-specific model using the highest quality assembly for each sample as the truth.  
-Assemblies were generate for each sample as outlined in section(LINK). After assessing the final assemblies we excluded sample mada_1-2 as it was found to contain three species and even after filtering out the contaminating contigs, the \mtb{} sequence was deemed too low quality for a truth assembly. See table X(TABLE) for the assemblies chosen for each of the remaining eight samples.
+Assemblies were generate for each sample as outlined in section(LINK). After assessing the final assemblies we excluded sample `mada_1-2` as it was found to contain three species and even after filtering out the contaminating contigs, the \mtb{} sequence was deemed too low quality for a truth assembly. See table X(TABLE) for the assemblies chosen for each of the remaining eight samples.  
+An overview of the Snakemake pipeline used for running the training can be seen in (FIGURE). The first step in training the model is ...
+
+\missingfigure{Snakemake DAG showing the basecall training pipeline}
 
 \missingfigure{A table showing the assemblies we chose to produce the basecalling model from}
 
