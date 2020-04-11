@@ -13,9 +13,12 @@
 
 \section{Methods}
 
-\subsection{Nanopore data pre-processing}
+\subsection{Nanopore data preprocessing}
 
-Basecalling and demultiplexing.
+All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool guppy (v3.4.5). We used default parameters for basecalling and the only non-default parameter used for de-multiplexing was the 'trim barcodes' option.  
+Quality metrics for assessing whether each sample should be included in the study included read length distribution and coverage (FIGURE). To calculate coverage, we sum the number of base pairs for a sample and divide this by the \mtb{} genome size of 4,411,532bp.
+
+\missingfigure{A plot showing the quality metrics for \ont{} data such as read length distribution and coverage}
 
 \subsection{Assembly}
 \begin{markdown}
