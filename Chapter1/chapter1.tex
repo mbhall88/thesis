@@ -3,7 +3,7 @@
 %*********************************** First Chapter *****************************
 %*******************************************************************************
 
-\chapter{\textit{De novo} variant discovery in genome graphs}  %Title of the First Chapter
+\chapter{\textit{De novo} variant discovery in genome graphs}
 
 \ifpdf
     \graphicspath{{Chapter1/Figs/Raster/}{Chapter1/Figs/PDF/}{Chapter1/Figs/}}
@@ -16,11 +16,32 @@
 \section{Motivation}
 
 %********************************** %Second Section  *************************************
-\section{Method}
+\section{Methods}
+
+\begin{markdown}
+
+We define a method that extends \pandora{} to allow for the discovery of variants not present in the \prg{} provided to a given run. In addition, we describe a framework for evaluating the validity of variant calls from \pandora{} and how to compare them with other methods which operate on single, linear reference sequence.
+
+The first step in *de novo* variant discovery in genome graphs is finding the regions of the graph that show evidence of dissimilarity from the sample reads.
+
+\end{markdown}
 
 \subsection{Finding candidate regions}
 
+We define a candidate region, $r$, as an interval within a local graph where coverage on the maximum likelihood path is less than a given threshold, $c$, for more than $l$ consecutive positions. For a given read, $s$, that has a mapping to $r$ we define $s_r$ to be the subsequence of $s$ that maps to $r$. We define the pileup $P_r$ as the set of all $s_r \in r$.
+
 \subsection{Enumerating paths through candidate regions}
+
+For $r \in R$, where $R$ is the set of all candidate regions, we construct a de Bruijn graph $G_r$ from $P_r$. \\
+$A_l$ and $A_r$ are defined as kmers to the left and right of $r$ in the local graph. They are anchors to allow re-insertion of new sequences found by \textit{de novo} discovery into the local graph. If $A_l \notin G_r \lor A_r \notin G_r$ then we abandon \textit{de novo} discovery for $r$. \\
+$T_r$ is the spanning tree obtained by performing depth-first search on $G_r$ from node $A_l$. $p_r$ is defined as a path, from the root node $A_l$ of $T_r$ and ending at node $A_r$, which fulfils the following two conditions:
+
+\begin{enumerate}
+  \item $p_r$ is shorter than the maximum allowed path length.
+  \item No more than $k$ nodes along $p_r$ have coverage $< (n_r \times 0.1) \times e_r$, where $e_r$ is the expected kmer coverage for $r$ and $n_r$ is the number of iterations of path enumeration for $r$.
+\end{enumerate}
+
+$V_r$ is the set of all $p_r$. If $|V_r|$ is greater than a predefined threshold, $n_r$ is incremented by 1 and $V_r$ is repopulated. If $n_r \times 0.1 = 1.0$ then \textit{de novo} discovery is abandoned for $r$.
 
 \subsection{Inserting new paths back into graph}
 
