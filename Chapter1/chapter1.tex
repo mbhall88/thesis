@@ -18,17 +18,19 @@
 %********************************** %Second Section  *************************************
 \section{Methods}
 
-\begin{markdown}
+We define a method that extends \pandora{} to allow for the discovery of variants not present in the \prg{} provided to a given run. It is implemented within the \pandora{} code base, in the C++ programming language. \\
+In addition, we describe a framework for evaluating the validity of variant calls from \pandora{} and how to compare them with other methods which operate on single, linear reference sequence.
 
-We define a method that extends \pandora{} to allow for the discovery of variants not present in the \prg{} provided to a given run. In addition, we describe a framework for evaluating the validity of variant calls from \pandora{} and how to compare them with other methods which operate on single, linear reference sequence.
+The first step in *de novo* variant discovery in genome graphs is finding the candidate regions of the graph that show evidence of dissimilarity from the sample's reads.
 
-The first step in *de novo* variant discovery in genome graphs is finding the regions of the graph that show evidence of dissimilarity from the sample reads.
-
-\end{markdown}
 
 \subsection{Finding candidate regions}
 
-We define a candidate region, $r$, as an interval within a local graph where coverage on the maximum likelihood path is less than a given threshold, $c$, for more than $l$ consecutive positions. For a given read, $s$, that has a mapping to $r$ we define $s_r$ to be the subsequence of $s$ that maps to $r$. We define the pileup $P_r$ as the set of all $s_r \in r$.
+The input required for finding candidate regions are a node, $n$, within the \pandora{} pangraph, the maximum likelihood path of both sequence and k-mers in $n$, $lmp_n$ and $kmp_n$ respectively, and a padding size $w$ for the number of positions surrounding the candidate region to retrieve. \\
+
+We define a candidate region, $r$, as an interval within $n$ where coverage on $lmp_n$ is less than a given threshold, $c$, for more than $l$ consecutive positions. We note that coverage is actually stored on $kmp_n$, but is stored for the whole k-mer. We convert the coverage on $kmp_n$ into per-position coverage on $lmp_n$ and use that for identifying low-coverage segments as just described. For a given read, $s$, that has a mapping to $r$ we define $s_r$ to be the subsequence of $s$ that maps to $r$, including an extra $w$ positions either side of the mapping. We define the pileup $P_r$ as the set of all $s_r \in r$.
+
+% EOD 15/04/2020: Expanding above methods based on thr pandora code
 
 \subsection{Enumerating paths through candidate regions}
 
