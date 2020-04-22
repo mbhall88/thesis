@@ -28,14 +28,14 @@ The first step in *de novo* variant discovery in genome graphs is finding the ca
 
 The input required for finding candidate regions are a node, $n$, within the \pandora{} pangraph, the maximum likelihood path of both sequence and k-mers in $n$, $lmp_n$ and $kmp_n$ respectively, and a padding size $w$ for the number of positions surrounding the candidate region to retrieve. \\
 
-We define a candidate region, $r$, as an interval within $n$ where coverage on $lmp_n$ is less than a given threshold, $c$, for more than $l$ consecutive positions. We note that coverage is actually stored on $kmp_n$, but is stored for the whole k-mer. We convert the coverage on $kmp_n$ into per-position coverage on $lmp_n$ and use that for identifying low-coverage segments as just described. For a given read, $s$, that has a mapping to $r$ we define $s_r$ to be the subsequence of $s$ that maps to $r$, including an extra $w$ positions either side of the mapping. We define the pileup $P_r$ as the set of all $s_r \in r$.
-
-% EOD 15/04/2020: Expanding above methods based on thr pandora code
+We define a candidate region, $r$, as an interval within $n$ where coverage on $lmp_n$ is less than a given threshold, $c$, for more than $l$ and less than $m$ consecutive positions. We note that coverage is actually stored on $kmp_n$, but is stored for the whole k-mer. We convert the coverage on $kmp_n$ into per-position coverage on $lmp_n$ and use that for identifying low-coverage segments as just described. $m$ acts to restrict the size of variants we are able to detect. If set too large, the following steps become much slower due to the combinatorial expansion of possible paths. \\
+For a given read, $s$, that has a mapping to $r$ we define $s_r$ to be the subsequence of $s$ that maps to $r$, including an extra $w$ positions either side of the mapping. We define the pileup $P_r$ as the set of all $s_r \in r$.
 
 \subsection{Enumerating paths through candidate regions}
 
-For $r \in R$, where $R$ is the set of all candidate regions, we construct a de Bruijn graph $G_r$ from $P_r$. \\
-$A_l$ and $A_r$ are defined as kmers to the left and right of $r$ in the local graph. They are anchors to allow re-insertion of new sequences found by \textit{de novo} discovery into the local graph. If $A_l \notin G_r \lor A_r \notin G_r$ then we abandon \textit{de novo} discovery for $r$. \\
+For $r \in R$, where $R$ is the set of all candidate regions, we construct a de Bruijn graph $G_r$ from $P_r$ using the GATB library(CITE). \\
+$A_l$ and $A_r$ are defined as sets of k-mers to the left and right of $r$ in the local graph. They are anchors to allow re-insertion of new sequences, found by \textit{de novo} discovery, into the local graph. If  $\nexists a \in A_l : a \in G_r \lor \nexists a \in A_r : a \in G_r$ then we abandon \textit{de novo} discovery for $r$. We use sets of k-mers for $A_l$ and $A_r$, rather than a single anchor k-mer, to provide redundancy in the case where sequencing errors cause some anchors to not be in $G_r$. \\
+% EOD 22/04: Next, expand on DFS and BFS uses for graph pruning
 $T_r$ is the spanning tree obtained by performing depth-first search on $G_r$ from node $A_l$. $p_r$ is defined as a path, from the root node $A_l$ of $T_r$ and ending at node $A_r$, which fulfils the following two conditions:
 
 \begin{enumerate}
