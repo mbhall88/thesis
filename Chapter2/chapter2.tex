@@ -11,17 +11,18 @@
     \graphicspath{{Chapter2/Figs/Vector/}{Chapter2/Figs/}}
 \fi
 
-\section{Methods}
+\begin{markdown}
 
-\subsection{Nanopore data preprocessing}
+## Methods
+
+### Nanopore data preprocessing
 
 All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool guppy (v3.4.5). We used default parameters for basecalling and the only non-default parameter used for de-multiplexing was the 'trim barcodes' option.  
 Quality metrics for assessing whether each sample should be included in the study included read length distribution and coverage (FIGURE). To calculate coverage, we sum the number of base pairs for a sample and divide this by the \mtb{} genome size of 4,411,532bp.
 
 \missingfigure{A plot showing the quality metrics for \ont{} data such as read length distribution and coverage}
 
-\subsection{Assembly}
-\begin{markdown}
+### Assembly
 
 Samples with greater than 30x coverage across all three sequencing technologies were chosen to produce high-quality assemblies. In total, this left us with 9 Malagasy samples. We compare five assemblers and select the best for each sample. The reason for this comparison is that different assembly algorithms can produce quite varied results depending on sequencing technology used, species, or computational resource availability(CITE).  
 The assembly tools used are Canu, Flye, Unicycler, HASLR, and Spades(CITE \& VERSION). HASLR and Unicycler are hybrid assemblers that take Illumina reads along with one long-read file, although Unicycler does not require both. Spades is also a hybrid assembler but takes an arbitrary number of different sequencing technologies. Canu and Flye are both long-read-only assemblers.
@@ -33,7 +34,8 @@ For both polished and unpolished assemblies, we annotate using Prokka(CITE). We 
 
 \missingfigure{Snakemake assembly pipeline DAG}
 
-\subsection{Nanopore basecall model training}
+### Nanopore basecaller model training
+
 Species-specific \ont{} basecalling models have been shown to provide increased read accuracy(CITE). The most challenging aspect of training such a model though, is providing a truth sequence. Given we have three sequencing technologies with good coverage for nine samples, we decided to train an \mtb-specific model using the highest quality assembly for each sample as the truth.  
 Assemblies were generated for each sample, as outlined in section(LINK). After assessing the final assemblies, we excluded sample `mada_1-2` as it was found to contain three species and even after filtering out the contaminating contigs, the \mtb{} sequence was deemed too low quality for a truth assembly. See table X(TABLE) for the assemblies chosen for each of the remaining eight samples.  
 \ont{} provides a software suite, Taiyaki(CITE), to prepare data for and also perform model training. An overview of the Snakemake pipeline used for running the training can be seen in (FIGURE). The first step in training the model is mapping the current basecalled reads to the respective truth sequence for each sample. The mapping is done using minimap2(CITE), and we use parameters that ensure it only outputs primary alignments. The sequence for each read is then replaced with the reference sequence it aligns to and written out to a Fasta file using a Taiyaki script. The eight "read-reference" Fasta files were then combined into a single file. The recommended number of reads for model-training is somewhere in the range of tens-of-thousands or low hundreds-of-thousands if lengths are greater than 1000bp or less than 500bp, respectively, on average (personal correspondence with \ont{} staff). The resulting aggregated read-reference Fasta file contained 1,309,053 entries, which is far more than is required so, we randomly sub-sampled the Fasta file into two chunks with 20\% (261,809) for training and the remainder (1,047,242) to be used for evaluating the final model. Using the list of read identifiers in these two subsets, we additionally subset the raw data, used for training, for each read into separate locations for training and evaluation. A script from Taiyaki is then used to align the raw signal for a read to its sequence in the read-reference file. This mapping is a vital preparation step that indicates what nucleotides are the result of a given collection of the raw signal. The raw signal mapping file was then passed to the model-training script from Taiyaki and training took 210 hours to complete on 2 GPUs. \\
@@ -41,6 +43,25 @@ Assemblies were generated for each sample, as outlined in section(LINK). After a
 \missingfigure{Snakemake DAG showing the basecall training pipeline}
 
 \missingfigure{A table showing the assemblies we chose to produce the basecalling model from}
+
+### Nanopore basecaller model evaluation
+
+\towrite[inline]{methods for nanopore basecaller model evaluation}
+
+### Quality control
+
+Prior to any variant calling, all samples were subjected to a quality control (QC) pipeline to ensure all data used was of the highest quality. The QC pipeline was written in `snakemake`(CITE) and an overview of the steps can be seen in (FIGURE). \\
+The first step in QC is decontamination of both Illumina and \ont{} sequencing reads. We use the decontamination database from `clockwork`(CITE), which contains a wide range of organisms, including viral, human, \mtb{}, NTM, and nasopharyngeal-associated bacterial genomes. Each genome has associated metadata indicating if it is contamination or not. Reads are mapped to the database using `bwa mem`(CITE) (Illumina) and `minimap2`(CITE). The resulting alignment is used to quantify the proportion of reads considered contamination, unmapped, and wanted. A read is considered wanted if it has any mapping to a non-contamination genome in the database and is output to a final decontaminated fastq file. All other mapped reads are considered contamination. Interactive `krona`(CITE) charts (see FIGURE\change{move the reference to the krona chart to the results section}) are used to visualise a sample's composition based on the decontamination database alignment.  
+
+All decontaminated fastq files were subsampled to a depth of 60x (Illumina) and 150x (\ont{}) using `rasusa`(CITE). The reason for subsampling is to limit unnecessarily large read sets that can drastically slow down later steps in the analysis process and do not provide any benefit\unsure{see if there is a reference that backs this up}. Any sample with depth less than the maximum threshold remains unchanged.  
+
+The last step in the QC pipeline is to assign lineages for each sample. A panel of lineage-defining SNPs from (CITE) is used in conjunction with a sample's VCF from the Illumina variant calls(LINK) for the lineage assignment. At each lineage-defining position in the sample's VCF we determine if the called allele is the same as the panel allele. If it is, we add the full lineage that allele defines (e.g. 4.1.1) to a list of called lineages. For this analysis, if more than one heterozygous call was made at lineage-defining positions, we abandon lineage assignment for that sample. After classifying all of a sample's lineage-defining positions we then produce a lineage assignment based on the list of called lineages. The most recent common ancestor of all the called lineages is used as the lineage assignment. For example, if the called lineages were [4, 4.2.3, 4.2.5] the lineage assignment would be 4.2. If there is more than one called lineage from a different major lineage group, a mixed lineage assignment is given. For example [4, 4.2.3, 4.2.5, 3.2] would still be called lineage 4.2, however, [4, 4.2.3, 4.2.5, 3.2, 3.1] would be called mixed.
+
+\missingfigure{Snakemake DAG of the QC pipeline}
+
+### Illumina variant calling
+
+\towrite[inline]{find a reference for the compass pipeline method}
 
 ## Results
 
@@ -50,6 +71,22 @@ The decontamination step in the assembly pipeline revealed that one sample, `mad
 
 \missingfigure{Some tables showing the best assemblies for each of the metrics used for assessing assembly accuracy}
 
+### Quality Control
+
+The purpose of QC is to ensure all samples used in later analysis are of the highest quality. By highest quality we mean all samples have perfectly matched Illumina and \ont{} data, sufficient coverage on both sequencing technologies, no contamination, and no evidence of a mixed \mtb{} population. Prior to the QC stage, N samples were excluded as their Illumina and \ont{} reads were not from the exact same DNA extraction.  
+
+After filtering out unmapped/contaminant reads and subsampling all samples to 60x (Illumina) and 150x (\ont{}), N samples were excluded from further analysis due to low coverage (FIGURE) - defined as Nx for Illumina and Nx for \ont{}. An example chart of the composition of genomes from the decontamination database for a sample can be seen in (FIGURE).  
+
+Lastly, N samples were excluded as their lineage assignment was either called mixed or unknown. Unknown lineage assignments can happen if the sample has too many heterozygous calls as lineage-defining positions, or there was no called lineages at any lineage-defining position.  
+
+In the end, we have N samples that have passed QC and will be used for the remainder of this chapter.
+
+\missingfigure{coverage report from QC pipeline - maybe add coverage cutoff lines}
+\missingfigure{An example Krona composition chart}
+
+### Baseline variant analysis
+
+\towrite[inline]{Make sure to mention the samples excluded as their Illumina and ONT data do not match based on the discrepancy in variant calls}
 
 
 \end{markdown}
