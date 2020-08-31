@@ -13,6 +13,42 @@
 
 \begin{markdown}
 
+## Results
+
+\improvement[inline]{refine subsection title below}
+### Benchmarking assembly methods with genomic data from three technologies 
+
+The decontamination step in the assembly pipeline revealed that one sample, `mada_1-2`, contained contigs from three different species: *Mycobacterium intracellulare*, *Dermacoccus nishinomiyaensis*, and *M. tuberculosis*. These contigs were all at sufficient coverage to not be considered background noise.
+
+\missingfigure{Some tables showing the best assemblies for each of the metrics used for assessing assembly accuracy}
+
+### An \mtb{} species-specific \ont{} basecalling model does not improve accuracy
+
+### Quality Control
+
+The purpose of QC is to ensure all samples used in later analysis are of the highest quality. By highest quality we mean all samples have perfectly matched Illumina and \ont{} data, sufficient coverage on both sequencing technologies, no contamination, and no evidence of a mixed \mtb{} population. Prior to the QC stage, N samples were excluded as their Illumina and \ont{} reads were not from the exact same DNA extraction.  
+
+After filtering out unmapped/contaminant reads and subsampling all samples to 60x (Illumina) and 150x (\ont{}), N samples were excluded from further analysis due to low coverage (FIGURE) - defined as Nx for Illumina and Nx for \ont{}. An example chart of the composition of genomes from the decontamination database for a sample can be seen in (FIGURE).  
+
+Lastly, N samples were excluded as their lineage assignment was either called mixed or unknown. Unknown lineage assignments can happen if the sample has too many heterozygous calls as lineage-defining positions, or there was no called lineages at any lineage-defining position.  
+
+In the end, we have N samples that have passed QC and will be used for the remainder of this chapter.
+
+\missingfigure{coverage report from QC pipeline - maybe add coverage cutoff lines}
+\missingfigure{An example Krona composition chart}
+
+\towrite[inline]{Make sure to mention the samples excluded as their Illumina and ONT data do not match based on the discrepancy in variant calls}
+
+\improvement[inline]{refine subsection title below}
+### Building PRGs of varying density
+
+### \ont{} SNPs are highly concordant with Illumina
+
+### Genome graphs provide superior \ont{} indel calls compared to a pileup approach
+
+### \ont{} data identifies transmission clusters inline with Illumina
+
+
 ## Methods
 
 ### Nanopore data preprocessing
@@ -63,30 +99,6 @@ The last step in the QC pipeline is to assign lineages for each sample. A panel 
 
 \towrite[inline]{find a reference for the compass pipeline method}
 
-## Results
-
-### Assembly
-
-The decontamination step in the assembly pipeline revealed that one sample, `mada_1-2`, contained contigs from three different species: *Mycobacterium intracellulare*, *Dermacoccus nishinomiyaensis*, and *M. tuberculosis*. These contigs were all at sufficient coverage to not be considered background noise.
-
-\missingfigure{Some tables showing the best assemblies for each of the metrics used for assessing assembly accuracy}
-
-### Quality Control
-
-The purpose of QC is to ensure all samples used in later analysis are of the highest quality. By highest quality we mean all samples have perfectly matched Illumina and \ont{} data, sufficient coverage on both sequencing technologies, no contamination, and no evidence of a mixed \mtb{} population. Prior to the QC stage, N samples were excluded as their Illumina and \ont{} reads were not from the exact same DNA extraction.  
-
-After filtering out unmapped/contaminant reads and subsampling all samples to 60x (Illumina) and 150x (\ont{}), N samples were excluded from further analysis due to low coverage (FIGURE) - defined as Nx for Illumina and Nx for \ont{}. An example chart of the composition of genomes from the decontamination database for a sample can be seen in (FIGURE).  
-
-Lastly, N samples were excluded as their lineage assignment was either called mixed or unknown. Unknown lineage assignments can happen if the sample has too many heterozygous calls as lineage-defining positions, or there was no called lineages at any lineage-defining position.  
-
-In the end, we have N samples that have passed QC and will be used for the remainder of this chapter.
-
-\missingfigure{coverage report from QC pipeline - maybe add coverage cutoff lines}
-\missingfigure{An example Krona composition chart}
-
-### Baseline variant analysis
-
-\towrite[inline]{Make sure to mention the samples excluded as their Illumina and ONT data do not match based on the discrepancy in variant calls}
 
 
 \end{markdown}
