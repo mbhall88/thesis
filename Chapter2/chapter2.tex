@@ -18,6 +18,40 @@
 \improvement[inline]{refine subsection title below}
 ### Benchmarking assembly methods with genomic data from three technologies 
 
+A central component of the work in this chapter is having a way of validating the quality of variant calls, without being biased by assuming short reads are the "truth". In addition to the matched sequencing on both the \ont{} and Illumina platforms, XXX of the Malagasy samples were also sent for PacBio Circular Consensus Sequencing (CCS)\improvement{clarify this from the methods Sara sent - i.e. is HiFi more correct?}. CCS produces so called HiFi reads, which have a base-level accuracy greater than 99.9\%(CITE). The reason these reads have such a high accuracy is that each one is the consensus from multiple passes of the DNA enzyme around a circular copy of the original double-stranded read. As the HiFi reads are both long and accurate, they are now being regularly used to produce high quality \denovo{} assemblies and complete existing reference genomes(CITE).  
+
+Due to the lack of extensive benchmarking of assembly methods for CCS, and \mtb{} more generally, we undertook to determine what combination of technologies and methods would give us the best "truth" genomes. There has been comprehensive analysis of \ont{} and hybrid assemblies for \ecoli{}(CITE), but its genomic characteristics are very different to those of \mtb{}. For this analysis we chose to assess five assemblers: `flye`, `canu`, `spades`, `unicycler`, and `HASLR`(CITE). Both `unicycler` and `HASLR` are hybrid assemblers, which means they utilise both long and short reads. We use them to produce Illumina/CCS and Illumina/\ont{} assemblies. The only tool capable of operating with all three technologies (at the time of writing) is `spades`. One assembly for each long read technology was produced with `canu` and `flye`.  
+Each assembly was additionally polished with their relevant long reads and Illumina data using `racon` and `pilon` respectively. These combinations resulted in 18 assemblies (9 polished and 9 unpolished) for assessment.  
+
+Assessing the quality of \denovo{} assemblies is non-trivial and requires aggregation of various metrics(CITE). Whilst a reference genome exists for \mtb{}, there are enough differences between the lineages that using this reference would not be appropriate for our purposes. We will look at each assessment metric individually, and then decide on the best assembly method from this information
+
+#### Assembly Likelihood Evaluation score
+
+The assembly likelihood evaluation (ALE) score is a reference-free metric that describes the likelihood of an assembly given it's k-mer distribution, and the likelihood of the reads being generated from that assembly. It combines information such as read quality, agreement in the alignment of reads to assembly, mate-pair orientation, paired-end read length, and depth of sequencing. Importantly, the ALE score can be used to compare assemblies of the same genome, which is exactly the use case we have. Whilst ALE scores and not insightful on their own, the difference \textit{between} assembly scores gives the relative probability of correctness. So for each sample, we are interesting in the assembly that has the \textit{highest} ALE score.  
+
+Across the 9 samples, `flye` has the highest ALE score in five cases, whilst `spades` was the most probable assembly in two, with `unicycler` and `canu` having the maximum score in one sample each (\autoref{fig:ale_score}). Note, this is considering both polished and unpolished assemblies together for each tool. When considering which long read sequencing technology produces the greatest ALE score, CCS had the top score in 7/9 samples. In 6/9 samples, the highest ALE score was from a polished assembly.\unsure{is this figure necessary or are the numbers in the text sufficient?}
+
+\end{markdown}
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/ale_score.png}
+\centering
+\caption{The normalised ALE score for each sample, coloured assembly tools. ALE score is a metric describing the likelihood of an assembly. The normalisation is done by subtracting the assembly's score from the maximum (best) score for that sample, giving a relative probability of correctness. Each box represents different technologies and polishing status for each assembler.}
+\label{fig:ale_score}
+\end{figure}
+
+\begin{markdown}
+
+#### Disagreement rate
+
+The disagreement rate is an approximation of the per-base accuracy of the assembly (see Methods\todo{link to relevant methods section}). In short, we map Illumina reads to the assembly and calculate what proportion of positions do XXX\% of the reads agree with the assembly nucleotide.  
+
+In 7/9 samples, a `HASLR` assembly had the lowest disagreement rate, followed `unicycler` having the minimum in 2/9. Polished genomes produced the lowest disagreement rate in 8/9 samples and \ont{}-based assemblies had the best accuracy in 6/9 samples. While it isn't so surprising that assemblies polished with Illumina reads have a lower disagreement rate, it is unexpected that \ont{} would produce more accurate assemblies. One caveat to keep in mind here - and this is the reason for looking at many different metrics - is that there is an element of overfitting to this metric:we assess using Illumina, and so naturally, assemblies polished with Illumina produce better results. That is not to say this statistic is void, but that it should be used with caution.
+
+\missingfigure{disagreement rate plot(s)}
+
+\towrite{segway from the metrics explained above into the contamination section below}
+
 The decontamination step in the assembly pipeline revealed that one sample, `mada_1-2`, contained contigs from three different species: *Mycobacterium intracellulare*, *Dermacoccus nishinomiyaensis*, and *M. tuberculosis*. These contigs were all at sufficient coverage to not be considered background noise.
 
 \missingfigure{Some tables showing the best assemblies for each of the metrics used for assessing assembly accuracy}
