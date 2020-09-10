@@ -36,7 +36,7 @@ Across the 9 samples, `flye` has the highest ALE score in five cases, whilst `sp
 \begin{figure}
 \includegraphics[width=1.0\textwidth]{Chapter2/Figs/ale_score.png}
 \centering
-\caption{The normalised ALE score for each sample, coloured assembly tools. ALE score is a metric describing the likelihood of an assembly. The normalisation is done by subtracting the assembly's score from the maximum (best) score for that sample, giving a relative probability of correctness. Each box represents different technologies and polishing status for each assembler.}
+\caption{The normalised ALE score (Y-axis) for each sample (X-axis), coloured by assembly tools. ALE score is a metric describing the likelihood of an assembly. The normalisation is done by subtracting the assembly's score from the maximum (best) score for that sample, giving a relative probability of correctness. Each box represents different technologies and polishing status for each assembler.}
 \label{fig:ale_score}
 \end{figure}
 
@@ -46,15 +46,61 @@ Across the 9 samples, `flye` has the highest ALE score in five cases, whilst `sp
 
 The disagreement rate is an approximation of the per-base accuracy of the assembly (see Methods\todo{link to relevant methods section}). In short, we map Illumina reads to the assembly and calculate what proportion of positions do XXX\% of the reads agree with the assembly nucleotide.  
 
-In 7/9 samples, a `HASLR` assembly had the lowest disagreement rate, followed `unicycler` having the minimum in 2/9. Polished genomes produced the lowest disagreement rate in 8/9 samples and \ont{}-based assemblies had the best accuracy in 6/9 samples. While it isn't so surprising that assemblies polished with Illumina reads have a lower disagreement rate, it is unexpected that \ont{} would produce more accurate assemblies. One caveat to keep in mind here - and this is the reason for looking at many different metrics - is that there is an element of overfitting to this metric:we assess using Illumina, and so naturally, assemblies polished with Illumina produce better results. That is not to say this statistic is void, but that it should be used with caution.
+In 7/9 samples, a `HASLR` assembly had the lowest disagreement rate, followed by `unicycler` having the minimum in 2/9. Polished genomes produced the lowest disagreement rate in 8/9 samples and \ont{}-based assemblies had the best accuracy in 6/9 samples. While it isn't so surprising that assemblies polished with Illumina reads have a lower disagreement rate, it is unexpected that \ont{} would produce more accurate assemblies (\autoref{fig:disagree_rate}). One caveat to keep in mind here - and this is the reason for looking at many different metrics - is that there is an element of overfitting to this metric: we assess using Illumina, and so naturally, assemblies polished with Illumina produce better results. That is not to say this statistic is void, but that it should be used with caution.
 
-\missingfigure{disagreement rate plot(s)}
+\end{markdown}
 
-\towrite{segway from the metrics explained above into the contamination section below}
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/disagree_rate.png}
+\centering
+\caption{The disagreement rate (Y-axis) for each assembler (X-axis), coloured by the sequencing technology. Disagreement rate is the percentage of sites in the assembly where Illumina reads do not have XX\% quorum. Each box/point represents different samples and polished status for the relevant assembler-technology combination.}
+\label{fig:disagree_rate}
+\end{figure}
 
-The decontamination step in the assembly pipeline revealed that one sample, `mada_1-2`, contained contigs from three different species: *Mycobacterium intracellulare*, *Dermacoccus nishinomiyaensis*, and *M. tuberculosis*. These contigs were all at sufficient coverage to not be considered background noise.
+\begin{markdown}
 
-\missingfigure{Some tables showing the best assemblies for each of the metrics used for assessing assembly accuracy}
+#### Number of contigs
+
+As \mtb{} has only a single, circular chromosome, for an assembly to be structurally complete, there should only be a single contig in the final assembly. However, it is not always appropriate for an assembly method to produce a single contig as data quality, depth of sequencing, read length, and/or repetitive content of the genome can hamper this goal(CITE). Conversely, receiving a single contig as output is no guarantee of it's quality for similar reasons to the previous, multi-contig scenario. For the purposes of this benchmark, considering on conjunction with the other metrics, the number of contigs can be a useful datum for selecting our favoured assembly. If an assembly has a single contig, and scores well on other metrics, we would be more inclined to choose it over another assembly with similar metrics, but many more contigs.
+
+Across all combinations of assembly conditions, `spades` (8/18), `flye` (18/32) and `canu` (16/32) produced far more single-contig assemblies than the hybrid methods (\autoref{fig:num_contigs}). `unicycler` produced no single-contig genomes, whilst `HASLR` yielded only 2/32. When considering sequencing technology, CCS (26/72) had many more single-contig assemblies than \ont{} (10/72). Note: `spades` assemblies use all three technologies and are not considered in the technology single-contig totals.
+
+\end{markdown}
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/num_contigs.png}
+\centering
+\caption{The number of contigs (Y-axis) produced from each assembly (X-axis), coloured by sequencing technology. Each box/point represents different samples and polished status for the relevant assembler-technology combination.}
+\label{fig:num_contigs}
+\end{figure}
+
+\begin{markdown}
+
+#### Length of assembly
+
+As mentioned earlier, comparing the assemblies to the \mtb{} reference genome (H37Rv; accession: `NC_000962.3`) is not appropriate, however, it's length/size can be used as an aid for selection. The size of the any lineage's genome is not expected to differ from the reference by more than about X kilobases(CITE). Considering the genome size in addition to disagreement rate is particularly informative. It would be quite easy for an assembly method to produce very accurate per-base contigs but refusing to produce sequence for "harder" parts of the genome. While such an assembly would score well on disagreement rate, it would not do so well when considering how close to the expected genome size it is. The length of the assembly is also clearly shows when a method is outputting \textit{too much} sequence.
+
+When comparing the size of each assembly to that of H37Rv, we found a fairly even spread across assemblers for the closest size to H37Rv. For 3/9 samples, `canu` has the smallest size difference, followed by `spades` (2/9), `unicycler` (2/9), `HASLR` (1/9) and `flye` (1/9). An honourable mention should be made of `flye` and `spades` as they had much lower variation in size compared to the other approaches. In terms of sequencing technology, in 6/9 samples CCS produced the genome size closest to H37Rv. Polished assemblies had the closer size in 5/9 samples.
+
+\end{markdown}
+
+\unsure[inline]{should I use the non-zoomed version of \autoref{fig:asm_len}?}
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/asm_len.png}
+\centering
+\caption{Size/length (Y-axis) of each assembly (X-axis), coloured by each sequencing technology. The horizontal dashed line represents the size of the \mtb{} reference genome (4,411,532bp). Each box/point represents different samples and polished status for the relevant assembler-technology combination. Note: the Y-axis has been limited to allow for greater resolution of similarity to the H37Rv size}
+\label{fig:asm_len}
+\end{figure}
+
+\begin{markdown}
+
+#### Contamination detection
+
+The decontamination step in the assembly pipeline (\todo{reference relevant section in methods}) revealed that one sample, `mada_1-2`, contained contigs from three different species: *Mycobacterium intracellulare*, *Dermacoccus nishinomiyaensis*, and *M. tuberculosis*. These contigs were all at sufficient coverage to not be considered background noise. For the assembly assessment analysis only the contigs from \mtb{} were used, but figures for the assessment metrics in the previous subsections show this sample is an outlier in almost all metrics. Given this profuse contamination, `mada_1-2` will not be used in any analysis where these assemblies are used for truth validation purposes.
+
+\\
+
+\unsure{should this paragraph stay here or move to the conclusion?}In conclusion, considering all assessment metrics, `flye` and `spades` assemblies were consistently the better performing methods across all of the criteria outlined in this section. As most of the validation analyses that these assemblies will be used for involve comparing Illumina and \ont{} data to a "neutral truth", the unpolished CCS assemblies from `flye` were selected for use in the remainder of this chapter. The differences between the polished and unpolished CCS assemblies was almost negligible and do not outweigh the benefit of having a single-technology PacBio assembly that can be used as an unbiased reference point for comparing the other two technologies.
 
 ### An \mtb{} species-specific \ont{} basecalling model does not improve accuracy
 
