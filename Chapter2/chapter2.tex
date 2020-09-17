@@ -13,10 +13,13 @@
 
 \begin{markdown}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 ## Results
 
 \improvement[inline]{refine subsection title below}
-### Benchmarking assembly methods with genomic data from three technologies 
+### Benchmarking assembly methods with genomic data from three technologies \label{sec:asm_results}
 
 A central component of the work in this chapter is having a way of validating the quality of variant calls, without being biased by assuming short reads are the "truth". In addition to the matched sequencing on both the \ont{} and Illumina platforms, XXX of the Malagasy samples were also sent for PacBio Circular Consensus Sequencing (CCS)\improvement{clarify this from the methods Sara sent - i.e. is HiFi more correct?}. CCS produces so called HiFi reads, which have a base-level accuracy greater than 99.9\%(CITE). The reason these reads have such a high accuracy is that each one is the consensus from multiple passes of the DNA enzyme around a circular copy of the original double-stranded read. As the HiFi reads are both long and accurate, they are now being regularly used to produce high quality \denovo{} assemblies and complete existing reference genomes(CITE).  
 
@@ -102,7 +105,79 @@ The decontamination step in the assembly pipeline (\todo{reference relevant sect
 
 \unsure{should this paragraph stay here or move to the conclusion?}In conclusion, considering all assessment metrics, `flye` and `spades` assemblies were consistently the better performing methods across all of the criteria outlined in this section. As most of the validation analyses that these assemblies will be used for involve comparing Illumina and \ont{} data to a "neutral truth", the unpolished CCS assemblies from `flye` were selected for use in the remainder of this chapter. The differences between the polished and unpolished CCS assemblies was almost negligible and do not outweigh the benefit of having a single-technology PacBio assembly that can be used as an unbiased reference point for comparing the other two technologies.
 
-### An \mtb{} species-specific \ont{} basecalling model does not improve accuracy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+### An \mtb{} species-specific \ont{} basecalling model does not improve read identity
+
+It has previously been shown(CITE) that a taxon-specific basecalling model can improve both the base-level and consensus accuracy of \ont{} sequencing reads. While this was shown for *Klebsiella pneumoniae*, it remains to be seen if this approach generalises to other species. The major difficulty in producing such a model pertains to the requirement for a "truth" genome for the training data. The \ont{} basecaller, \guppy{}, uses neural networks to convert raw signal into a DNA sequence. In order to train the network in how to make this inference it is necessary to label the raw signal with its corresponding "truth" sequence. Such datasets are difficult to find for certain species. However, the dataset we have collected for the work in this chapter is perfectly suited as we have reads from Illumina, PacBio, and \ont{} that are from the *exact* sample DNA extraction. As the bulk of the work in this chapter (and the subsequent chapters) has an implicit reliance on the quality of the \ont{} basecalling accuracy, we sought to train a \mtb{}-specific \guppy{} model.  
+
+To facilitate the training of the \mtb{}-specific model we used the \ont{} model-training tool \taiyaki{} (see \todo{add link to relevant methods section}). We use the samples with matched PacBio data for the training as they have high quality assemblies that can be used as truth (\autoref{sec:asm_results}). With the aid of \taiyaki{} we map the basecalled \ont{} reads to the truth assembly; creating a truth sequence for each read. The truth sequence for each read is then mapped to the raw signal, which is the main input format for training. Across the eight samples there was a total of 1,309,049 \ont{} reads that were mapped. Reads were split into training (20\% - 261,808 reads) and evaluation (80\% - 1,047,241 reads) sets. The model was trained by \taiyaki{} (using only the training set) and took 210 hours (8.75 days) to complete on 2 GPUs. The resulting \mtb{} model (referred to as 'tubby') was then used to rebasecall the reads in the evaluation set. We evaluate the tubby model and the default \guppy{} model inline with Wick *et al.*(CITE)(see \todo{add link to relevant methods section}).
+
+#### Read BLAST identity
+
+The first evaluation metric, read BLAST identity, determines the read-level accuracy produced by the basecalling model. We align the basecalled reads to the truth assembly and calculate BLAST identity as, for each mapping, the number of matching bases divided by the length of the alignment. \autoref{fig:read_blast} shows the \guppy{} model has slightly higher BLAST identity than tubby with 0.884/0.920/0.942 and 0.888/0.919/0.938 $25^{th}$/median/$75^{th}$ percentiles respectively.
+
+\end{markdown}
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/read_blast.png}
+\centering
+\caption{Read BLAST identity (Y-axis) for the \mtb{}-specific basecalling model 'tubby' compared with the default \guppy{} model. BLAST identity is the number of matching bases (in a read alignment) divided by the length of the alignment. Horizontal, dashed lines indicate the lower, median, and upper quartiles. Note: the Y-axis has been cut to allow closer inspection of the bulk of the data.}
+\label{fig:read_blast}
+\end{figure}
+
+\begin{markdown}
+
+#### Relative read length
+
+We define relative read length as the length of the aligned part of the read, divided by the total length of the read. The purpose of this metric is to see whether there is a bias towards insertions (greater than 1.0) or deletions (less than 1.0). \autoref{fig:read_relen} shows that tubby has a much greater tendency towards deletions compared to \guppy{} with median relative read lengths of 0.974 and 0.993 respectively.
+
+\end{markdown}
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/read_relen.png}
+\centering
+\caption{Relative read length (Y-axis) for the \mtb{}-specific basecalling model 'tubby' compared with the default \guppy{} model. Relative read length is the length of the aligned part of the read, divided by the total length of the read. Horizontal, dashed lines indicate the lower, median, and upper quartiles. Note: the Y-axis has been cut to allow closer inspection of the bulk of the data.}
+\label{fig:read_relen}
+\end{figure}
+
+\begin{markdown}
+
+#### Consensus accuracy
+
+To assess consensus accuracy the basecalled reads were assembled using `rebaler`. `rebaler` was developed by Wick *et al.* for the purposes of evaluating basecalling models and is a reference-guided assembly approach (see \todo{link to relevant methods section}). Here we show consensus accuracy in a similar manner to read identity. Each "read" in this context is the result of chopping the `rebaler` assembly of the reads up into 10kbp "chunks" to simulate reads. These chunks are then mapped back to the original assembly and we use BLAST identity as the measure of accuracy. \autoref{fig:consensus_acc} shows much higher consensus accuracy for \guppy{} (median XX) compared with tubby (median XX)\todo{get exact consensus median values}.
+
+\end{markdown}
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/consensus_acc.png}
+\centering
+\caption{Consensus accuracy of the \mtb{}-specific basecalling model 'tubby' compared with the default \guppy{} model. Consensus accuracy refers to "chunks" of the genome assembly produced by the basecalled reads for each model mapped to the truth genome. BLAST identity (Y-axis) is the number of matching bases (in a chunk alignment) divided by the length of the alignment. Horizontal, dashed lines indicate the lower, median, and upper quartiles. Note: the Y-axis has been cut to allow closer inspection of the bulk of the data.}
+\label{fig:consensus_acc}
+\end{figure}
+
+\begin{markdown}
+
+#### Error types
+
+Here we classify the types of errors that occur in the `rebaler` assemblies and look at how these errors compare across models. To determine the errors, we categorise the differences between the truth and `rebaler` assemblies (see \todo{link to relevant methods}). As would be prediction from the tendency towards deletions, \autoref{fig:error_types} shows that the greater part of the error types (for both models) are attributable to deletion errors, with most being homopolymer deletions. We do however see that tubby's deletion errors are much higher than \guppy{}'s \todo{add some concrete numbers} as are substitution errors. However, tubby does have less insertions that \guppy{} although these constitute a small portion of the overall errors. Both models have a very low level of Dcm-methylation errors, which is a nice control of sorts as \mtb{} does not have any known 5-methylcystosine methyltransferases(CITE)\improvement{ensure the wording of this and correct and that the claim is also correct}.
+
+\end{markdown}
+
+\begin{figure}
+\includegraphics[width=1.0\textwidth]{Chapter2/Figs/error_types.png}
+\centering
+\caption{Error types in the `rebaler` assemblies produced from reads basecalled with tubby and \guppy{} (colours). The consensus error rate is the percentage of the assembly these errors compose. The errors are per-assembly, so the confidence intervals represent variation in error types between samples/assemblies. dcm refers to Dcm-methylation motifs. homo\_ins/del are homopolymer insertions or deletions. sub is single-base substitutions.}
+\label{fig:error_types}
+\end{figure}
+
+\begin{markdown}
+
+\\
+
+Given the reduced performance across nearly all metrics for a \mtb{}-specific \ont{} basecalling model, the default \guppy{} model will be used for the remainder of this work. It is likely these results could be improved with more complex filtering of reads used for training and adjustment of training parameters, but the performance of the default \guppy{} model seems to be sufficient for the goals of this thesis. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ### Quality Control
 
@@ -119,21 +194,31 @@ In the end, we have N samples that have passed QC and will be used for the remai
 
 \towrite[inline]{Make sure to mention the samples excluded as their Illumina and ONT data do not match based on the discrepancy in variant calls}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \improvement[inline]{refine subsection title below}
 ### Building PRGs of varying density
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 ### \ont{} SNPs are highly concordant with Illumina
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ### Genome graphs provide superior \ont{} indel calls compared to a pileup approach
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 ### \ont{} data identifies transmission clusters inline with Illumina
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ## Methods
 
 ### Nanopore data preprocessing
 
-All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool guppy (v3.4.5). We used default parameters for basecalling and the only non-default parameter used for de-multiplexing was the 'trim barcodes' option.  
+All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool \guppy{} (v3.4.5). We used default parameters for basecalling and the only non-default parameter used for de-multiplexing was the 'trim barcodes' option.  
 Quality metrics for assessing whether each sample should be included in the study included read length distribution and coverage (FIGURE). To calculate coverage, we sum the number of base pairs for a sample and divide this by the \mtb{} genome size of 4,411,532bp.
 
 \missingfigure{A plot showing the quality metrics for \ont{} data such as read length distribution and coverage}
@@ -154,7 +239,7 @@ For both polished and unpolished assemblies, we annotate using Prokka(CITE). We 
 
 Species-specific \ont{} basecalling models have been shown to provide increased read accuracy(CITE). The most challenging aspect of training such a model though, is providing a truth sequence. Given we have three sequencing technologies with good coverage for nine samples, we decided to train an \mtb-specific model using the highest quality assembly for each sample as the truth.  
 Assemblies were generated for each sample, as outlined in section(LINK). After assessing the final assemblies, we excluded sample `mada_1-2` as it was found to contain three species and even after filtering out the contaminating contigs, the \mtb{} sequence was deemed too low quality for a truth assembly. See table X(TABLE) for the assemblies chosen for each of the remaining eight samples.  
-\ont{} provides a software suite, Taiyaki(CITE), to prepare data for and also perform model training. An overview of the Snakemake pipeline used for running the training can be seen in (FIGURE). The first step in training the model is mapping the current basecalled reads to the respective truth sequence for each sample. The mapping is done using minimap2(CITE), and we use parameters that ensure it only outputs primary alignments. The sequence for each read is then replaced with the reference sequence it aligns to and written out to a Fasta file using a Taiyaki script. The eight "read-reference" Fasta files were then combined into a single file. The recommended number of reads for model-training is somewhere in the range of tens-of-thousands or low hundreds-of-thousands if lengths are greater than 1000bp or less than 500bp, respectively, on average (personal correspondence with \ont{} staff). The resulting aggregated read-reference Fasta file contained 1,309,053 entries, which is far more than is required so, we randomly sub-sampled the Fasta file into two chunks with 20\% (261,809) for training and the remainder (1,047,242) to be used for evaluating the final model. Using the list of read identifiers in these two subsets, we additionally subset the raw data, used for training, for each read into separate locations for training and evaluation. A script from Taiyaki is then used to align the raw signal for a read to its sequence in the read-reference file. This mapping is a vital preparation step that indicates what nucleotides are the result of a given collection of the raw signal. The raw signal mapping file was then passed to the model-training script from Taiyaki and training took 210 hours to complete on 2 GPUs. \\
+\ont{} provides a software suite, \taiyaki{}(CITE), to prepare data for and also perform model training. An overview of the Snakemake pipeline used for running the training can be seen in (FIGURE). The first step in training the model is mapping the current basecalled reads to the respective truth sequence for each sample. The mapping is done using minimap2(CITE), and we use parameters that ensure it only outputs primary alignments. The sequence for each read is then replaced with the reference sequence it aligns to and written out to a Fasta file using a \taiyaki{} script. The eight "read-reference" Fasta files were then combined into a single file. The recommended number of reads for model-training is somewhere in the range of tens-of-thousands or low hundreds-of-thousands if lengths are greater than 1000bp or less than 500bp, respectively, on average (personal correspondence with \ont{} staff). The resulting aggregated read-reference Fasta file contained 1,309,053 entries, which is far more than is required so, we randomly sub-sampled the Fasta file into two chunks with 20\% (261,809) for training and the remainder (1,047,242) to be used for evaluating the final model. Using the list of read identifiers in these two subsets, we additionally subset the raw data, used for training, for each read into separate locations for training and evaluation. A script from \taiyaki{} is then used to align the raw signal for a read to its sequence in the read-reference file. This mapping is a vital preparation step that indicates what nucleotides are the result of a given collection of the raw signal. The raw signal mapping file was then passed to the model-training script from \taiyaki{} and training took 210 hours to complete on 2 GPUs. \\
 
 \missingfigure{Snakemake DAG showing the basecall training pipeline}
 

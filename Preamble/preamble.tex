@@ -51,8 +51,9 @@
 
 % ********************Captions and Hyperreferencing / URL **********************
 
-% Captions: This makes captions of figures use a boldfaced small font.
-%\RequirePackage[small,bf]{caption}
+% Captions: This makes captions of figures use a small font with the figure label in bold and the text in slanted shape.
+% https://mirror.aarnet.edu.au/pub/CTAN/macros/latex/contrib/caption/caption-eng.pdf
+\RequirePackage[font=small,labelfont=bf,textfont=sl]{caption}
 
 \RequirePackage[labelsep=space,tableposition=top]{caption}
 \renewcommand{\figurename}{Fig.} %to support older versions of captions.sty
@@ -133,14 +134,17 @@
 % ************************* User Defined Commands ******************************
 % ******************************************************************************
 
+\newcommand{\pandora}{\texttt{pandora}}
+\newcommand{\denovo}{\textit{de novo}}
+\newcommand{\ecoli}{\textit{E. coli}}
+\newcommand{\taiyaki}{\texttt{taiyaki}}
+\newcommand{\guppy}{\texttt{guppy}}
+
 % *********** To change the name of Table of Contents / LOF and LOT ************
 
 %\renewcommand{\contentsname}{My Table of Contents}
 %\renewcommand{\listfigurename}{My List of Figures}
 %\renewcommand{\listtablename}{My List of Tables}
-
-\newcommand{\pandora}{\texttt{pandora}}
-
 
 % ********************** TOC depth and numbering depth *************************
 
@@ -166,11 +170,6 @@
 \nomenclature[z-PRG]{\prg}{Population Reference Graph}
 \newcommand{\snp}{SNP}
 \nomenclature[z-SNP]{\snp}{Single Nucleotide Polymorphism}
-
-% commands for commonly used long words
-\newcommand{\denovo}{\textit{de novo}}
-\newcommand{\ecoli}{\textit{E. coli}}
-
 
 % ********************************* Appendix ***********************************
 
