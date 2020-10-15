@@ -194,6 +194,8 @@ In the end, we have N samples that have passed QC and will be used for the remai
 
 ## Methods
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 ### Nanopore data preprocessing
 
 All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool \guppy{} (v3.4.5). We used default parameters for basecalling and the only non-default parameter used for de-multiplexing was the 'trim barcodes' option.  
@@ -201,7 +203,9 @@ Quality metrics for assessing whether each sample should be included in the stud
 
 \missingfigure{A plot showing the quality metrics for \ont{} data such as read length distribution and coverage}
 
-### Assembly
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+### Benchmarking of assembly methods 
 
 Samples with greater than 30x coverage across all three sequencing technologies were chosen to produce high-quality assemblies. In total, this left us with 9 Malagasy samples. We compare five assemblers and select the best for each sample. The reason for this comparison is that different assembly algorithms can produce quite varied results depending on sequencing technology used, species, or computational resource availability(CITE).  
 The assembly tools used are Canu, Flye, Unicycler, HASLR, and Spades(CITE \& VERSION). HASLR and Unicycler are hybrid assemblers that take Illumina reads along with one long-read file, although Unicycler does not require both. Spades is also a hybrid assembler but takes an arbitrary number of different sequencing technologies. Canu and Flye are both long-read-only assemblers.
@@ -213,19 +217,29 @@ For both polished and unpolished assemblies, we annotate using Prokka(CITE). We 
 
 \missingfigure{Snakemake assembly pipeline DAG}
 
-### Nanopore basecaller model training
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Species-specific \ont{} basecalling models have been shown to provide increased read accuracy(CITE). The most challenging aspect of training such a model though, is providing a truth sequence. Given we have three sequencing technologies with good coverage for nine samples, we decided to train an \mtb-specific model using the highest quality assembly for each sample as the truth.  
-Assemblies were generated for each sample, as outlined in section(LINK). After assessing the final assemblies, we excluded sample `mada_1-2` as it was found to contain three species and even after filtering out the contaminating contigs, the \mtb{} sequence was deemed too low quality for a truth assembly. See table X(TABLE) for the assemblies chosen for each of the remaining eight samples.  
-\ont{} provides a software suite, \taiyaki{}(CITE), to prepare data for and also perform model training. An overview of the Snakemake pipeline used for running the training can be seen in (FIGURE). The first step in training the model is mapping the current basecalled reads to the respective truth sequence for each sample. The mapping is done using minimap2(CITE), and we use parameters that ensure it only outputs primary alignments. The sequence for each read is then replaced with the reference sequence it aligns to and written out to a Fasta file using a \taiyaki{} script. The eight "read-reference" Fasta files were then combined into a single file. The recommended number of reads for model-training is somewhere in the range of tens-of-thousands or low hundreds-of-thousands if lengths are greater than 1000bp or less than 500bp, respectively, on average (personal correspondence with \ont{} staff). The resulting aggregated read-reference Fasta file contained 1,309,053 entries, which is far more than is required so, we randomly sub-sampled the Fasta file into two chunks with 20\% (261,809) for training and the remainder (1,047,242) to be used for evaluating the final model. Using the list of read identifiers in these two subsets, we additionally subset the raw data, used for training, for each read into separate locations for training and evaluation. A script from \taiyaki{} is then used to align the raw signal for a read to its sequence in the read-reference file. This mapping is a vital preparation step that indicates what nucleotides are the result of a given collection of the raw signal. The raw signal mapping file was then passed to the model-training script from \taiyaki{} and training took 210 hours to complete on 2 GPUs. \\
+### Training a \mtb{}-specific \ont{} basecalling model
 
-\missingfigure{Snakemake DAG showing the basecall training pipeline}
+Taxon-specific \ont{} basecalling models have been shown to provide increased read and consensus accuracy(CITE). One of the most challenging aspects of training such a model though, is providing a truth sequence for the \ont{} data. Ideally, the training data should be from the same DNA extraction as the sequencing reads that produced the truth sequene. This ensures any discrepancies between the \ont{} data and the truth as technology differences, and not *in vitro* evolution. Given we have sequencing reads from the same DNA extraction across three sequencing technologies for nine samples, we chose to train an \mtb{}-specific model using the highest quality PacBio assembly from (\todo{link to asm methods}) for each sample as the truth. Using the PacBio assembly ensures no systematic biases from the \ont{} data are being reinforced.   
+After assessing the final assemblies \todo{link to asm results}, we excluded sample one sample (`mada_1-2`) as it was found to contain three species and even after filtering out the contaminating contigs, the \mtb{} sequence was deemed too low quality for a truth assembly.  
+\ont{} provides a software suite, \taiyaki{}(CITE), to prepare data for and perform model training. The first step in training the model is mapping the \ont{} basecalled reads to the respective truth sequence for each sample. The mapping is done using `minimap2`(CITE), and we use parameters that ensure it only outputs primary alignments. The sequence for each read is then replaced with the reference sequence it aligns to and written out to a Fasta file using a \taiyaki{} script. The eight "read-reference" Fasta files are then combined into a single file. The recommended number of reads for model-training is somewhere in the range of tens-of-thousands or low hundreds-of-thousands if lengths are greater than 1000bp or less than 500bp, respectively, on average (personal correspondence with \ont{} staff). The resulting aggregated read-reference Fasta file contained 1,309,759 entries. As this is far more sequences than is required, we randomly sub-sampled the Fasta file into two chunks with 20\% (261,950) for training and the remainder (1,047,807) to be used for validation of the final model. Using the list of read identifiers in these two subsets, we additionally subset the raw data, used for training, for each read into separate locations for training and evaluation. A script from \taiyaki{} is then used to align the raw signal for a read to its sequence in the read-reference file. This mapping is a vital preparation step that indicates what nucleotides are the result of a given collection of the raw signal. The raw signal mapping file was then passed to the model-training script from \taiyaki{} and training took 108 hours (4.5 days) to complete on 2 GPUs.
 
-\missingfigure{A table showing the assemblies we chose to produce the basecalling model from}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-### Nanopore basecaller model evaluation
+### Evaluating a custom \ont{} basecalling model
 
-\towrite[inline]{methods for nanopore basecaller model evaluation}
+The model-training process produces a JSON file that can be used to basecall \ont{} reads with \guppy{}. The first step in evaluating whether our \mtb{}-specific model, 'tubby', provides improved accuracy compared to \guppy{}'s default model is to re-basecall (with tubby) the validation reads that were set aside prior to training. These validation reads provide an unbiased dataset to evaluate on as they were not involved in the training process. Our evaluation process closely mirrors that of Wick *et al.* who produced the first taxon-specific \ont{} basecalling model(CITE).  
+
+We evaluate both the read- and consensus-level accuracy of reads produced by \guppy{} and tubby. For read-level accuracy, we map the basecalled data for each sample to the respective truth assembly and pool the read identities for each mapping over all samples. Our measure of read identity is the BLAST identity, defined as, for each alignment, the number of matching positions divided by the length of the alignment.  
+
+To assess consensus-level accuracy, we first need to produce assemblies for each model's generated reads. To allow for comparison of these model-specific consensus sequences to the truth assembly, a reference-guided method is needed to ensure overall structure of the truth and consensus sequences is the same. We use `rebaler`(CITE), a tool developed for specifically this use-case. Briefly, `rebaler` aligns the reads to a reference sequence and replaces that sequence with the sequence from the best alignments, producing an unpolished assembly. After this, it polishes the assembly with `racon` to produce a consensus sequence. We then calculate the consensus accuracy by following a similar approach used for the read accuracy. However, as we have a single sequence, we cut the consensus into 10kbp chunks and treat these chunks as reads. These chunks are mapped to the reference/truth and the consensus accuracy is reported as the BLAST identity of the alignments produced.  
+
+In addition to the read and consensus accuracy, we also evaluate the relative lengths of the reads/chunks in the alignment used for calculating the BLAST identity. The relative length is the length of the alignment, divided by the length of the read/chunk. This metric provides an indication of whether either model has a tendency towards deletions (relative length less than 1.0) or insertions (greater than 1.0).  
+
+Lastly, we classify the the types of errors that occur in the assemblies produced from each model's output. The `rebaler` assembly for each model and sample combination was aligned to the sample's truth assembly using `nucmer`(CITE). `nucmer` produces all positions of difference - errors in this case - between the two sequences. We classify errors as Dcm if the reported difference occurs in a known 5-methylcystosine methyltransferases motif(CITE), homopolymer insertion or deletion if the difference involves as base being added/removed from a region containing 3 or more of that same base. All deletions, insertions, and substitutions that do not fit into one of these categories after reported in their own group.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 ### Quality control
 
