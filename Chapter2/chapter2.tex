@@ -261,7 +261,7 @@ with equivalent precision to Illumina, but with less recall.
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/bcftools-precision-recall-filters.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/bcftools-precision-recall-filters.png}
 \caption{{Precision (left) and recall (right) of SNPs for COMPASS (red) and a
 selection of bcftools filters. `\#nofilter' (blue) is bcftools with no
 filtering of variants. `QUAL' (purple) is bcftools SNPs with a quality score of
@@ -292,12 +292,12 @@ The results of incrementally applying these filters, along with no filters and C
 is with a sparse \prg{} and all filters applied. With all filters, the sparse \prg{} leads to a median recall of 71.99\%. When compared to the COMPASS median precision and recall values
 of 100\% and 92.58\%, respectively, \pandora{} produces Nanopore variant calls
 with equivalent precision to Illumina, but with 20.59\% less recall. Part of the recall disparity between \pandora{} and COMPASS is explained by the masking of loci in the reference graph (see \autoref{sec:tbprg} and \autoref{app:mask}). Despite this large difference in recall, we chose to use all of the filters outlined above because, as mentioned earlier, precision is far more important than recall for the transmission cluster work.
-In nearly every filtering combination, the sparse \prg{} lead to higher recall \emph{and} precision. As a result, the remaining work featuring \pandora{} in this chapter will use the sparse \prg{}.
+In nearly every filtering combination, the sparse \prg{} lead to higher recall \emph{and} precision, albeit quite marginal. As a result, the remaining work featuring \pandora{} in this chapter will use the sparse \prg{}. Given the increased computational cost of using the dense \prg{}, without any benefit for precision and recall.
 
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/pandora-precision-recall-filters-snps.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora-precision-recall-filters-snps.png}
 \caption{{Precision (bottom) and recall (top) of SNPs for COMPASS (purple) and \pandora{} with sparse (red) and dense (blue) \prg{}s. The \pandora{} boxes start with no filters on the left, with each box moving to the right adding a filter to the previous box. The COMPASS box is a reference to the precision and recall of Illumina variant calls. Linear PRG density refers to the fact that COMPASS uses a single, linear reference genome as opposed to \pandora{}, which uses a genome graph. The black points refer to single data points for the seven samples used. MIN\_COV=minimum depth of coverage;MIN\_SB=minimum strand bias;MIN\_GT\_CONF=minimum genotype confidence score;MIN\_FRS=minimum fraction of read support.
 {\label{fig:pandora-filters-snps}}%
 }}
@@ -309,7 +309,7 @@ Although we only use SNPs for identifying transmission clusters, we also assesse
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/pandora-precision-recall-filters-all-variants.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora-precision-recall-filters-all-variants.png}
 \caption{{Precision (bottom) and recall (top) of SNPs for COMPASS (purple) and all variants (maximum indel length of 20bp) for \pandora{} with sparse (red) and dense (blue) \prg{}s. The \pandora{} boxes start with no filters on the left, with each box moving to the right adding a filter to the previous box. The COMPASS box is a reference to the precision and recall of Illumina variant calls. Linear PRG density refers to the fact that COMPASS uses a single, linear reference genome as opposed to \pandora{}, which uses a genome graph. The black points refer to single data points for the seven samples used. MIN\_COV=minimum depth of coverage;MIN\_SB=minimum strand bias;MIN\_GT\_CONF=minimum genotype confidence score;MIN\_FRS=minimum fraction of read support.
 {\label{fig:pandora-filters-all}}%
 }}
@@ -320,13 +320,16 @@ Although we only use SNPs for identifying transmission clusters, we also assesse
 
 \pandora{}'s \vrb{map} routine infers a consensus sequence for a single sample and outputs variant calls with respect to that. However, \pandora{} also has a multi-sample counterpart - \vrb{compare}. The \vrb{compare} routine infers a consensus sequence for \emph{all} samples and outputs a locus presense-absence matrix, along with a VCF with genotypes for all samples with respect to the consensus sequence \todo{link to ch1 or 2 section describing compare}. As it was designed for analysing collection of (potentially divergent) samples, we use the \vrb{compare} protocol to assess its ability to describe transmission clusters. 
 
-\towrite[inline]{descrive how we run pandora compare}
+The process for calling variants using compare is to first take the novel variants discovered for each sample in \autoref{sec:map-var-calls}. Instead of creating an updated \prg{} for each sample, we take all novel variants for all samples and add them to the relevant locus' original MSA. We then update the MSA, rebuild the \prg{}s for each locus, combine all \prg{}s into a single PanRG and then index with \pandora{}. In the end, we have a \prg{} that has novel variants from all samples contained within it, rather than the \prg{}s used by `map` which only have the novel variants for a single sample.
+Next, we run `pandora compare` using the updated sparse and dense \prg{}s and filter the resulting VCF as-per \autoref{sec:pandora-filters}.
 
 As a result of its design, it is not possible to provide `compare` with a reference to base VCF coordinates off (as in \autoref{sec:map-var-calls}). Therefore, we cannot assess the precision and recall for the seven samples as above. We maintain the same filtering strategy as the single-sample approach though, as all of those fields are available in the VCF from `compare`.
 
 \subsection{Computational performance}
 
 In addition to the quality of the variant calls, the computational cost of running them is also important. The CPU time and maximum memory usage for performing the \ont{} variant calling is shown in \autoref{fig:var-comp-perf}. \pandora{}'s performance is broken down into the individual stages, while bcftools is represented by a single job. The median maxmimum memory for bcftools was 8.2GB, although, the maximum was as high as 58.5GB. This is compared to the highest \pandora{} step - updating the MSAs with novel variants - with a median maximum memory usage of 9.7GB and 13.3GB for the sparse and dense \prg{}s respectively. The highest memory usage for \pandora{} was 18.6GB during the updating of MSAs, nearly 40GB lower than the peak of bcftools. The median CPU time for bcftools was 35129 seconds, or 9.75 hours, with the longest run coming in at 138364 seconds (38.4 hours). To be able to compare this with \pandora{} as a whole, we can sum the median CPU time over each step, which gives 21704 and 53194 seconds, or 6.0 and 14.7 hours, for the sparse and dense \prg{}s respectively. As with the memory usage, the longest runtime component of the \pandora{} pipeline was updating the MSAs with \denovo{} variants.
+
+The computational performance of \pandora{} `compare` is not directly comparable to bcftools and \pandora{} `map` as it runs on all samples at the same time. Additionally, the novel variant discovery phase of pandora map for all samples technically contributes to the overall runtime of compare. As the performance of this discovery step has already been reported, we outline the remainder of the steps involved in compare. In total, the remainder of the sparse and dense \prg{} steps took 58.4 and 83.1 CPU hours respectively. The actual wall clock time for these steps was 5.5 and 7.3 hours. The maximum memory was again obtained during the updating of the MSAs and peaked at 38 and 37GB for the sparse and dense \prg{}s respectively.
 
 \begin{figure}
      \centering
@@ -347,6 +350,18 @@ In addition to the quality of the variant calls, the computational cost of runni
         \label{fig:var-comp-perf}
 \end{figure}
 
+\subsection{Summary}
+
+\towrite[inline]{briefly compare the precision and recall of combined}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.9\columnwidth]{Chapter2/Figs/combined-precision-recall-filters-snps.png}
+\caption{{Precision (left) and recall (right) of SNPs for COMPASS (red), . 
+{\label{fig:prec-recall-filters}}%
+}}
+\end{center}
+\end{figure}
 
 %=========================================================================
 
@@ -395,7 +410,7 @@ linear equation would predict a corresponding Nanopore SNP distance of
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/combined-dotplots.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/combined-dotplots.png}
 \caption{{Pairwise SNP distance relationship between Illumina (COMPASS; x-axis)
 and Nanopore (bcftools; y-axis) data. Each point represents the SNP
 distance between two samples. The black, dashed line shows the identity
@@ -507,7 +522,7 @@ thresholds.~
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/bcftools_clusters.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/bcftools_clusters.png}
 \caption{{Agreement of Illumina and Nanopore transmission clustering at SNP
 thresholds 0 (top-left), 2 (top-right), 5 (bottom-left). The title of
 each subplot indicates the Illumina (Ill.) and Nanopore (NP) threshold
@@ -616,7 +631,7 @@ no samples that should have been clustered were missed (on average).
 
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/mixed_self_dist.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/mixed_self_dist.png}
 \caption{{Mixed modality "self-distance". This plot shows the SNP distance
 (x-axis) between each sample's COMPASS (Illumina) and bcftools
 (Nanopore) VCF calls.
@@ -626,7 +641,7 @@ no samples that should have been clustered were missed (on average).
 \end{figure}
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/mixed-dotplot.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/mixed-dotplot.png}
 \caption{{The relationship of the distance between all pairs of samples based on
 COMPASS VCF calls (X-axis) and mixed COMPASS-bcftools calls (Y-axis).
 The black, dashed line indicates the relationship we would expect if the
@@ -643,7 +658,7 @@ pairs.
 \end{figure}
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.70\columnwidth]{Chapter2/Figs/mixed_simulations.png}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/mixed_simulations.png}
 \caption{{Simulating varying ratios (X-axis) of Nanopore/Illumina sample mixtures.
 The different thresholds (subplots) indicate the cutoff for defining
 samples as part of a cluster. The Y-axis depicts the Sample-Averaged
@@ -662,6 +677,8 @@ sample pairs.
 %=========================================================================
 
 \section{Discussion}
+
+% dense prg preformance is worse than sparse mostly because of shared kmers leading to coverage on alt alleles in longer alleles and especially for sites with multiple alleles
 
 %=========================================================================
 
