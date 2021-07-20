@@ -32,6 +32,7 @@ We define a candidate region, $r$, as an interval within $n$ where coverage on $
 For a given read, $s$, that has a mapping to $r$ we define $s_r$ to be the subsequence of $s$ that maps to $r$, including an extra $w$ positions either side of the mapping. We define the pileup $P_r$ as the set of all $s_r \in r$.
 
 \subsection{Enumerating paths through candidate regions}
+\label{sec:path-enum}
 
 For $r \in R$, where $R$ is the set of all candidate regions, we construct a de Bruijn graph $G_r$ from $P_r$ using the GATB library(CITE). \\
 $A_L$ and $A_R$ are defined as sets of \kmer{}s to the left and right of $r$ in the local graph. They are anchors to allow re-insertion of new sequences, found by \textit{de novo} discovery, into the local graph. If  $\nexists a \in A_L : a \in G_r \lor \nexists a \in A_R : a \in G_r$ then we abandon \textit{de novo} discovery for $r$. We use sets of \kmer{}s for $A_L$ and $A_R$, rather than a single anchor \kmer{}, to provide redundancy in the case where sequencing errors cause some anchors to not be in $G_r$. Once $G_r$ is built, and we define the start anchor \kmer{}, $a_L$, as the first $a_L \in A_L \land a_L \in G_r$. Likewise, we define the end anchor \kmer{}, $a_R$, as the first $a_R \in A_R \land a_R \in G_r$.\\
@@ -76,6 +77,7 @@ We can use $D_r$ to prune the path-space by requiring, for each node, $n \in p_r
 
 %********************************** % Fifth Section  *************************************
 \section{Limitations}
+\label{sec:denovo-limits}
 
 %********************************** % Sixth Section  *************************************
 \section{Future Work}
