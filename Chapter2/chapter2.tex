@@ -200,7 +200,8 @@ Index    & 142            & 0:01             & 1.5              & 361           
 
 %=========================================================================
 
-\section{Calibration of \ont{} variant filters}
+\section{Variant-calling and calibration of \ont{} variant filters}
+\label{sec:var-calls}
 
 Filtering of variant calls is integral to creating trusted transmission
 inference. There are many such filters used for Illumina genomic data
@@ -281,12 +282,16 @@ hidden.
 \label{sec:pandora-filters}
 
 When assessing the best filters for increasing the precision of variant calls from \pandora{}, we are also interested in determining whether \prg{} density has a noticeable impact on performance. We use the sparse and dense \prg{}s from \autoref{sec:tbprg} and look at precision and recall these produce for the same filters.
+
+\subsubsection{Single-sample}
+\label{sec:map-var-calls}
+
 For each sample, we discover \denovo{} variants using the method outlined in \autoref{chap:denovo} using the \vrb{discover} command of \pandora{} (version 0.8.0), using default parameters except for limiting the number of novel variants for a candidate region to 10. Novel variants are added to the relevant \prg{} using the same method as \todo{reference chapter 1 section that outlines how we feed de novo variants back into the PRG} and the resulting, update \prg{}s are indexed with \pandora{}. The \vrb{map} routine of \pandora{} is then used to genotype the sample's reads and produce a VCF. To be able to compare the \pandora{} VCF to the truth assemblies we tell \pandora{} to output coordinates with respect to the H37Rv reference sequence for each locus. Then, we convert these locus positions to the absolute position within H37Rv. Running \pandora{} in this way leads to some alleles being quite long and having a lot of redundant information, so we use bcftools norm to trim unused alleles and reduce variants down to their most succinct representation.
 The \pandora{} VCF fields we use for filtering are: the depth of coverage on the called allele, which we require at least 3 reads; we keep positions with a strand bias of at least 1\%, which is the lowest depth on the forward or reverse strand divided by the total depth; a genotype confidence score no less than 5; an FRS of at least 90\%  - calculated the same way as in \autoref{sec:bcftools-filters}.
 The results of incrementally applying these filters, along with no filters and COMPASS, are shown in \autoref{fig:pandora-filters-snps}. \pandora{}'s best median precision (100\%) and
 is with a sparse \prg{} and all filters applied. With all filters, the sparse \prg{} leads to a median recall of 71.99\%. When compared to the COMPASS median precision and recall values
 of 100\% and 92.58\%, respectively, \pandora{} produces Nanopore variant calls
-with equivalent precision to Illumina, but with 20.59\% less recall. Despite this large difference in recall, we chose to use all of the filters outlined above because, as mentioned earlier, precision is far more important than recall for the transmission cluster work.
+with equivalent precision to Illumina, but with 20.59\% less recall. Part of the recall disparity between \pandora{} and COMPASS is explained by the masking of loci in the reference graph (see \autoref{sec:tbprg} and \autoref{app:mask}). Despite this large difference in recall, we chose to use all of the filters outlined above because, as mentioned earlier, precision is far more important than recall for the transmission cluster work.
 In nearly every filtering combination, the sparse \prg{} lead to higher recall \emph{and} precision. As a result, the remaining work featuring \pandora{} in this chapter will use the sparse \prg{}.
 
 
@@ -300,7 +305,7 @@ In nearly every filtering combination, the sparse \prg{} lead to higher recall \
 \end{figure}
 
 
-Although we only use SNPs for identifying transmission clusters, we also assessed \pandora{} variant calls for all variants, including indels up to a length of 20bp in \autoref{fig:pandora-filters-all}.  We did this for the sake of future work that might be interested in using \pandora{} indel calls, such as predicting drug resistance. Again, the sparse \prg{} gave better precision and recall than the dense one. Using all variants, there was a recall improvement to 75.48\% (all filters) - up 3.49\% from SNPs only. Precision on the other hand sees a drop to 95.90\% when assessing all variants - compared to 100\% for SNPs only.
+Although we only use SNPs for identifying transmission clusters, we also assessed \pandora{} variant calls for all variants, including indels up to a length of 20bp in \autoref{fig:pandora-filters-all}.  We did this for the sake of future work that might be interested in using \pandora{} indel calls, such as predicting drug resistance. Again, the sparse \prg{} gave better precision and recall than the dense one. Using all variants, there was a recall improvement to 75.48\% (all filters) - up 3.49\% from SNPs only. Precision on the other hand sees a drop to 95.90\% when assessing all variants - compared to 100\% for SNPs only. Given the large drop in precision it is clear that \pandora{} indel-calling needs further improvement, however, indel calling (deletions especially) are a known limitation of \ont{} \cite{jain2018,wick2019}.
 
 \begin{figure}
 \begin{center}
@@ -311,13 +316,43 @@ Although we only use SNPs for identifying transmission clusters, we also assesse
 \end{center}
 \end{figure}
 
-\towrite[inline]{talk about all variants results}
+\subsubsection{Multi-sample}
+
+\pandora{}'s \vrb{map} routine infers a consensus sequence for a single sample and outputs variant calls with respect to that. However, \pandora{} also has a multi-sample counterpart - \vrb{compare}. The \vrb{compare} routine infers a consensus sequence for \emph{all} samples and outputs a locus presense-absence matrix, along with a VCF with genotypes for all samples with respect to the consensus sequence \todo{link to ch1 or 2 section describing compare}. As it was designed for analysing collection of (potentially divergent) samples, we use the \vrb{compare} protocol to assess its ability to describe transmission clusters. 
+
+\towrite[inline]{descrive how we run pandora compare}
+
+As a result of its design, it is not possible to provide `compare` with a reference to base VCF coordinates off (as in \autoref{sec:map-var-calls}). Therefore, we cannot assess the precision and recall for the seven samples as above. We maintain the same filtering strategy as the single-sample approach though, as all of those fields are available in the VCF from `compare`.
+
+\subsection{Computational performance}
+
+In addition to the quality of the variant calls, the computational cost of running them is also important. The CPU time and maximum memory usage for performing the \ont{} variant calling is shown in \autoref{fig:var-comp-perf}. \pandora{}'s performance is broken down into the individual stages, while bcftools is represented by a single job. The median maxmimum memory for bcftools was 8.2GB, although, the maximum was as high as 58.5GB. This is compared to the highest \pandora{} step - updating the MSAs with novel variants - with a median maximum memory usage of 9.7GB and 13.3GB for the sparse and dense \prg{}s respectively. The highest memory usage for \pandora{} was 18.6GB during the updating of MSAs, nearly 40GB lower than the peak of bcftools. The median CPU time for bcftools was 35129 seconds, or 9.75 hours, with the longest run coming in at 138364 seconds (38.4 hours). To be able to compare this with \pandora{} as a whole, we can sum the median CPU time over each step, which gives 21704 and 53194 seconds, or 6.0 and 14.7 hours, for the sparse and dense \prg{}s respectively. As with the memory usage, the longest runtime component of the \pandora{} pipeline was updating the MSAs with \denovo{} variants.
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.475\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Chapter2/Figs/cpu_time.png}
+         \caption{}
+         \label{fig:cpu-time}
+     \end{subfigure}
+    %  \hfill
+     \begin{subfigure}[b]{0.475\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Chapter2/Figs/max_mem.png}
+         \caption{}
+         \label{fig:max-mem}
+     \end{subfigure}
+        \caption{The CPU time (in seconds; y-axis; \textbf{a}) and maximum memory usage (in megabytes; y-axis; \textbf{b}) for each \ont{} variant-calling job. Sparse (red) and dense (blue) refer to \pandora{} steps with the respective density \prg{}. \vrb{bcftools} (purple) only has one step (\vrb{pileup\_nanopore}). The violins represent the distribution of CPU time over all samples. }
+        \label{fig:var-comp-perf}
+\end{figure}
+
 
 %=========================================================================
 
 \section{Pairwise SNP distance comparison for Illumina and \ont{} sequencing data}
 
-To determine the distance between samples, we first generate sample consensus sequences for both sequencing modalities. This consensus sequence is obtained by applying the calls from a given VCF to the Mtb reference genome. We nullify (mark as 'N') any positions were i) the position failed filtering, ii) the reference genome position does not appear in the VCF file, iii) the genotype is null, or iv) the position is within the reference mask (see section 2.4). All consensus sequences for a sequencing technology are joined into a single FASTA file and a pairwise distance matrix is calculated using snp-dists (Seemann 2018).
+To determine the distance between samples, we first generate sample consensus sequences for both sequencing modalities. This consensus sequence is obtained by applying the calls from a given VCF (from \autoref{sec:var-calls}) to the \mtb{} reference genome. We nullify (mark as \vrb{N}) any positions were i) the position failed filtering, ii) the reference genome position does not appear in the VCF file, iii) the genotype is null, or iv) the position is within the reference mask. All consensus sequences for a sequencing technology are joined into a single FASTA file and a pairwise distance matrix is calculated using snp-dists (Seemann 2018).
 Figure 3 was created in Python using the matplotlib and seaborn libraries. All pairwise comparisons between a sample and itself were removed from the visualisation, and only a single value was used for each pair (i.e. we keep sample1 vs. sample2 and discard sample2 vs. sample1 as they are the same). RANSAC Robust Linear Regression (Fischler 1981), as implemented in the Python library scikit-learn (Pedregosa 2011), was used for determining a linear equation and line-of-best fit for the relationship between pairwise Illumina and Nanopore SNP distance.
 
 When attempting to infer transmission clusters, the accepted approach is
