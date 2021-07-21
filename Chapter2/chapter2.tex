@@ -352,12 +352,12 @@ The computational performance of \pandora{} `compare` is not directly comparable
 
 \subsection{Summary}
 
-\towrite[inline]{briefly compare the precision and recall of combined}
+In summary, \autoref{fig:prec-recall-filters} shows that our selection of filters for \ont{} variant callers provide precision on-par with Illumina. However, this precision comes at the cost of a loss in recall. The remainder of this chapter explores how the SNP calls from \ont{} can be used for calculate distances between samples, and define putative transmission clusters from these distances. We are especially interested in how similar the pairwise distances are between samples and sequencing modality and whether the same distance thresholds used for Illumina can also be used for \ont{}.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.9\columnwidth]{Chapter2/Figs/combined-precision-recall-filters-snps.png}
-\caption{{Precision (left) and recall (right) of SNPs for COMPASS (red), . 
+\caption{{Precision (left) and recall (right) of filtered SNPs for COMPASS (red), bcftools (blue), and \pandora{} (purple). Each black point represents one of seven evaluation samples. 
 {\label{fig:prec-recall-filters}}%
 }}
 \end{center}
