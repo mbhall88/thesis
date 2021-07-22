@@ -351,6 +351,7 @@ The computational performance of \pandora{} `compare` is not directly comparable
 \end{figure}
 
 \subsection{Summary}
+\label{sec:var-summary}
 
 In summary, \autoref{fig:prec-recall-filters} shows that our selection of filters for \ont{} variant callers provide precision on-par with Illumina. However, this precision comes at the cost of a loss in recall. The remainder of this chapter explores how the SNP calls from \ont{} can be used for calculate distances between samples, and define putative transmission clusters from these distances. We are especially interested in how similar the pairwise distances are between samples and sequencing modality and whether the same distance thresholds used for Illumina can also be used for \ont{}.
 
@@ -367,69 +368,73 @@ In summary, \autoref{fig:prec-recall-filters} shows that our selection of filter
 
 \section{Pairwise SNP distance comparison for Illumina and \ont{} sequencing data}
 
-To determine the distance between samples, we first generate sample consensus sequences for both sequencing modalities. This consensus sequence is obtained by applying the calls from a given VCF (from \autoref{sec:var-calls}) to the \mtb{} reference genome. We nullify (mark as \vrb{N}) any positions were i) the position failed filtering, ii) the reference genome position does not appear in the VCF file, iii) the genotype is null, or iv) the position is within the reference mask. All consensus sequences for a sequencing technology are joined into a single FASTA file and a pairwise distance matrix is calculated using snp-dists (Seemann 2018).
-Figure 3 was created in Python using the matplotlib and seaborn libraries. All pairwise comparisons between a sample and itself were removed from the visualisation, and only a single value was used for each pair (i.e. we keep sample1 vs. sample2 and discard sample2 vs. sample1 as they are the same). RANSAC Robust Linear Regression (Fischler 1981), as implemented in the Python library scikit-learn (Pedregosa 2011), was used for determining a linear equation and line-of-best fit for the relationship between pairwise Illumina and Nanopore SNP distance.
-
 When attempting to infer transmission clusters, the accepted approach is
 to define a SNP distance threshold and say that any genomes within this
-distance of each other are clustered. It follows that the SNPs used must
-be trusted. Having shown that precision on par with Illumina can be
-achieved with Nanopore data, we investigate the pairwise SNP distance
+distance of each other are clustered (possible transmissions). It follows that the SNPs used must
+be trusted. Having shown that SNP precision on-par with Illumina can be
+achieved with \ont{} data, we investigate the pairwise SNP distance
 between samples produced by both sequencing technologies. The intention
 here is to determine whether the thresholds typically used for Illumina
 data can also be used for Nanopore, or whether adjustments need to be
 made.
 
+To determine the distance between samples, we first generate sample consensus sequences. We do this for each variant-caller: COMPASS (Illumina), bcftools (\ont{}), and \pandora{}'s single-sample mode (\ont{}) (not \pandora{}'s multi-sample mode). A consensus sequence is obtained by applying the calls from a given VCF (from \autoref{sec:var-calls}) to the \mtb{} reference genome. We nullify (mark as \vrb{N}) any positions where i) the position failed filtering, ii) the reference genome position does not appear in the VCF file, iii) the called genotype is null, or iv) the position is within the reference genome mask. All sample consensus sequences for a variant-caller are joined into a single FASTA file and a pairwise distance matrix is calculated using \vrb{snp-dists} (version 0.7.0) \cite{snp-dists}. In the case of \pandora{} \vrb{compare} (multi-sample mode), we cannot follow this approach for generating a consensus sequence and distance matrix, due to the inability to translate the coordinates from a graph to a linear reference. Instead of a consensus sequence, we generate a genotype array by extracting the called genotype for each sample at each site (VCF record). Where a site has failed a filter, we use a genotype value of -2. To calculate the distance between two samples, we compare their genotype arrays; if either sample's genotype is $<0$ (i.e. null or filtered) or the genotypes are the same, we record a distance of 0, otherwise 1. The sum of these comparisons for each genotype is the distance between the two samples.
+
 The pairwise SNP distance relationship can be seen in
-Figure~{\ref{638875}}. For a given pair of samples, we
+\autoref{fig:dotplot}. For a given pair of samples, we
 plot their SNP distance, based on the COMPASS (Illumina) variant calls,
-against the SNP distance for the same pair, based on the bcftools
-(Nanopore) variant calls. If the same thresholds used for Illumina can
+against the SNP distance for the same pair, based on the \ont{} variant calls.
+
+All pairwise comparisons between a sample and itself were removed from the visualisation, and only a single value was used for each pair (i.e. we keep sample1 vs. sample2 and discard sample2 vs. sample1 as they are the same). RANSAC Robust Linear Regression \cite{fischler1981}, as implemented in the Python library \vrb{scikit-learn} \cite{scikitlearn}, was used for determining a linear equation and line-of-best fit for the relationship between pairwise Illumina and \ont{} SNP distance.
+
+ If the same thresholds used for Illumina can
 also be used for Nanopore, we would expect the distances to be the same
 and the bulk of the points in the plot to fall on the dashed, diagonal
 identity line. What we see instead is a linear relationship that falls
-slightly~\emph{under} this identity line. Given the filtered Nanopore
-SNP calls made by bcftools have a recall XX\% lower than Illumina, this
+\emph{under} this identity line - for all \ont{} variant callers. Given the filtered Nanopore
+SNP calls made by bcftools and \pandora{} have lower recall than Illumina (see \autoref{sec:var-summary}), this
 is expected, as we miss some SNPs found by Illumina.
 
 One important observation though is highlighted by the zoomed inset in
-Figure~{\ref{638875}}. As SNP thresholds used for Mtb
-are generally well below 100, it makes more sense to base SNP distance
+\autoref{fig:dotplot}. As SNP thresholds used for \mtb{}
+are generally well below 100 \cite{stimson2019}, it makes more sense to base SNP distance
 relationships on those samples that are ``close''. And indeed, when we
 zoom in on pairs of samples within 100 (Illumina) SNPs of each other, we
 see an association that falls closer to the identity line. Fitting a
 linear model to this close subset of pairwise distances, yields a
-relationship defined by the equation~\(y=0.808x+0.559\).
-Replacing~\(x\) with an Illumina SNP threshold gives the
-(predicted) equivalent Nanopore SNP threshold based on this
-relationship.~ For example, at an Illumina SNP threshold of 12, the
-linear equation would predict a corresponding Nanopore SNP distance of
-10.~
-
-
+relationship defined by the equation $y=0.806x+0.593$ for bcftools, $y=0.575x+13.544$ for \pandora{} single-sample, and $y=0.342x+0.765$ for \pandora{} multi-sample.
+Replacing $x$ with an Illumina SNP threshold gives the
+(predicted) equivalent Nanopore SNP threshold based on these
+relationships. For example, at an Illumina SNP threshold of 12, the
+linear equation would predict a corresponding bcftools Nanopore SNP distance of
+10.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/combined-dotplots.png}
 \caption{{Pairwise SNP distance relationship between Illumina (COMPASS; x-axis)
-and Nanopore (bcftools; y-axis) data. Each point represents the SNP
-distance between two samples. The black, dashed line shows the identity
-line (i.e. y=x) and the blue line shows the line of best fit based on
+and \ont{} (bcftools (red), and \pandora{} single-sample (blue) and multi-sample (purple) mode; y-axis) data. Each point represents the SNP
+distance between two samples for the two sequencing modalities. The black, dashed line shows the identity
+line (i.e. y=x) and the coloured lines shows the line of best fit based on
 the robust linear model fit to the data. The zoomed inset shows all
 pairs where the COMPASS distance is~\(\le100\).
-{\label{638875}}%
+{\label{fig:dotplot}}%
 }}
 \end{center}
 \end{figure}
 
+%  see https://github.com/mbhall88/head_to_head_pipeline/issues/61 for a full investigation of the outliers discussed below
+In the middle-left of the inset in \autoref{fig:dotplot} a small cluster of \pandora{} single-sample (blue) points can be seen. These have an approximate pairwise \ont{} distance of 100, but \texttildelow 10 for Illumina. Upon further investigation, the cause of the large discprepancy in distance was due to \pandora{} single-sample failing to identify a number of heterozygous calls. Two samples in particular occur as one member in all of the major outlying pairs. 94\% of the false positive differences leading to the large \ont{} distances occur at positions that are filtered due to evidence of heterozygosity in COMPASS. That is, in the Illumina consensus sequence these positions are ignored and do not count as a difference. However, \pandora{} did not have sufficient read depth on both alleles to trigger the FRS filter (see \autoref{sec:pandora-filters}) - leading to a passing variant call that differs from the sample it is being compared with.
 
+
+The relationship between Illumina and \ont{} distances is indeed linear for all three variant-calling methodologies. While the relationship is not identical (i.e. a distance of 12 for Illumina does not necessarily mean a distance of 12 for \ont{}), we will attempt to use linear models fit to the relationship to infer what \ont{} SNP distance threshold is likely to align with a given Illumina threshold for defining putative transmission clusters.
 
 %=========================================================================
 
 \section{SNP threshold-based \ont{} transmission clustering}
 
 Selecting a SNP threshold to infer transmission clusters from has seen a
-variety of values recommended\todo{http://dx.doi.org/10.1093/molbev/msy242}. As we seek to show
+variety of values recommended \cite{stimson2019}. As we seek to show
 concordance of Nanopore data with PHE's Illumina-based strategy, we opt
 for threshold values 0, 2, 5, and 12. PHE define two cases as clustered
 if they have a SNP distance $\le$ 12 as "\emph{although 12

@@ -1,6 +1,3 @@
-% ------------------------------------------------------------------------
-% SAMPLE BIBLIOGRAPHY FILE
-% ------------------------------------------------------------------------
 @article{walter2020, 
 year = {2020}, 
 keywords = {mtb,variant-calling,transmission-clustering}, 
@@ -55,3 +52,84 @@ pages = {338--345},
 number = {4}, 
 volume = {36}
 }
+
+@online{snp-dists,
+  author       = {Seemann, Torsten},
+  title        = {snp-dists: Pairwise SNP distance matrix from a FASTA sequence alignment },
+  month        = Sep,
+  year         = 2018,
+  publisher    = {Zenodo},
+  version      = {0.7.0},
+  doi          = {10.5281/zenodo.1411986},
+  url          = {https://doi.org/10.5281/zenodo.1411986}
+}
+
+@article{fischler1981,
+author = {Fischler, Martin A. and Bolles, Robert C.},
+title = {Random Sample Consensus: A Paradigm for Model Fitting with Applications to Image Analysis and Automated Cartography},
+year = {1981},
+issue_date = {June 1981},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {24},
+number = {6},
+issn = {0001-0782},
+url = {https://doi.org/10.1145/358669.358692},
+doi = {10.1145/358669.358692},
+abstract = {A new paradigm, Random Sample Consensus (RANSAC), for fitting a model to experimental
+data is introduced. RANSAC is capable of interpreting/smoothing data containing a
+significant percentage of gross errors, and is thus ideally suited for applications
+in automated image analysis where interpretation is based on the data provided by
+error-prone feature detectors. A major portion of this paper describes the application
+of RANSAC to the Location Determination Problem (LDP): Given an image depicting a
+set of landmarks with known locations, determine that point in space from which the
+image was obtained. In response to a RANSAC requirement, new results are derived on
+the minimum number of landmarks needed to obtain a solution, and algorithms are presented
+for computing these minimum-landmark solutions in closed form. These results provide
+the basis for an automatic system that can solve the LDP under difficult viewing},
+journal = {Commun. ACM},
+month = jun,
+pages = {381–395},
+numpages = {15},
+keywords = {automated cartography, scene analysis, model fitting, image matching, camera calibration, location determination}
+}
+
+@article{scikitlearn,
+author = {Pedregosa, Fabian and Varoquaux, Ga\"{e}l and Gramfort, Alexandre and Michel, Vincent and Thirion, Bertrand and Grisel, Olivier and Blondel, Mathieu and Prettenhofer, Peter and Weiss, Ron and Dubourg, Vincent and Vanderplas, Jake and Passos, Alexandre and Cournapeau, David and Brucher, Matthieu and Perrot, Matthieu and Duchesnay, \'{E}douard},
+title = {Scikit-Learn: Machine Learning in Python},
+year = {2011},
+issue_date = {2/1/2011},
+publisher = {JMLR.org},
+volume = {12},
+number = {null},
+issn = {1532-4435},
+abstract = {Scikit-learn is a Python module integrating a wide range of state-of-the-art machine
+learning algorithms for medium-scale supervised and unsupervised problems. This package
+focuses on bringing machine learning to non-specialists using a general-purpose high-level
+language. Emphasis is put on ease of use, performance, documentation, and API consistency.
+It has minimal dependencies and is distributed under the simplified BSD license, encouraging
+its use in both academic and commercial settings. Source code, binaries, and documentation
+can be downloaded from http://scikit-learn.sourceforge.net.},
+journal = {J. Mach. Learn. Res.},
+month = nov,
+pages = {2825–2830},
+numpages = {6}
+}
+
+@article{stimson2019, 
+year = {2019}, 
+keywords = {transmission-clustering,mtb}, 
+title = {{Beyond the SNP Threshold: Identifying Outbreak Clusters Using Inferred Transmissions}}, 
+author = {Stimson, James and Gardy, Jennifer and Mathema, Barun and Crudu, Valeriu and Cohen, Ted and Colijn, Caroline}, 
+journal = {Molecular Biology and Evolution}, 
+issn = {0737-4038}, 
+doi = {10.1093/molbev/msy242}, 
+pmid = {30690464}, 
+abstract = {{Whole-genome sequencing (WGS) is increasingly used to aid the understanding of pathogen transmission. A first step in analyzing WGS data is usually to define "transmission clusters," sets of cases that are potentially linked by direct transmission. This is often done by including two cases in the same cluster if they are separated by fewer single-nucleotide polymorphisms (SNPs) than a specified threshold. However, there is little agreement as to what an appropriate threshold should be. We propose a probabilistic alternative, suggesting that the key inferential target for transmission clusters is the number of transmissions separating cases. We characterize this by combining the number of SNP differences and the length of time over which those differences have accumulated, using information about case timing, molecular clock, and transmission processes. Our framework has the advantage of allowing for variable mutation rates across the genome and can incorporate other epidemiological data. We use two tuberculosis studies to illustrate the impact of our approach: with British Columbia data by using spatial divisions; with Republic of Moldova data by incorporating antibiotic resistance. Simulation results indicate that our transmission-based method is better in identifying direct transmissions than a SNP threshold, with dissimilarity between clusterings of on average 0.27 bits compared with 0.37 bits for the SNP-threshold method and 0.84 bits for randomly permuted data. These results show that it is likely to outperform the SNP-threshold method where clock rates are variable and sample collection times are spread out. We implement the method in the R package transcluster.}}, 
+pages = {587--603}, 
+number = {3}, 
+volume = {36}
+}  
+
+
+
