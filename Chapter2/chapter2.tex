@@ -186,14 +186,14 @@ An important consideration for usability of any genomic method is the computatio
 
 \begin{table}
 \centering
-\begin{tabular}{|l|l|l|l|l|l|l|}
+\begin{tabularx}{\textwidth}{|l|l|l|l|l|l|l|}
 \hline
          & \multicolumn{3}{l|}{Sparse}                          & \multicolumn{3}{l|}{Dense}                           \\ \hline
-Step     & CPU time (sec) & Wall clock (H:m) & Max. memory (Gb) & CPU time (sec) & Wall clock (H:m) & Max. memory (Gb) \\ \cline{1-2} \cline{4-5} \cline{7-7} 
-MSA      & 138576         & 1:16             & 209              & 445284         & 3:56             & 301              \\ \cline{1-2} \cline{4-5} \cline{7-7} 
-Make PRG & 3746           & 0:04             & 0.9              & 4269           & 0:05             & 0.9              \\ \cline{1-2} \cline{4-5} \cline{7-7} 
-Index    & 142            & 0:01             & 1.5              & 361            & 0:01             & 1.7              \\ \cline{1-2} \cline{4-5} \cline{7-7} 
-\end{tabular}
+Step     & CPU time (sec) & Real time (H:m) & Max. RAM (GB) & CPU time (sec) & Real time (H:m) & Max. RAM (GB) \\ \hline%\cline{1-2} \cline{4-5} \cline{7-7} 
+MSA      & 138576         & 1:16             & 209              & 445284         & 3:56             & 301              \\ \hline%\cline{1-2} \cline{4-5} \cline{7-7} 
+Make PRG & 3746           & 0:04             & 0.9              & 4269           & 0:05             & 0.9              \\ \hline%\cline{1-2} \cline{4-5} \cline{7-7} 
+Index    & 142            & 0:01             & 1.5              & 361            & 0:01             & 1.7              \\ \hline%\cline{1-2} \cline{4-5} \cline{7-7} 
+\end{tabularx}
 \caption{Computational time and memory usage for the main steps of building a \mtb{} reference graph. Sparse and Dense refer to two different densities with respect to the number of variants used. All steps were run on a single compute node with 32 CPU cores. MSA=multiple sequence alignment;PRG=population reference graph.}
 \label{tab:build-prg}
 \end{table}
@@ -469,6 +469,7 @@ where $V_G$ is the set of samples (nodes) in $G$ and $C_{n,G}$ is the cluster in
 SACR and SACP do not inherently account for when $H$ has clusters containing no samples in $G$. In order to quantify any extra clustering by $H$, we characterise the Excess Clustering Rate (XCR) as the proportion of singletons (unconnected nodes) in $G$ are (incorrectly) non-singletons in $H$. We define this as
 
 \begin{equation}
+\label{eq:xcr}
     XCR = \frac{|S_G-S_H|}{|S_G|}
 \end{equation}
 
@@ -486,8 +487,6 @@ SACP by dividing the number of neighbours by the number of samples in
 the sample's cluster in $H$. Both SACR and SACP are the
 mean for all samples in $G$. 
 
-\towrite[inline]{add a worked example based on } % https://github.com/mbhall88/head_to_head_pipeline/issues/65#issuecomment-818432604
-
 To summarise, for each sample in an Illumina-defined cluster, SACR is the
 proportion of samples in its Illumina cluster also in its \ont{}
 cluster - averaged over all samples. SACP is the proportion of samples
@@ -500,7 +499,7 @@ Nanopore clustering contains clusters where no member of the cluster is
 part of an Illumina cluster. To that end, XCR is the proportion of Illumina non-clustered
 (singleton) samples that are added to a cluster by Nanopore. An XCR value of 0.1 would
 indicate that 10\% of non-clustered samples were actually part of a
-cluster in the Nanopore clustering.
+cluster in the Nanopore clustering. An illustrated, worked example of these metrics can be found in \autoref{sec:cluster-example}.
 
 \subsection{Evaluating \ont{} transmission clusters: bcftools}
 

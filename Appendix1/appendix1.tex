@@ -1,6 +1,8 @@
 %!TEX root = ../thesis.tex
 % ******************************* Thesis Appendix A ****************************
-\chapter{Chapter 3}
+\chapter{Supporting work for Chapter 3}
+
+% ===========================================================
 
 \section{Masking of the \mtb{} reference graph}
 \label{app:mask}
@@ -27,6 +29,54 @@ The third strategy is the one we ended up using - removing loci with 30\% or mor
         \caption{\textbf{a)} Proportion of loci lost (y-axis) when removing those with a certain fraction (x-axis) of their positions within the genome mask. \textbf{b)} Proportion of total genome positions lost (y-axis) when removing loci with a certain fraction (x-axis) of their positions within the genome mask.}
         \label{fig:loci-mask}
 \end{figure}
+
+% ===========================================================
+
+\section{An illustrated example of clustering similarity metrics}
+\label{sec:cluster-example}
+
+\autoref{sec:cluster-similarity} outlines three metrics - SACR, SACP and XCR - for evaluating the similarity between two different strategies for transmission clustering. In order to provide the reader with greater intuition for the relevance of each metric, we present an illustrated example in \autoref{fig:cluster-example}. We take \autoref{fig:example-truth} to be the truth clusters and \autoref{fig:example-test} to be some test clusters. These are akin to Illumina and \ont{} clusters, respectively, in \autoref{sec:cluster-similarity}). The individual recall and precision values for each sample in \autoref{fig:example-truth} are shown in \autoref{tab:cluster-example}. SACR and SACP are \emph{sample-averaged}, so their values for this example are 0.82 and 0.83 respectively. To highlight the objective of SACR, we take the truth and test clusters containing the sample $F$. Samples $F$, $G$, $H$ and $I$ are shared between both, but $J$ is missing from the test cluster. To calculate the individual recall for $F$, we take the intersection size of the truth and test clusters it exists in and divide it by that size again, plus the number of samples in the truth cluster that are not in the test cluster - $\frac{4}{5}=0.8$. Ee do the same for the precision of sample $D$, expect we add the number of samples in the test cluster not in the truth cluster to the denominator - giving $\frac{2}{3}=0.66$. The relevance of the XCR metric is best exemplified by the test cluster containing samples $L$ and $M$. As we calculate SACR and SACP for all samples in the truth clusters, these two samples would be ignored. However, they are samples that - according to the truth - should not be part of any cluster. SACR and SACP cannot capture these extra clusterings if they do not contain clustered truth samples. XCR covers this limitation and is the proportion of non-clustered samples (singletons) in the truth that are clustered in the test (see \autoref{eq:xcr}). As \autoref{fig:cluster-example} does not show singletons, let us pretend there are 20 singletons in the truth (including samples $L$ and $M$). This would give an XCR of $2/20=0.1$.
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/illumina-cluster-example.png}
+         \caption{}
+         \label{fig:example-truth}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/ont-cluster-example.png}
+         \caption{}
+         \label{fig:example-test}
+     \end{subfigure}
+        \caption{Illustrative examples of transmission clustering. \textbf{a)} represents truth clusters, while \textbf{b)} is clustering from some "test" method we would like to compare to \textbf{a}. The nodes represent samples with the numbers on the edges connecting them indicating the distance between those two samples. The red nodes indicate samples with a clustering disparity between the two clusterings.}
+        \label{fig:cluster-example}
+\end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{|c|c|c|}
+sample & recall & precision \\
+\hline
+A      & 1.0    & 1.0       \\
+B      & 1.0    & 1.0       \\
+C      & 1.0    & 1.0       \\
+D      & 1.0    & 0.66      \\
+E      & 1.0    & 0.66      \\
+F      & 0.8    & 1.0       \\
+G      & 0.8    & 1.0       \\
+H      & 0.8    & 1.0       \\
+I      & 0.8    & 1.0       \\
+J      & 0.0      & 0.0        
+\end{tabular}
+\caption{Cluster recall and precision results for each sample in \autoref{fig:cluster-example}}
+\label{tab:cluster-example}
+\end{table}
+
+% ===========================================================
 
 \section{Selecting \ont{} SNP thresholds to define transmission clusters}
 \label{sec:dist-sweep}
