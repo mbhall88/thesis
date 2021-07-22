@@ -367,6 +367,7 @@ In summary, \autoref{fig:prec-recall-filters} shows that our selection of filter
 %=========================================================================
 
 \section{Pairwise SNP distance comparison for Illumina and \ont{} sequencing data}
+\label{sec:snp-dist}
 
 When attempting to infer transmission clusters, the accepted approach is
 to define a SNP distance threshold and say that any genomes within this
@@ -433,62 +434,83 @@ The relationship between Illumina and \ont{} distances is indeed linear for all 
 
 \section{SNP threshold-based \ont{} transmission clustering}
 
-Selecting a SNP threshold to infer transmission clusters from has seen a
-variety of values recommended \cite{stimson2019}. As we seek to show
-concordance of Nanopore data with PHE's Illumina-based strategy, we opt
-for threshold values 0, 2, 5, and 12. PHE define two cases as clustered
-if they have a SNP distance $\le$ 12 as "\emph{although 12
-SNPs represents the maximum SNP difference between 2 isolates for which
-epidemiological links have previously been identified
-\todo{http://dx.doi.org/10.1016/s1473-3099(12)70277-3} and is a conservative measure for reporting
-isolate relatedness}"~\todo{https://www.gov.uk/government/publications/tuberculosis-in-england-annual-report}. Five was likewise selected as
-it was found by~\todo{http://dx.doi.org/10.1016/s1473-3099(12)70277-3} to indicate membership in a recent
-transmission chain. Threshold values 0 and 2 were chosen to provide
-insight into the level of granularity possible and is of clinical
-interest in certain settings (personal correspondence).
-
-
-
-In order to cluster samples, for a given SNP threshold $t$, we use only pairs of samples in the distance matrix with a distance $\le t$ to define a graph, $G=(N,E)$, where samples ($N$) are connected by weighted edges ($E$), with the weight of an edge indicating the distance between the two samples it connects. Clusters are defined as the set of connected components $\{C_1, C_2...C_N\}\in G$, where $N$ is the number of clusters. That is, a cluster (connected component), $C_i$, is a subgraph of $G$ where a path exists between any two samples in $C_i$, but no path exists to any samples in the rest of $G$. With this definition, all clusters have a minimum of two members. \\
-To assess how closely Nanopore SNP-based clustering approximates Illumina SNP-based clustering we use a similarity measure on sets, the Tversky Index \todo{http://dx.doi.org/10.1037/0033-295x.84.4.327}. We define the Illumina clustering as $G$ and the Nanopore clustering as $H$ and formulate the Tversky Index as $$TI=\frac{\sum_{n}^{N_G}\frac{\left|C_{n,G}\cap C_{n,H}\right|}{\left|C_{n,G}\cap C_{n,H}\right|+\alpha |C_{n,G}-C_{n,H}|+\beta |C_{n,H}-C_{n,G}|}}{|N_G|}$$
-where $N_G$ is the set of samples (nodes) in $G$ and $C_{n,G}$ is the cluster in $G$ that sample $n$ is a member of. When $\alpha = 1$ and $\beta=0$ we get the Sample-Averaged Cluster Recall (SACR) and when $\alpha = 0$ and $\beta = 1$ we get the Sample-Averaged Cluster Precision (SACP). SACR states, on average, what proportion of the samples clustered together in $G$ are also clustered together in $H$ - it is a measure of how many true positives Nanopore retains. Likewise, SACP states, on average, what proportion of the samples clustered together in $H$ are also clustered together in $G$ - it is a measure of how many extra samples Nanopore adds to clusters. \\
-SACR and SACP do not inherently account for when $H$ has clusters containing no samples in $G$. In order to quantify any extra clustering by $H$, we characterise the Excess Clustering Rate (XCR) as the proportion of singletons (unconnected nodes) in $G$ that are (incorrectly) connected in $H$. We define this as
-$$XCR = \frac{|A-B|}{|A|}$$
-where $A$ is the set of singletons in $G$ and $B$ is the set of singletons in $H$.
-
-
-
-\emph{{Note about the above paragraph}}
-
-We implement SACR, SACP and XCR calculation in Python with
-the~\texttt{networkx} library~\todo{Aric A. Hagberg, Daniel A. Schult, Pieter J. Swart. Exploring Network Structure, Dynamics, and Function using NetworkX. 11 - 15 In Proceedings of the 7th Python in Science Conference. (2008)}. For a given threshold,
-we create the Illumina clustering (graph),~\(G\), and the
-Nanopore clustering,~\(H\). For each sample (node)
-in~\(G\), we count the number of samples in it's cluster
-(neighbours) in both~\(G\) and~\(H\). To
-determine SACR we divide the number of neighbours by the number of
-samples in it's cluster in~\(G\). Likewise, we determine
-SACP by dividing the number of neighbours by the number of samples in
-the sample's cluster in~\(H\). Both SACR and SACP are the
-mean for all samples in~\(G\). Suppl. Figure X illustrates
-this process.
-
-Figure~{\ref{827243}} is a visualisation of these
-clustering results. The graphs represented are~\(G\) - one
-for each SNP threshold. The inner and outer parts of each node
-represents the SACR and SACP values, respectively, for the cluster it is
-a member of.~
-
-\subsection{Linear reference approach}
-
 It is one thing to look at the relationship between Illumina and
 Nanopore pairwise SNP distance, but ultimately the most important
 question is: do Nanopore SNPs lead to transmission clusters consistent
 with those obtained with Illumina SNPs? To answer this question, we
 compare Illumina- and Nanopore-based clusters for{ four
-clinically-interesting (Illumina) SNP thresholds -} 0, 2, 5, and 12. For
-the clustering of the Nanopore data, we use the same SNP threshold as
-Illumina, except for 12 - we use 11 for Nanopore instead.
+clinically-interesting (Illumina) SNP thresholds -} 0, 2, 5, and 12. 
+
+Selecting a SNP threshold to infer transmission clusters from has seen a
+variety of values recommended \cite{stimson2019}. As we seek to show
+concordance of \ont{} data with PHE's Illumina-based strategy, we opt
+to investigate Illumina threshold values 0, 2, 5, and 12. PHE define two cases as clustered
+if they have a SNP distance $\le$ 12 as "\emph{although 12
+SNPs represents the maximum SNP difference between 2 isolates for which
+epidemiological links have previously been identified
+\cite{walker2013} and is a conservative measure for reporting
+isolate relatedness}"\cite{phe-tb-england}. Five was likewise selected as
+it was found by \cite{walker2013} to indicate membership in a recent
+transmission chain. Threshold values 0 and 2 were chosen to provide
+insight into the level of granularity possible and is of clinical
+interest in certain settings (personal correspondence). For each of these four thresholds, we investigate what corresponding \ont{} SNP distance threshold yields the most similar clustering.
+
+\subsection{Transmission cluster similarity}
+\label{sec:cluster-similarity}
+
+We use the distance matrices from \autoref{sec:snp-dist} to infer transmission clusters. In order to cluster samples, for a given SNP threshold $t$, we use only pairs of samples in the distance matrix with a distance $\le t$ to define a graph, $G=(V,E)$, where samples (nodes, $V$) are connected by weighted edges ($E$), with the weight of an edge indicating the distance between the two samples it connects. Clusters are defined as the set of connected components $\{C_1, C_2...C_N\}\in G$, where $N$ is the number of clusters. That is, a cluster (connected component), $C_i$, is a subgraph of $G$ where a path exists between any two samples in $C_i$, but no path exists to any samples in the rest of $G$. With this definition, all clusters have a minimum of two members. \\
+To assess how closely \ont{} SNP-based clustering approximates Illumina SNP-based clustering we use a similarity measure on sets, the Tversky Index \cite{tversky1977}. We define the Illumina clustering as $G$ and the \ont{} clustering as $H$ and formulate the Tversky Index as 
+
+\begin{equation}
+   TI=\frac{\sum_{n}^{V_G}\frac{\left|C_{n,G}\cap C_{n,H}\right|}{\left|C_{n,G}\cap C_{n,H}\right|+\alpha |C_{n,G}-C_{n,H}|+\beta |C_{n,H}-C_{n,G}|}}{|V_G|}
+\end{equation}
+
+where $V_G$ is the set of samples (nodes) in $G$ and $C_{n,G}$ is the cluster in $G$ that sample $n$ is a member of. When $\alpha = 1$ and $\beta=0$ we get the Sample-Averaged Cluster Recall (SACR) and when $\alpha = 0$ and $\beta = 1$ we get the Sample-Averaged Cluster Precision (SACP). SACR states, on average, what proportion of the samples clustered together in $G$ (Illumina) are also clustered together in $H$ (\ont{}) - it is a measure of how many true positives \ont{} retains. Inversely, SACP states, on average, what proportion of the samples clustered together in $H$ are also clustered together in $G$ - it is a measure of how many extra samples \ont{} adds to clusters. \\
+SACR and SACP do not inherently account for when $H$ has clusters containing no samples in $G$. In order to quantify any extra clustering by $H$, we characterise the Excess Clustering Rate (XCR) as the proportion of singletons (unconnected nodes) in $G$ are (incorrectly) non-singletons in $H$. We define this as
+
+\begin{equation}
+    XCR = \frac{|S_G-S_H|}{|S_G|}
+\end{equation}
+
+where $S_G$ is the set of singletons in $G$ and $S_H$ is the set of singletons in $H$.
+
+We implement SACR, SACP and XCR calculation in the Python programming language with
+the~\texttt{networkx} library \cite{networkx}. For a given threshold,
+we create the Illumina clustering (graph), $G$, and the
+\ont{} clustering, $H$. For each sample (node)
+in $G$, we count the number of samples in its cluster
+(neighbours) in both $G$ and $H$. To
+determine SACR we divide the number of neighbours by the number of
+samples in its cluster in $G$. Likewise, we determine
+SACP by dividing the number of neighbours by the number of samples in
+the sample's cluster in $H$. Both SACR and SACP are the
+mean for all samples in $G$. 
+
+\towrite[inline]{add a worked example based on } % https://github.com/mbhall88/head_to_head_pipeline/issues/65#issuecomment-818432604
+
+To summarise, for each sample in an Illumina-defined cluster, SACR is the
+proportion of samples in its Illumina cluster also in its \ont{}
+cluster - averaged over all samples. SACP is the proportion of samples
+in its \ont{} cluster also in its Illumina cluster - averaged
+over all samples. SACR indicates whether samples have been missed from
+Nanopore clustering (false negatives) and SACP reveals if additional
+samples are being added to Nanopore clusters (false positives). One
+shortcoming of SACR and SACP is they do not account for when the
+Nanopore clustering contains clusters where no member of the cluster is
+part of an Illumina cluster. To that end, XCR is the proportion of Illumina non-clustered
+(singleton) samples that are added to a cluster by Nanopore. An XCR value of 0.1 would
+indicate that 10\% of non-clustered samples were actually part of a
+cluster in the Nanopore clustering.
+
+\subsection{Evaluating \ont{} transmission clusters: bcftools}
+
+For the four Illumina SNP distance thresholds of interest - 0, 2, 5, and 12 - the corresponding bcftools thresholds we use are 0, 2, 5, and 11. We chose to forego the model-based predicted thresholds and instead use the hand-picked ones based on the analysis in \autoref{sec:dist-sweep}.
+
+Figure~{\ref{827243}} is a visualisation of these
+clustering results. The graphs represented are~\(G\) - one
+for each SNP threshold. The inner and outer parts of each node
+represents the SACR and SACP values, respectively, for the cluster it is
+a member of.
 
 Transmission clusters are generated by connecting two node when the
 distance between them is less than or equal to the SNP threshold. The
@@ -500,20 +522,6 @@ To assess whether Nanopore transmission clusters are consistent with
 their Illumina counterparts, we define two evaluation metrics:
 Sample-Averaged Cluster Recall (SACR) and Precision (SACP). Full
 definitions for SACR and SACP can be found in {[}link to methods{]}.
-Briefly, for each sample in an Illumina-defined cluster, SACR is the
-proportion of samples in it's Illumina cluster are also in it's Nanopore
-cluster - averaged over all samples. SACP is the proportion of samples
-in it's Nanopore cluster are also in it's Illumina cluster - averaged
-over all samples. SACR indicates whether samples have been missed from
-Nanopore clustering (false negatives) and SACP reveals if additional
-samples are being added to Nanopore clusters (false positives). One
-shortcoming of SACR and SACP is they do not account for when the
-Nanopore clustering contains clusters where no member of the cluster is
-part of an Illumina cluster. To that end, we also define Excess
-Clustering Rate (XCR) as the proportion of Illumina non-clustered
-(singleton) samples that are clustered by Nanopore. A value of 0.1 would
-indicate that 10\% of non-clustered samples were actually part of a
-cluster in the Nanopore clustering.
 
 Figure~{\ref{827243}} shows the results running the
 above evaluation. For all four SNP thresholds analysed, Nanopore
@@ -541,9 +549,9 @@ Illumina-based clustering is shown.
 \end{center}
 \end{figure}
 
-\subsection{Single-sample genome graph approach}
+\subsection{Evaluating \ont{} transmission clusters: \pandora{} single-sample approach}
 
-\subsection{Multi-samples genome graph approach}
+\subsection{Evaluating \ont{} transmission clusters: \pandora{} multi-sample approach}
 
 %=========================================================================
 

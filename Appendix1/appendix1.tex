@@ -27,3 +27,49 @@ The third strategy is the one we ended up using - removing loci with 30\% or mor
         \caption{\textbf{a)} Proportion of loci lost (y-axis) when removing those with a certain fraction (x-axis) of their positions within the genome mask. \textbf{b)} Proportion of total genome positions lost (y-axis) when removing loci with a certain fraction (x-axis) of their positions within the genome mask.}
         \label{fig:loci-mask}
 \end{figure}
+
+\section{Selecting \ont{} SNP thresholds to define transmission clusters}
+\label{sec:dist-sweep}
+
+In \autoref{sec:snp-dist}, we found linear models that describe the relationship between the Illumina and \ont{} SNP distance between pairs of samples. Using the equations for each model, we can infer a \ont{} threshold corresponding to a given Illumina threshold. We investigate how well these model-based thresholds perform by using the cluster similarity metrics defined in \autoref{sec:cluster-similarity}. To assess the performance, we by looking at the SACR, SACP, and XCR for all threshold values surrounding the model-based threshold and seeing whether the model-based performs best.
+
+\subsection{bcftools}
+
+For the Illumina SNP thresholds 0, 2, 5, and 12, the corresponding bcftools model-inferred thresholds are 1, 3, 5, and 10 (red vertical dashed lines in \autoref{fig:bcftools-dist-sweep}). Based on the threshold sweep in \autoref{fig:bcftools-dist-sweep}, the best SNP distance thresholds to use for bcftools are deemed 0, 2, 5, and 11 as these provide the best balance between the three similarity metrics.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Appendix1/Figs/bcftools-threshold-sweep.png}
+\caption{{Illumina and \ont{} (bcftools) transmission cluster similarity for various SNP distance threshold. Each subplot compares the \ont{} clustering for the threshold on the x-axis to the Illumina clustering based on the distance (threshold) in the subplot title. SACR (red), SACP (blue), and $1-$XCR are represented by the lines with the band around the line indicating the 95\% confidence interval. The red, vertical, dashed lines indicate the model-based prediction of what the \ont{} SNP distance threshold should be based on the Illumina distance for that subplot.
+{\label{fig:bcftools-dist-sweep}}%
+}}
+\end{center}
+\end{figure}
+
+\subsection{\pandora{} single-sample}
+
+For the Illumina SNP thresholds 0, 2, 5, and 12, the corresponding \pandora{} single-sample model-inferred thresholds are 15, 17, 19, and 24 (red vertical dashed lines in \autoref{fig:map-dist-sweep}). Based on the threshold sweep in \autoref{fig:map-dist-sweep}, the best SNP distance thresholds to use for \pandora{} single-sample are deemed 16, 18, 18, and 27 as these provide the best balance between the three similarity metrics.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Appendix1/Figs/map-threshold-sweep.png}
+\caption{{Illumina and \ont{} (\pandora{} single-sample) transmission cluster similarity for various SNP distance threshold. Each subplot compares the \ont{} clustering for the threshold on the x-axis to the Illumina clustering based on the distance (threshold) in the subplot title. SACR (red), SACP (blue), and $1-$XCR are represented by the lines with the band around the line indicating the 95\% confidence interval. The red, vertical, dashed lines indicate the model-based prediction of what the \ont{} SNP distance threshold should be based on the Illumina distance for that subplot.
+{\label{fig:map-dist-sweep}}%
+}}
+\end{center}
+\end{figure}
+
+\subsection{\pandora{} multi-sample}
+
+For the Illumina SNP thresholds 0, 2, 5, and 12, the corresponding \pandora{} multi-sample model-inferred thresholds are 0, 0, 1, and 4 (red vertical dashed lines in \autoref{fig:compare-dist-sweep}). Based on the threshold sweep in \autoref{fig:compare-dist-sweep}, the best SNP distance thresholds to use for \pandora{} multi-sample are deemed 0, 1, 3, and 7 as these provide the best balance between the three similarity metrics.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Appendix1/Figs/compare-threshold-sweep.png}
+\caption{{Illumina and \ont{} (\pandora{} multi-sample) transmission cluster similarity for various SNP distance threshold. Each subplot compares the \ont{} clustering for the threshold on the x-axis to the Illumina clustering based on the distance (threshold) in the subplot title. SACR (red), SACP (blue), and $1-$XCR are represented by the lines with the band around the line indicating the 95\% confidence interval. The red, vertical, dashed lines indicate the model-based prediction of what the \ont{} SNP distance threshold should be based on the Illumina distance for that subplot.
+{\label{fig:compare-dist-sweep}}%
+}}
+\end{center}
+\end{figure}
+
+In summary, the model-based thresholds chosen for the \ont{} variant callers are not the best-performing. For all further transmission cluster work, the hand-picked thresholds are used instead.
