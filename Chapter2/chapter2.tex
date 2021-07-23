@@ -494,6 +494,8 @@ part of an Illumina cluster. To that end, XCR is the proportion of Illumina non-
 indicate that 10\% of non-clustered samples were actually part of a
 cluster in the Nanopore clustering. An illustrated, worked example of these metrics can be found in \autoref{sec:cluster-example}.
 
+Of the metrics outlined above, our major focus is SACR as missing samples from clusters is of particular concern for public health authorities.
+
 \subsection{Evaluating \ont{} transmission clusters: bcftools}
 
 For the four Illumina SNP distance thresholds of interest - 0, 2, 5, and 12 - the corresponding bcftools thresholds we use are 0, 2, 5, and 11. We chose to forego the model-based predicted thresholds and instead use the hand-picked ones based on the analysis in \autoref{sec:dist-sweep}.
@@ -511,8 +513,8 @@ The lowest SACP was at threshold 12. This is explained by two cases of a cluster
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/bcftools_clusters.png}
-\caption{{Agreement of Illumina and Nanopore transmission clustering at SNP
-thresholds 0 (top-left), 2 (top-right), 5 (bottom-left). The title of
+\caption{{Agreement of Illumina and bcftools (\ont{}) transmission clustering at SNP
+thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of
 each subplot indicates the Illumina (Ill.) and Nanopore (NP) threshold
 used when clustering. Samples (nodes) are connected when the SNP
 distance between them is less than or equal to the relevant threshold.
@@ -528,22 +530,101 @@ Illumina-based clustering is shown.
 \centering
 \begin{tabular}{llll}
 Threshold & SACR & SACP  & XCR           \\
+\hline
 0         & 1.0  & 1.0   & 0.015 (2/137) \\
+\hline
 2         & 1.0  & 0.966 & 0.008 (1/128) \\
+\hline
 5         & 1.0  & 0.949 & 0.057 (7/122) \\
-12        & 1.0  & 0.845 & 0.031 (3/97) 
+\hline
+12 (11)       & 1.0  & 0.845 & 0.031 (3/97) 
 \end{tabular}
-\caption{Summary of bcftools clustering metrics for four SNP distance thresholds. The fractions in parentheses for XCR indicate the underlying numbers. SACR=sample-averaged cluster recall; SACP=sample-averaged cluster precision; XCR=excess clustering rate.}
+\caption{Summary of bcftools clustering metrics for four (Illumina) SNP distance thresholds. The threshold(s) in parentheses are the \ont{} equivalent threshold used. The fractions in parentheses for XCR indicate the underlying numbers. SACR=sample-averaged cluster recall; SACP=sample-averaged cluster precision; XCR=excess clustering rate.}
 \label{tab:bcftools-cluster-summary}
 \end{table}
 
-\subsection{Evaluating \ont{} transmission clusters: \pandora{} single-sample approach}
+\subsection{Evaluating \ont{} transmission clusters: \pandora{} single-sample}
 
-\subsection{Evaluating \ont{} transmission clusters: \pandora{} multi-sample approach}
+For \pandora{} single-sample we also chose to use the hand-picked SNP distance thresholds from analysis in \autoref{sec:dist-sweep}. These are 16, 18, 18, and 27 for the Illumina thresholds of interest 0, 2, 5, and 12 respecitvely. The clustering results for each of these thresholds are summarised in \autoref{tab:map-cluster-summary} and visualised in \autoref{fig:map-clusters}. At no threshold was \pandora{} single-sample clustering able to achieve perfect SACR, SACP or XCR. In particular, all thresholds had a SACP value less than 0.69 and an XCR greater than 0.11. Taken together, these outline the fact that there were quite a lot of singletons that were erroneously clustered and many clusters joined. In large part, this is expected due to the much wider spread of distances along the y-axis for \pandora{} single-sample in the inset of \autoref{fig:dotplot} when compared to bcftools of \pandora{} multi-sample. Although the SACR values are not as low as the SACP, we place a higher value on them. The nodes with red(ish) outer circles in \autoref{fig:map-clusters} highlight clusters where samples have been missed.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora_map_clusters.png}
+\caption{{Agreement of Illumina and \pandora{} single-sample (\ont{}) transmission clustering at SNP
+thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of
+each subplot indicates the Illumina (Ill.) and Nanopore (NP) threshold
+used when clustering. Samples (nodes) are connected when the SNP
+distance between them is less than or equal to the relevant threshold.
+The inner and outer colours for each node indicates the SACR and SACP
+values, respectively, for the cluster it is a part of. The
+Illumina-based clustering is shown.
+{\label{fig:map-clusters}}%
+}}
+\end{center}
+\end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{llll}
+Threshold & SACR  & SACP  & XCR            \\
+\hline
+0 (16)    & 0.846 & 0.628 & 0.146 (20/137) \\
+\hline
+2 (18)    & 0.909 & 0.688 & 0.141 (18/128) \\
+\hline
+5 (18)    & 0.857 & 0.643 & 0.115 (11/122) \\
+\hline
+12 (27)   & 0.852 & 0.621 & 0.124 (12/97)  
+\end{tabular}
+\caption{Summary of \pandora{} single-sample clustering metrics for four (Illumina) SNP distance thresholds. The threshold(s) in parentheses are the \ont{} equivalent threshold used. The fractions in parentheses for XCR indicate the underlying numbers. SACR=sample-averaged cluster recall; SACP=sample-averaged cluster precision; XCR=excess clustering rate.}
+\label{tab:map-cluster-summary}
+\end{table}
+
+\subsection{Evaluating \ont{} transmission clusters: \pandora{} multi-sample}
+
+The SNP thresholds we use for \pandora{} multi-sample clustering are 0, 1, 3, and 7. The results of this clustering are summarised in \autoref{tab:compare-cluster-summary} and visualised in \autoref{fig:compare-clusters}. One important result is that unlike the single-sample approach of \pandora{}, the multi-sample mode leads to perfect SACR across all thresholds. Additionally, the clustering at the threshold of 0 perfectly mirrors Illumina. At a threshold of 2, there was one singleton added to an otherwise perfect cluster and 2 additional clusters of size 2. At thresholds 5 and 12 there were a number of clusters joined into larger ones and some additions of singletons to existing clusters, along with new clusters.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora_compare_clusters.png}
+\caption{{Agreement of Illumina and \pandora{} multi-sample (\ont{}) transmission clustering at SNP
+thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of
+each subplot indicates the Illumina (Ill.) and Nanopore (NP) threshold
+used when clustering. Samples (nodes) are connected when the SNP
+distance between them is less than or equal to the relevant threshold.
+The inner and outer colours for each node indicates the SACR and SACP
+values, respectively, for the cluster it is a part of. The
+Illumina-based clustering is shown.
+{\label{fig:compare-clusters}}%
+}}
+\end{center}
+\end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{llll}
+Threshold & SACR  & SACP  & XCR            \\
+\hline
+0        & 1.0 & 1.0 & 0.0 (0/137) \\
+\hline
+2 (1)    & 1.0 & 0.966 & 0.039 (5/128) \\
+\hline
+5 (3)    & 1.0 & 0.690 & 0.090 (11/122) \\
+\hline
+12 (7)   & 1.0 & 0.772 & 0.103 (10/97)  
+\end{tabular}
+\caption{Summary of \pandora{} multi-sample clustering metrics for four (Illumina) SNP distance thresholds. The threshold(s) in parentheses are the \ont{} equivalent threshold used. The fractions in parentheses for XCR indicate the underlying numbers. SACR=sample-averaged cluster recall; SACP=sample-averaged cluster precision; XCR=excess clustering rate.}
+\label{tab:compare-cluster-summary}
+\end{table}
+
+\subsection{Summary}
+
+The results presented in this section show that when using bcftools for variant calling \ont{} is capable of producing transmission clusters with a high degree of similarity to Illumina. Most importantly, no samples deemed part of a cluster by Illumina were missed by bcftools. We have also shown that the Illumina SNP thresholds of 0, 2, and 5 are also valid for \ont{} variant calls from bcftools and the threshold of 12 needs only to be reduced to 11. 
+We also invesigated whether the genome graph method of \pandora{} could be used to produce accurate transmission clusters. While the single-sample approach did not yield particularly good results, the multi-sample mode showed promise. For all SNP thresholds assessed, \pandora{}'s multi-sample method did not miss any samples from clustering. The SACP values for thresholds 0 and 2 were as good as those from bcftools, but at thresholds 5 and 12 \pandora{} did not perform as well. 
 
 %=========================================================================
 
-\section{Constructing transmission clusters with mixed Illumina and \ont{} data}
+\section{Transmission clusters with mixed Illumina and \ont{} data}
 
 Being able to deduce transmission clusters from a mixture of sequencing
 modalities would allow greater integration across datasets from various
