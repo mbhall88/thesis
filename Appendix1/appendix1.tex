@@ -33,7 +33,7 @@ The third strategy is the one we ended up using - removing loci with 30\% or mor
 % ===========================================================
 
 \section{An illustrated example of clustering similarity metrics}
-\label{sec:cluster-example}
+\label{app:cluster-example}
 
 \autoref{sec:cluster-similarity} outlines three metrics - SACR, SACP and XCR - for evaluating the similarity between two different strategies for transmission clustering. In order to provide the reader with greater intuition for the relevance of each metric, we present an illustrated example in \autoref{fig:cluster-example}. We take \autoref{fig:example-truth} to be the truth clusters and \autoref{fig:example-test} to be some test clusters. These are akin to Illumina and \ont{} clusters, respectively, in \autoref{sec:cluster-similarity}). The individual recall and precision values for each sample in \autoref{fig:example-truth} are shown in \autoref{tab:cluster-example}. SACR and SACP are \emph{sample-averaged}, so their values for this example are 0.82 and 0.83 respectively. To highlight the objective of SACR, we take the truth and test clusters containing the sample $F$. Samples $F$, $G$, $H$ and $I$ are shared between both, but $J$ is missing from the test cluster. To calculate the individual recall for $F$, we take the intersection size of the truth and test clusters it exists in and divide it by that size again, plus the number of samples in the truth cluster that are not in the test cluster - $\frac{4}{5}=0.8$. Ee do the same for the precision of sample $D$, expect we add the number of samples in the test cluster not in the truth cluster to the denominator - giving $\frac{2}{3}=0.66$. The relevance of the XCR metric is best exemplified by the test cluster containing samples $L$ and $M$. As we calculate SACR and SACP for all samples in the truth clusters, these two samples would be ignored. However, they are samples that - according to the truth - should not be part of any cluster. SACR and SACP cannot capture these extra clusterings if they do not contain clustered truth samples. XCR covers this limitation and is the proportion of non-clustered samples (singletons) in the truth that are clustered in the test (see \autoref{eq:xcr}). As \autoref{fig:cluster-example} does not show singletons, let us pretend there are 20 singletons in the truth (including samples $L$ and $M$). This would give an XCR of $2/20=0.1$.
 
@@ -79,7 +79,7 @@ J      & 0.0      & 0.0
 % ===========================================================
 
 \section{Selecting \ont{} SNP thresholds to define transmission clusters}
-\label{sec:dist-sweep}
+\label{app:dist-sweep}
 
 In \autoref{sec:snp-dist}, we found linear models that describe the relationship between the Illumina and \ont{} SNP distance between pairs of samples. Using the equations for each model, we can infer a \ont{} threshold corresponding to a given Illumina threshold. We investigate how well these model-based thresholds perform by using the cluster similarity metrics defined in \autoref{sec:cluster-similarity}. To assess the performance, we by looking at the SACR, SACP, and XCR for all threshold values surrounding the model-based threshold and seeing whether the model-based performs best.
 
