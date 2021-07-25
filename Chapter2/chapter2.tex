@@ -4,6 +4,7 @@
 %*******************************************************************************
 
 \chapter{\ont{} sequencing for \mtb{} transmission clustering}
+\label{chap:clustering}
 
 \ifpdf
     \graphicspath{{Chapter2/Figs/Raster/}{Chapter2/Figs/PDF/}{Chapter2/Figs/}}
@@ -14,12 +15,25 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{section}{-1}
+\section{Publication and collaboration acknowledgements}
 
-\section*{Publication and collaboration acknowledgements}
+A manuscript comprising the work in this chapter and \autoref{chap:dst} is currently being prepared. The only work that was not completed by myself is the DNA sequencing of the samples.
+The samples from Madagascar were sequenced by Marie Sylvianne Rabodoarivelo and Simon Grandjean Lapierre.
+\towrite[inline]{acknowledge the people who did the south african sequencing}
+\towrite[inline]{acknowledge the people who did the birmingham sample sequencing}
+
+While the bioinformatic work in this chapter was done by myself, I must acknowledge the wonderful guidance I have received. My supervisor Zamin Iqbal who always knows the right questions to ask. Simon Grandjean Lapierre, who helped conceive of this study, along with Zam, and who's clinical perspective helped keep me grounded in the real world. I would also like to acknowledge the many insightful conversations with our other collaborators: Marie Sylvianne Rabodoarivelo, Anastasia Koch, Niaina Rakotosamimanana, Anzaan Dippenaar, and Helen Cox. And finally, Tim Peto, who's input helped shape some of the clustering evaluation.
 
 %=========================================================================
 
 \section{Introduction}
+% ebola work https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4734547/ and https://www.nature.com/articles/nature16996
+% zika work https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-016-0356-2
+% SARS-CoV-2 https://www.sciencedirect.com/science/article/pii/S1473309920305624
+\mtb{} is a contagious bacterial pathogen that accounts for more deaths than any other pathogen each year. As such, detecting chains of transmission is of the utmost importance. WGS is establishing itself as a key tool for identifying possible transmission clusters and is being used by many leading public health agencies to aid contact-tracing. Illumina is considered the gold-standard for this type of WGS work. However, in many high-burden TB settings, Illumina is not readily available and requires considerable time and resources to start and maintain. \ont{} has shown itself to be adept in these types of settings, having been used to great effect during Zika and Ebola outbreaks. Even in environments where resource availability may not be a problem, \ont{}'s rapid turnaround time has been used for monitoring COVID-19 and informing infection control measures. The time and resources required to set up \ont{} sequencing are far lower than Illumina, but despite this, there has been little work done to assess its suitability for \mtb{} WGS-based transmission clustering. The lack of work in this space likely stems from the long-held belief that due to its higher sequencing error rate, \ont{} is not capable of such fine-grained analyses. However, \ont{} has seen considerable improvements in its accuracy in recent years and studies using variant calls from the technology are becoming increasingly common. In particular, PHE has investigated the use of \ont{} for the analysis of Shiga toxin-producing \ecoli{} and found it to be well-suited to the application. \\
+In this chapter, we evaluate whether \ont{} sequencing can provide \mtb{} transmission clusters consistent with Illumina. To facilitate this investigation, we collect a new dataset of 150 samples - from Madagascar, South Africa, and England - sequenced on both Illumina and \ont{} platforms. We first assess \ont{} variant calls and outline a filtering strategy to provide Illumina-level precision. We use these variant calls to cluster samples based on SNP distance thresholds and find \ont{} does not miss any samples from their expected cluster. Finally, we show that reliable clustering can be performed on samples from a mixture of Illumina and \ont{} modalities. \\
+\mtb{} has a "closed" pan-genome; there is little (but some) gene content not shared between all species members. In \autoref{chap:denovo} we sought to improve variant calling of bacterial pan-genomes with genome graphs. The work in that chapter was performed on \ecoli{}, which has an "open" pan-genome. In the interest of understanding how such genome graph methods can aid in closed pan-genomes, we additionally assess transmission clusters produced from \pandora{} variant calls. We construct two \mtb{} reference graphs from different densities of population variation towards this end. While the clustering from \pandora{} does not quite perform to the standards of the single-reference caller bcftools, we gain many insights for the improvement of \pandora{} and the construction of genome graphs.
 
 %=========================================================================
 
@@ -211,7 +225,7 @@ performance of a range of filtering parameters for both bcftools and \pandora{}.
 The aim of this filter calibration is ultimately to determine if SNP-calling precision for \ont{} is comparable with Illumina, and if not, how close can we get it.
 We evaluate the resulting, filtered SNP calls
 against the COMPASS\todo{http://dx.doi.org/10.2807/1560-7917.es.2019.24.50.1900130} Illumina SNP calls for the seven
-samples with high-quality PacBio assemblies (see Section \autoref{sec:asm_results}) to ensure no bias for
+samples with high-quality PacBio assemblies (see \autoref{sec:asm_results}) to ensure no bias for
 Illumina or Nanopore.
 For others interested in investigating variant filters for \ont{} data, we also hope this calibration acts as a good starting point for deeper analysis.
 
@@ -743,7 +757,7 @@ In this section we have shown that putative transmission clusters constructed us
 
 \section{Discussion}
 
-\mtb{} is a contagious bacterial pathogen that accounts for more deaths than any other pathogen each year. As such, detecting chains of transmission is of the utmost importance. WGS is establishing itself as a key tool for identifying possible transmission clusters and it being used by many leading public health agencies. Illumina is considered the gold-standard for this type of WGS work. However, in many high-burden TB settings, Illumina is not readily available and requires considerable time and resources to start and maintain. \ont{} has shown itself to be adept in these types of settings, having been used to great effect during Zika and Ebola(??) outbreaks. The time and resources required to set up \ont{} sequencing are far lower than Illumina, but despite this, there has been little work done to assess its suitability for \mtb{} WGS-based transmission clustering. The lack of work in this space likely stems from the long-held belief that due to its higher sequencing error rate, \ont{} is not capable of such fine-grained analyses. However, \ont{} has seen considerable improvements in its accuracy in recent years and studies using variant calls from the technology are becoming increasingly common. In particular, PHE has investigated the use of \ont{} for the analysis of Shiga toxin-producing \ecoli{} and found it to be well-suited to the application. 
+
 Recent work from CITE \etal{} is the first effort to assess \ont{} for the clustering of samples based on genetic distance. While their work had a larger number of samples to ours (431), the SNP distance comparison details were very brief and were only presented for a subset of 14 samples. They present the results as a distance matrix and leave it as an exercise for the reader to compare the Illumina and \ont{} matrices. There is no quantification of the clustering similarities or investigation into whether Illumina and \ont{} data can be mixed for this application. In contrast, the work presented in this chapter provides a detailed analysis of all of these topics and much more.
 
 In addition to the conventional single-reference variant-calling approach we also assessed the performance of the genome graph method developed in \autoref{chap:denovo} for \mtb{}. We built two \mtb{} population reference graphs with different variant densities. Intuition would say that the more variants in the \prg{}, the better the ability to find and call variants. However, we found the opposite. The sparse \prg{} produced marginally high precision and recall, on average, compared to its dense counterpart. As the computational resources required to construct and operate the sparse \prg{} are a lot less than the dense, we chose to use it for the subsequent analysis. The lack of improvement by adding more variants is inline with previosu work (CITE forge) that found a ceiling in the gains to adding more variants and that eventually it just causes complexity "blow ups" that manifest as increased computational resource requirements and reference ambiguity, all of which lead to a decay in overall performance. This is the same thing we see and note that many of the errors made by the dense \prg{} relate to shared \kmer{}s between alternate paths (generally in longer alleles) at sites in the graph, which in turn confuse the genotyping by adding coverage to multiple alleles. We investigate this complexity problem further in \autoref{chap:dst}.
