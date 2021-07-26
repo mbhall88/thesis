@@ -191,3 +191,48 @@ doi = {10.1101/2021.04.08.438862},
 abstract = {{Short-read whole genome sequencing (WGS) is a vital tool for clinical applications and basic research. Genetic divergence from the reference genome, repetitive sequences, and sequencing bias, reduce the performance of variant calling using short-read alignment, but the loss in recall and specificity has not been adequately characterized. For the clonal pathogen Mycobacterium tuberculosis (Mtb), researchers frequently exclude 10.7\% of the genome believed to be repetitive and prone to erroneous variant calls. To benchmark short-read variant calling, we used 36 diverse clinical Mtb isolates dually sequenced with Illumina short-reads and PacBio long-reads. We systematically study the short-read variant calling accuracy and the influence of sequence uniqueness, reference bias, and GC content. Reference based Illumina variant calling had a recall ≥89.0\% and precision ≥98.5\% across parameters evaluated. The best balance between precision and recall was achieved by tuning the mapping quality (MQ) threshold, i.e. confidence of the read mapping (recall 85.8\%, precision 99.1\% at MQ ≥ 40). Masking repetitive sequence content is an alternative conservative approach to variant calling that maintains high precision (recall 70.2\%, precision 99.6\% at MQ≥40). Of the genomic positions typically excluded for Mtb, 68\% are accurately called using Illumina WGS including 52 of the 168 PE/PPE genes (34.5\%). We present a refined list of low confidence regions and examine the largest sources of variant calling error. Our improved approach to variant calling has broad implications for the use of WGS in the study of Mtb biology, inference of transmission in public health surveillance systems, and more generally for WGS applications in other organisms.}}, 
 pages = {2021.04.08.438862}
 }
+
+@article{bainomugisa2018, 
+year = {2018}, 
+keywords = {mtb,assembly,nanopore,amr,ppe}, 
+title = {{A complete high-quality MinION nanopore assembly of an extensively drug-resistant Mycobacterium tuberculosis Beijing lineage strain identifies novel variation in repetitive PE/PPE gene regions}}, 
+author = {Bainomugisa, Arnold and Duarte, Tania and Lavu, Evelyn and Pandey, Sushil and Coulter, Chris and Marais, Ben J. and Coin, Lachlan M.}, 
+journal = {Microbial Genomics}, 
+issn = {2057-5858}, 
+doi = {10.1099/mgen.0.000188}, 
+pmid = {29906261}, 
+pmcid = {PMC6113869}, 
+abstract = {{A better understanding of the genomic changes that facilitate the emergence and spread of drug-resistant Mycobacterium tuberculosis strains is currently required. Here, we report the use of the MinION nanopore sequencer (Oxford Nanopore Technologies) to sequence and assemble an extensively drug-resistant (XDR) isolate, which is part of a modern Beijing sub-lineage strain, prevalent in Western Province, Papua New Guinea. Using 238-fold coverage obtained from a single flow-cell, de novo assembly of nanopore reads resulted into one contiguous assembly with 99.92 \% assembly accuracy. Incorporation of complementary short read sequences (Illumina) as part of consensus error correction resulted in a 4 404 064 bp genome with 99.98 \% assembly accuracy. This assembly had an average nucleotide identity of 99.7 \% relative to the reference genome, H37Rv. We assembled nearly all GC-rich repetitive PE/PPE family genes (166/168) and identified variants within these genes. With an estimated genotypic error rate of 5.3 \% from MinION data, we demonstrated identification of variants to include the conventional drug resistance mutations, and those that contribute to the resistance phenotype (efflux pumps/transporter) and virulence. Reference-based alignment of the assembly allowed detection of deletions and insertions. MinION sequencing provided a fully annotated assembly of a transmissible XDR strain from an endemic setting and showed its utility to provide further understanding of genomic processes within Mycobacterium tuberculosis.}}, 
+number = {7}, 
+volume = {4}
+}
+
+@article{kato2001, 
+year = {2001}, 
+keywords = {mtb,assembly}, 
+title = {{Comparing Genomes within the Species Mycobacterium tuberculosis}}, 
+author = {Kato-Maeda, Midori and Rhee, Jeanne T. and Gingeras, Thomas R. and Salamon, Hugh and Drenkow, Jorg and Smittipat, Nat and Small, Peter M.}, 
+journal = {Genome Research}, 
+issn = {1088-9051}, 
+doi = {10.1101/gr166401}, 
+pmid = {11282970}, 
+abstract = {{The study of genetic variability within natural populations of pathogens may provide insight into their evolution and pathogenesis. We used a Mycobacterium tuberculosis high-density oligonucleotide microarray to detect small-scale genomic deletions among 19 clinically and epidemiologically well-characterized isolates of M. tuberculosis. The pattern of deletions detected was identical within mycobacterial clones but differed between different clones, suggesting that this is a suitable genotyping system for epidemiologic studies. An analysis of genomic deletions among an extant population of pathogenic bacteria provided a novel perspective on genomic organization and evolution. Deletions are likely to contain ancestral genes whose functions are no longer essential for the organism's survival, whereas genes that are never deleted constitute the minimal mycobacterial genome. As the amount of genomic deletion increased, the likelihood that the bacteria will cause pulmonary cavitation decreased, suggesting that the accumulation of mutations tends to diminish their pathogenicity. Array-based comparative genomics is a promising approach to exploring molecular epidemiology, microbial evolution, and pathogenesis.}}, 
+pages = {547--554}, 
+number = {4}, 
+volume = {11}
+}
+
+@article{wenger2019, 
+year = {2019}, 
+keywords = {pacbio,long-reads}, 
+title = {{Accurate circular consensus long-read sequencing improves variant detection and assembly of a human genome}}, 
+author = {Wenger, Aaron M. and Peluso, Paul and Rowell, William J. and Chang, Pi-Chuan and Hall, Richard J. and Concepcion, Gregory T. and Ebler, Jana and Fungtammasan, Arkarachai and Kolesnikov, Alexey and Olson, Nathan D. and Töpfer, Armin and Alonge, Michael and Mahmoud, Medhat and Qian, Yufeng and Chin, Chen-Shan and Phillippy, Adam M. and Schatz, Michael C. and Myers, Gene and DePristo, Mark A. and Ruan, Jue and Marschall, Tobias and Sedlazeck, Fritz J. and Zook, Justin M. and Li, Heng and Koren, Sergey and Carroll, Andrew and Rank, David R. and Hunkapiller, Michael W.}, 
+journal = {Nature Biotechnology}, 
+issn = {1087-0156}, 
+doi = {10.1038/s41587-019-0217-9}, 
+pmid = {31406327}, 
+abstract = {{The DNA sequencing technologies in use today produce either highly accurate short reads or less-accurate long reads. We report the optimization of circular consensus sequencing (CCS) to improve the accuracy of single-molecule real-time (SMRT) sequencing (PacBio) and generate highly accurate (99.8\%) long high-fidelity (HiFi) reads with an average length of 13.5 kilobases (kb). We applied our approach to sequence the well-characterized human HG002/NA24385 genome and obtained precision and recall rates of at least 99.91\% for single-nucleotide variants (SNVs), 95.98\% for insertions and deletions <50 bp (indels) and 95.99\% for structural variants. Our CCS method matches or exceeds the ability of short-read sequencing to detect small variants and structural variants. We estimate that 2,434 discordances are correctable mistakes in the ‘genome in a bottle’ (GIAB) benchmark set. Nearly all (99.64\%) variants can be phased into haplotypes, further improving variant detection. De novo genome assembly using CCS reads alone produced a contiguous and accurate genome with a contig N50 of >15 megabases (Mb) and concordance of 99.997\%, substantially outperforming assembly with less-accurate long reads. High-fidelity reads improve variant detection and genome assembly on the PacBio platform.}}, 
+pages = {1155--1162}, 
+number = {10}, 
+volume = {37}
+}

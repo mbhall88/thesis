@@ -19,11 +19,11 @@
 \section{Publication and collaboration acknowledgements}
 
 A manuscript comprising the work in this chapter and \autoref{chap:dst} is currently being prepared. The only work that was not completed by myself is the DNA sequencing of the samples.
-The samples from Madagascar were sequenced by Marie Sylvianne Rabodoarivelo and Simon Grandjean Lapierre.
+The DNA extractions, and Illumina and \ont{} sequencing for the samples from Madagascar were sequenced by Marie Sylvianne Rabodoarivelo and Simon Grandjean Lapierre. The PacBio sequencing for these samples was performed by the Next Generation Genomics Core within Cold Spring Harbor Laboratory.
 \towrite[inline]{acknowledge the people who did the south african sequencing}
 \towrite[inline]{acknowledge the people who did the birmingham sample sequencing}
-
-While the bioinformatic work in this chapter was done by myself, I must acknowledge the wonderful guidance I have received. My supervisor Zamin Iqbal who always knows the right questions to ask. Simon Grandjean Lapierre, who helped conceive of this study, along with Zam, and who's clinical perspective helped keep me grounded in the real world. I would also like to acknowledge the many insightful conversations with our other collaborators: Marie Sylvianne Rabodoarivelo, Anastasia Koch, Niaina Rakotosamimanana, Anzaan Dippenaar, and Helen Cox. And finally, Tim Peto, who's input helped shape some of the clustering evaluation.
+The variant-calling of all Illumina samples was performed by Fan Yang-Turner at the Nuffield Department of Medicine, University of Oxford. 
+While the bioinformatic work (except the Illumina variant-calling) in this chapter was done by myself, I must acknowledge the wonderful guidance I have received. My supervisor Zamin Iqbal who always knows the right questions to ask. Simon Grandjean Lapierre, who helped conceive of this study, along with Zam, and who's clinical perspective helped keep me grounded in the real world. I would also like to acknowledge the many insightful conversations with our other collaborators: Marie Sylvianne Rabodoarivelo, Anastasia Koch, Niaina Rakotosamimanana, Anzaan Dippenaar, and Helen Cox. And finally, Tim Peto, who's input helped shape some of the clustering evaluation.
 
 %=========================================================================
 
@@ -31,17 +31,17 @@ While the bioinformatic work in this chapter was done by myself, I must acknowle
 % ebola work https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4734547/ and https://www.nature.com/articles/nature16996
 % zika work https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-016-0356-2
 % SARS-CoV-2 https://www.sciencedirect.com/science/article/pii/S1473309920305624
-\mtb{} is a contagious bacterial pathogen that accounts for more deaths than any other pathogen each year. As such, detecting chains of transmission is of the utmost importance. WGS is establishing itself as a key tool for identifying possible transmission clusters and is being used by many leading public health agencies to aid contact-tracing. Illumina is considered the gold-standard for this type of WGS work. However, in many high-burden TB settings, Illumina is not readily available and requires considerable time and resources to start and maintain. \ont{} has shown itself to be adept in these types of settings, having been used to great effect during Zika and Ebola outbreaks. Even in environments where resource availability may not be a problem, \ont{}'s rapid turnaround time has been used for monitoring COVID-19 and informing infection control measures. The time and resources required to set up \ont{} sequencing are far lower than Illumina, but despite this, there has been little work done to assess its suitability for \mtb{} WGS-based transmission clustering. The lack of work in this space likely stems from the long-held belief that due to its higher sequencing error rate, \ont{} is not capable of such fine-grained analyses. However, \ont{} has seen considerable improvements in its accuracy in recent years and studies using variant calls from the technology are becoming increasingly common. In particular, PHE has investigated the use of \ont{} for the analysis of Shiga toxin-producing \ecoli{} and found it to be well-suited to the application. \\
+\mtb{} is a contagious bacterial pathogen that causes the disease Tuberculosis (TB) and accounts for more deaths than any other pathogen each year. As such, detecting chains of \mtb{} transmission is of the utmost importance. Whole-genome sequencing (WGS) is establishing itself as a key tool for identifying possible transmission clusters and is being used by many leading public health agencies to aid contact-tracing. Illumina is considered the gold-standard for this type of WGS work. However, in many high-burden TB settings, Illumina is not readily available and requires considerable time and resources to start and maintain. \ont{} has shown itself to be adept in these types of settings, having been used to great effect during Zika and Ebola outbreaks. Even in environments where resource availability may not be a problem, \ont{}'s rapid turnaround time has been used for monitoring COVID-19 and informing infection control measures. The time and resources required to set up \ont{} sequencing are far lower than Illumina, but despite this, there has been little work done to assess its suitability for \mtb{} WGS-based transmission clustering. The lack of work in this space likely stems from the long-held belief that due to its higher sequencing error rate, \ont{} is not capable of such fine-grained analyses. However, \ont{} has seen considerable improvements in its accuracy in recent years and studies using variant calls from the technology are becoming increasingly common. In particular, Public Health England (PHE) has investigated the use of \ont{} for the analysis of Shiga toxin-producing \ecoli{} and found it to be well-suited to the application. \\
 In this chapter, we evaluate whether \ont{} sequencing can provide \mtb{} transmission clusters consistent with Illumina. To facilitate this investigation, we collect a new dataset of 150 samples - from Madagascar, South Africa, and England - sequenced on both Illumina and \ont{} platforms. We first assess \ont{} variant calls and outline a filtering strategy to provide Illumina-level precision. We use these variant calls to cluster samples based on SNP distance thresholds and find \ont{} does not miss any samples from their expected cluster. Finally, we show that reliable clustering can be performed on samples from a mixture of Illumina and \ont{} modalities. \\
-\mtb{} has a "closed" pan-genome; there is little (but some) gene content not shared between all species members. In \autoref{chap:denovo} we sought to improve variant calling of bacterial pan-genomes with genome graphs. The work in that chapter was performed on \ecoli{}, which has an "open" pan-genome. In the interest of understanding how such genome graph methods can aid in closed pan-genomes, we additionally assess transmission clusters produced from \pandora{} variant calls. We construct two \mtb{} reference graphs from different densities of population variation towards this end. While the clustering from \pandora{} does not quite perform to the standards of the single-reference caller bcftools, we gain many insights for the improvement of \pandora{} and the construction of genome graphs.
+\mtb{} has a "closed" pan-genome; most (but not all) gene content is shared by all species members. In \autoref{chap:denovo} we sought to improve variant calling of bacterial pan-genomes with genome graphs. The work in that chapter was performed on \ecoli{}, which has an "open" pan-genome. In the interest of understanding how such genome graph methods can aid in closed pan-genomes, we additionally assess transmission clusters produced from \pandora{} variant calls. We construct two \mtb{} reference graphs from different densities of population variation towards this end. While the clustering from \pandora{} does not quite perform to the standards of the single-reference caller bcftools, we gain many insights for the improvement of \pandora{} and the construction of genome graphs.
 
 %=========================================================================
 
 \section{Dataset}
+\label{sec:dataset}
 
-
-The data used for the work in this chapter and chapter 3\todo{link to chapter 3} are patient-derived \mtb{} WGS from culture. We gathered samples from Madagascar (118), South Africa (83), and England's National Mycobacteria Reference Service in Birmingham (46); giving us a total of 247 samples.  
-Each sample was sequenced on both \ont{} and Illumina platforms. Our aim was to perform all sequencing for a sample from a single DNA extraction. This would ensure that any variation identified between technologies for the same sample would be due to differences in the sequencing platform and not *in vitro* evolution.  
+The data used for the work in this chapter, and \autoref{chap:dst}, are patient-derived \mtb{} isolates from culture. We gathered samples from Madagascar (118), South Africa (83), and England's National Mycobacteria Reference Service in Birmingham (46); giving us a total of 247 samples.  
+Each sample was sequenced on both \ont{} and Illumina platforms. Our aim was to perform all sequencing for a sample from a single DNA extraction. This ensures that any variation identified between technologies for the same sample would be due to differences in the sequencing platform and not \textit{in vitro} evolution.  
 As these samples are not reference isolates, and we want to be able to compare both Illumina and Nanopore to a "truth", we also sequenced 35 of the Malagasy isolates with PacBio.
 
 \subsubsection{Illumina sequencing}
@@ -52,108 +52,20 @@ As these samples are not reference isolates, and we want to be able to compare b
 
 \towrite[inline]{need to get this information from all three collaborators}
 
-All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool \guppy{} (v3.4.5). We used default parameters for basecalling and the only non-default parameter used for de-multiplexing was the option to trim barcodes from the resulting sequences.  
+All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool \guppy{} (version 3.4.5). We used default parameters for basecalling and the only non-default parameter used for de-multiplexing was the option to trim barcodes from the resulting sequences.  
 
 \subsubsection{PacBio sequencing}
-\unsure[inline]{is this too much detail}
-35 of the Malagasy samples were sequenced and processed at the Next Generation Genomics Core within Cold Spring Harbor Laboratory. Samples were quantified with a Qubit dsDNA HS Assay Kit and QC’d through a Pulsed Field Gel Electrophoresis system. Then, samples were sheared at 10kb using a Megaruptor device and size-selected to 8-10 kb with a Blue pippin instrument - followed by 0.45X ampure bead purification. The PacBio library protocol SMRTbell Express Template Prep Kit 2.0 was used for each sample. Briefly, the first step was the removal of single-stranded overhangs followed by DNA Damage Repair, End-Repair/A-tailing, Ligation of overhang barcoded adaptors and sample pooling. A total of 3 pools were produced: LID50532 (16 samples), LID50533 (10 samples), and LID50534 (9 samples). After pooling, 0.5X ampure bead clean up was performed. A Sequel I instrument was used to sequence the 3 library pools. Libraries were annealed for an hour and bounded for an hour using sequel binding kit 3.0. Bound SMRTbell complexes were then purified with ampure beads. The run was set up as 10kb length for 10 hours movie time. The Sequel 1M V2 SMRT cells were used for each library.  
-The circular consensus was called via the SMRTlink graphical user interface version 6.0.0.47841.
+35 of the Malagasy samples were sequenced and processed at the Next Generation Genomics Core within Cold Spring Harbor Laboratory with PacBio Sequel 1M V2 SMRT cells. The circular consensus was called via the SMRTlink graphical user interface version 6.0.0.47841. Full details of the sequencing protocol are outlined in \autoref{app:pacbio-seq}.
 
 %=========================================================================
 
 \section{High-quality genome assemblies for validating variant calls}
 \label{sec:asm_results}
+A central component of the work in this chapter is having a way of validating the quality of variant calls, without being biased by assuming short reads are the "truth". In \autoref{sec:var-calls} we compare the precision and recall of \ont{} and Illumina variant calls. A necessary component of such analysis is a reference genome for each sample. In addition to the matched sequencing on both the \ont{} and Illumina platforms, 35 of the Malagasy samples were also sent for PacBio Circular Consensus Sequencing (CCS). CCS produces so called high-fidelity sequencing reads with a base-level accuracy greater than 99.8\% \cite{wenger2019}. The reason these reads have such a high accuracy is that each one is the consensus from multiple passes of the DNA enzyme around a circular copy of the original double-stranded read. As the CCS reads are both long and accurate, they are now being regularly used to produce high-quality \denovo{} assemblies and complete existing reference genomes(CITE). 
+For the samples with available PacBio data, we construct high-quality assemblies to use as reference genomes.
 
-Samples with greater than 30x coverage across all three sequencing technologies were chosen to produce high-quality assemblies. In total, this left us with 9 Malagasy samples. We compare five assemblers and select the best for each sample. The reason for this comparison is that different assembly algorithms can produce quite varied results depending on sequencing technology used, species, or computational resource availability(CITE).  
-The assembly tools used are Canu, Flye, Unicycler, HASLR, and Spades(CITE \& VERSION). HASLR and Unicycler are hybrid assemblers that take Illumina reads along with one long-read file, although Unicycler does not require both. Spades is also a hybrid assembler but takes an arbitrary number of different sequencing technologies. Canu and Flye are both long-read-only assemblers.
-
-The entire assembly pipeline was orchestrated using the workflow management system Snakemake(CITE). An overview of the entire pipeline is shown in (FIGURE). The first step is trimming of adapter sequences in the Illumina reads using Trimmomatic(CITE). Two assemblies were then produced for each sample - one for each long-read technology. The exception to this was Spades, for which there is just one assembly for each sample, as it accepts all reads simultaneously. Canu, in some cases, produces assembly bubbles, which are regions where it believes there is a heterozygous locus due to differences in haplotypes. While it is not impossible some samples could be multi-clonal, we chose to remove bubbles from the Canu assemblies, effectively choosing the dominant haplotype for downstream analysis.  
-All contigs in the resulting assemblies were species-classified using Centrifuge(CITE). We remove any contigs whose classification places them outside of the Mycobacterium Tuberculosis Complex.  
-Polishing of the decontaminated assemblies is done in two steps. First using long reads and Racon(CITE) with default settings, followed by short reads with Pilon(CITE). Default Pilon settings were used for \ont{} assemblies, but for \pb{} we don't correct for SNPs . \pb{} CCS reads are already a consensus from multiple reads, so allowing Illumina reads to fix at a per-base level leads to decreased per-base accuracy (results not shown CITE?).  
-For both polished and unpolished assemblies, we annotate using Prokka(CITE). We assess relative correctness of all assembly variations for a given sample using Assembly Likelihood Estimator (ALE)(CITE). Assembly statistics were generated for each sample using Quast(CITE) with H37Rv as a reference. We do not expect our assemblies to be the same as H37Rv, but it can provide insights into the structural completeness and genome size. Lastly, we assess per-base accuracy using a custom script. As input for the script, we provide a BAM file of the Illumina reads mapped to the assembly and the pileup generated by the Samtools subroutine \vrb{mpileup}(CITE). We provide a quorum of 90, which is the percentage of reads that must agree with the assembly at each position, and a minimum depth of 10x. Any position within the assembly that does not meet both of these conditions is considered a disagreement. The output from the script is a collection of statistics and a BED(CITE) file containing all disagreement positions.
-
-A central component of the work in this chapter is having a way of validating the quality of variant calls, without being biased by assuming short reads are the "truth". In addition to the matched sequencing on both the \ont{} and Illumina platforms, XXX of the Malagasy samples were also sent for PacBio Circular Consensus Sequencing (CCS)\improvement{clarify this from the methods Sara sent - i.e. is HiFi more correct?}. CCS produces so called HiFi reads, which have a base-level accuracy greater than 99.9\%(CITE). The reason these reads have such a high accuracy is that each one is the consensus from multiple passes of the DNA enzyme around a circular copy of the original double-stranded read. As the HiFi reads are both long and accurate, they are now being regularly used to produce high quality \denovo{} assemblies and complete existing reference genomes(CITE).  
-
-Due to the lack of extensive benchmarking of assembly methods for CCS, and \mtb{} more generally, we undertook to determine what combination of technologies and methods would give us the best "truth" genomes. There has been comprehensive analysis of \ont{} and hybrid assemblies for \ecoli{}(CITE), but its genomic characteristics are very different to those of \mtb{}. For this analysis we chose to assess five assemblers: \vrb{flye}, \vrb{canu}, \vrb{spades}, \vrb{unicycler}, and \vrb{HASLR}(CITE). Both \vrb{unicycler} and \vrb{HASLR} are hybrid assemblers, which means they utilise both long and short reads. We use them to produce Illumina/CCS and Illumina/\ont{} assemblies. The only tool capable of operating with all three technologies (at the time of writing) is \vrb{spades}. One assembly for each long read technology was produced with \vrb{canu} and \vrb{flye}.  
-Each assembly was additionally polished with their relevant long reads and Illumina data using \vrb{racon} and \vrb{pilon} respectively. These combinations resulted in 18 assemblies (9 polished and 9 unpolished) for assessment.  
-
-Assessing the quality of \denovo{} assemblies is non-trivial and requires aggregation of various metrics(CITE). Whilst a reference genome exists for \mtb{}, there are enough differences between the lineages that using this reference would not be appropriate for our purposes. We will look at each assessment metric individually, and then decide on the best assembly method from this information
-
-\subsubsection{Assembly Likelihood Evaluation score}
-
-The assembly likelihood evaluation (ALE) score is a reference-free metric that describes the likelihood of an assembly given it's \kmer{} distribution, and the likelihood of the reads being generated from that assembly. It combines information such as read quality, agreement in the alignment of reads to assembly, mate-pair orientation, paired-end read length, and depth of sequencing. Importantly, the ALE score can be used to compare assemblies of the same genome, which is exactly the use case we have. Whilst ALE scores and not insightful on their own, the difference \textit{between} assembly scores gives the relative probability of correctness. So for each sample, we are interesting in the assembly that has the \textit{highest} ALE score.  
-
-Across the 9 samples, \vrb{flye} has the highest ALE score in five cases, whilst \vrb{spades} was the most probable assembly in two, with \vrb{unicycler} and \vrb{canu} having the maximum score in one sample each (\autoref{fig:ale_score}). Note, this is considering both polished and unpolished assemblies together for each tool. When considering which long read sequencing technology produces the greatest ALE score, CCS had the top score in 7/9 samples. In 6/9 samples, the highest ALE score was from a polished assembly.\unsure{is this figure necessary or are the numbers in the text sufficient?}
-
-
-
-\begin{figure}
-\includegraphics[width=1.0\textwidth]{Chapter2/Figs/ale_score.png}
-\centering
-\caption{The normalised ALE score (Y-axis) for each sample (X-axis), coloured by assembly tools. ALE score is a metric describing the likelihood of an assembly. The normalisation is done by subtracting the assembly's score from the maximum (best) score for that sample, giving a relative probability of correctness. Each box represents different technologies and polishing status for each assembler.}
-\label{fig:ale_score}
-\end{figure}
-
-
-
-\subsubsection{Disagreement rate}
-
-The disagreement rate is an approximation of the per-base accuracy of the assembly (see Methods\todo{link to relevant methods section}). In short, we map Illumina reads to the assembly and calculate what proportion of positions do XXX\% of the reads agree with the assembly nucleotide.  
-
-In 7/9 samples, a \vrb{HASLR} assembly had the lowest disagreement rate, followed by \vrb{unicycler} having the minimum in 2/9. Polished genomes produced the lowest disagreement rate in 8/9 samples and \ont{}-based assemblies had the best accuracy in 6/9 samples. While it isn't so surprising that assemblies polished with Illumina reads have a lower disagreement rate, it is unexpected that \ont{} would produce more accurate assemblies (\autoref{fig:disagree_rate}). One caveat to keep in mind here - and this is the reason for looking at many different metrics - is that there is an element of overfitting to this metric: we assess using Illumina, and so naturally, assemblies polished with Illumina produce better results. That is not to say this statistic is void, but that it should be used with caution.
-
-
-
-\begin{figure}
-\includegraphics[width=1.0\textwidth]{Chapter2/Figs/disagree_rate.png}
-\centering
-\caption{The disagreement rate (Y-axis) for each assembler (X-axis), coloured by the sequencing technology. Disagreement rate is the percentage of sites in the assembly where Illumina reads do not have XX\% quorum. Each box/point represents different samples and polished status for the relevant assembler-technology combination.}
-\label{fig:disagree_rate}
-\end{figure}
-
-
-
-\subsubsection{Number of contigs}
-
-As \mtb{} has only a single, circular chromosome, for an assembly to be structurally complete, there should only be a single contig in the final assembly. However, it is not always appropriate for an assembly method to produce a single contig as data quality, depth of sequencing, read length, and/or repetitive content of the genome can hamper this goal(CITE). Conversely, receiving a single contig as output is no guarantee of it's quality for similar reasons to the previous, multi-contig scenario. For the purposes of this benchmark, considering on conjunction with the other metrics, the number of contigs can be a useful datum for selecting our favoured assembly. If an assembly has a single contig, and scores well on other metrics, we would be more inclined to choose it over another assembly with similar metrics, but many more contigs.
-
-Across all combinations of assembly conditions, \vrb{spades} (8/18), \vrb{flye} (18/32) and \vrb{canu} (16/32) produced far more single-contig assemblies than the hybrid methods (\autoref{fig:num_contigs}). \vrb{unicycler} produced no single-contig genomes, whilst \vrb{HASLR} yielded only 2/32. When considering sequencing technology, CCS (26/72) had many more single-contig assemblies than \ont{} (10/72). Note: \vrb{spades} assemblies use all three technologies and are not considered in the technology single-contig totals.
-
-
-
-\begin{figure}
-\includegraphics[width=1.0\textwidth]{Chapter2/Figs/num_contigs.png}
-\centering
-\caption{The number of contigs (Y-axis) produced from each assembly (X-axis), coloured by sequencing technology. Each box/point represents different samples and polished status for the relevant assembler-technology combination.}
-\label{fig:num_contigs}
-\end{figure}
-
-
-
-\subsubsection{Length of assembly}
-
-As mentioned earlier, comparing the assemblies to the \mtb{} reference genome (H37Rv; accession: `NC\_000962.3`) is not appropriate, however, it's length/size can be used as an aid for selection. The size of the any lineage's genome is not expected to differ from the reference by more than about X kilobases(CITE). Considering the genome size in addition to disagreement rate is particularly informative. It would be quite easy for an assembly method to produce very accurate per-base contigs but refusing to produce sequence for "harder" parts of the genome. While such an assembly would score well on disagreement rate, it would not do so well when considering how close to the expected genome size it is. The length of the assembly is also clearly shows when a method is outputting \textit{too much} sequence.
-
-When comparing the size of each assembly to that of H37Rv, we found a fairly even spread across assemblers for the closest size to H37Rv. For 3/9 samples, \vrb{canu} has the smallest size difference, followed by \vrb{spades} (2/9), \vrb{unicycler} (2/9), \vrb{HASLR} (1/9) and \vrb{flye} (1/9). An honourable mention should be made of \vrb{flye} and \vrb{spades} as they had much lower variation in size compared to the other approaches. In terms of sequencing technology, in 6/9 samples CCS produced the genome size closest to H37Rv. Polished assemblies had the closer size in 5/9 samples.
-
-
-
-\unsure[inline]{should I use the non-zoomed version of \autoref{fig:asm_len}?}
-\begin{figure}
-\includegraphics[width=1.0\textwidth]{Chapter2/Figs/asm_len.png}
-\centering
-\caption{Size/length (Y-axis) of each assembly (X-axis), coloured by each sequencing technology. The horizontal dashed line represents the size of the \mtb{} reference genome (4,411,532bp). Each box/point represents different samples and polished status for the relevant assembler-technology combination. Note: the Y-axis has been limited to allow for greater resolution of similarity to the H37Rv size}
-\label{fig:asm_len}
-\end{figure}
-
-
-
-\subsubsection{Contamination detection}
-
-The decontamination step in the assembly pipeline (\todo{reference relevant section in methods}) revealed that one sample, `mada\_1-2`, contained contigs from three different species: *Mycobacterium intracellulare*, *Dermacoccus nishinomiyaensis*, and *M. tuberculosis*. These contigs were all at sufficient coverage to not be considered background noise. For the assembly assessment analysis only the contigs from \mtb{} were used, but figures for the assessment metrics in the previous subsections show this sample is an outlier in almost all metrics. Given this profuse contamination, `mada\_1-2` will not be used in any analysis where these assemblies are used for truth validation purposes.
-
-
-\unsure{should this paragraph stay here or move to the conclusion?}In conclusion, considering all assessment metrics, \vrb{flye} and \vrb{spades} assemblies were consistently the better performing methods across all of the criteria outlined in this section. As most of the validation analyses that these assemblies will be used for involve comparing Illumina and \ont{} data to a "neutral truth", the unpolished CCS assemblies from \vrb{flye} were selected for use in the remainder of this chapter. The differences between the polished and unpolished CCS assemblies was almost negligible and do not outweigh the benefit of having a single-technology PacBio assembly that can be used as an unbiased reference point for comparing the other two technologies.
+Samples with greater than 30x coverage across all three sequencing technologies were chosen to produce high-quality assemblies. In total, this left us with 9 Malagasy samples. There has been many new genome assembly methods produced since the last known assessment of \mtb{} long-read assemblies \cite{bainomugisa2018}. As such, we benchmark five assemblers and select the best for each sample. The reason for this comparison is that different assembly algorithms can produce quite varied results depending on sequencing technology used, species, or computational resource availability(CITE). The assembly tools used were Canu, Flye, Unicycler, HASLR, and Spades(CITE \& VERSION). The full benchmark is presented in \autoref{app:asm}.
+In summary, we use the unpolished PacBio-only assemblies produced by Flye as reference genomes for 8 samples. Although we assembled 9 samples, one sample was found to have significant contamination and will be excluded from further analysis.
 
 %=========================================================================
 
