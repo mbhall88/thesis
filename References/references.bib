@@ -401,3 +401,110 @@ pages = {giab008},
 number = {2}, 
 volume = {10}
 }
+
+@article{sanderson2020, 
+year = {2020}, 
+keywords = {amr,bacterial-genomics,nanopore,variant-calling}, 
+title = {{High precision Neisseria gonorrhoeae variant and antimicrobial resistance calling from metagenomic Nanopore sequencing}}, 
+author = {Sanderson, Nicholas D. and Swann, Jeremy and Barker, Leanne and Kavanagh, James and Hoosdally, Sarah and Crook, Derrick and Group, The GonFast Investigators and Street, Teresa L. and Eyre, David W.}, 
+journal = {Genome Research}, 
+issn = {1088-9051}, 
+doi = {10.1101/gr.262865.120}, 
+pmid = {32873606}, 
+abstract = {{The rise of antimicrobial-resistant Neisseria gonorrhoeae is a significant public health concern. Against this background, rapid culture-independent diagnostics may allow targeted treatment and prevent onward transmission. We have previously shown metagenomic sequencing of urine samples from men with urethral gonorrhea can recover near-complete N. gonorrhoeae genomes. However, disentangling the N. gonorrhoeae genome from metagenomic samples and robustly identifying antimicrobial resistance determinants from error-prone Nanopore sequencing is a substantial bioinformatics challenge. Here, we show an N. gonorrhoeae diagnostic workflow for analysis of metagenomic sequencing data obtained from clinical samples using R9.4.1 Nanopore sequencing. We compared results from simulated and clinical infections with data from known reference strains and Illumina sequencing of isolates cultured from the same patients. We evaluated three Nanopore variant callers and developed a random forest classifier to filter called SNPs. Clair was the most suitable variant caller after SNP filtering. A minimum depth of 20× reads was required to confidently identify resistant determinants over the entire genome. Our findings show that metagenomic Nanopore sequencing can provide reliable diagnostic information in N. gonorrhoeae infection.}}
+}
+
+@article{clairvoyant2019, 
+year = {2019}, 
+keywords = {nanopore,variant-calling,software,neural-network}, 
+title = {{A multi-task convolutional deep neural network for variant calling in single molecule sequencing}}, 
+author = {Luo, Ruibang and Sedlazeck, Fritz J. and Lam, Tak-Wah and Schatz, Michael C.}, 
+journal = {Nature Communications}, 
+doi = {10.1038/s41467-019-09025-z}, 
+pmid = {30824707}, 
+abstract = {{The accurate identification of DNA sequence variants is an important, but challenging task in genomics. It is particularly difficult for single molecule sequencing, which has a per-nucleotide error rate of \textbackslashtextasciitilde5–15\%. Meeting this demand, we developed Clairvoyante, a multi-task five-layer convolutional neural network model for predicting variant type (SNP or indel), zygosity, alternative allele and indel length from aligned reads. For the well-characterized NA12878 human sample, Clairvoyante achieves 99.67, 95.78, 90.53\% F1-score on 1KP common variants, and 98.65, 92.57, 87.26\% F1-score for whole-genome analysis, using Illumina, PacBio, and Oxford Nanopore data, respectively. Training on a second human sample shows Clairvoyante is sample agnostic and finds variants in less than 2 h on a standard server. Furthermore, we present 3,135 variants that are missed using Illumina but supported independently by both PacBio and Oxford Nanopore reads. Clairvoyante is available open-source (https://github.com/aquaskyline/Clairvoyante), with modules to train, utilize and visualize the model. Single Molecule Sequencing (SMS) technologies generate long but noisy reads data. Here, the authors develop Clairvoyante, a deep neural network-based method for variant calling with SMS reads such as PacBio and ONT data.}}, 
+pages = {998}, 
+number = {1}, 
+volume = {10}
+}
+
+@article{meehan2018, 
+year = {2018}, 
+keywords = {mtb,transmission-clustering}, 
+title = {{The relationship between transmission time and clustering methods in Mycobacterium tuberculosis epidemiology}}, 
+author = {Meehan, Conor J. and Moris, Pieter and Kohl, Thomas A. and Pečerska, Jūlija and Akter, Suriya and Merker, Matthias and Utpatel, Christian and Beckert, Patrick and Gehre, Florian and Lempens, Pauline and Stadler, Tanja and Kaswa, Michel K. and Kühnert, Denise and Niemann, Stefan and Jong, Bouke C. de}, 
+journal = {EBioMedicine}, 
+issn = {2352-3964}, 
+doi = {10.1016/j.ebiom.2018.10.013}, 
+pmid = {30341041}, 
+abstract = {{ Background Tracking recent transmission is a vital part of controlling widespread pathogens such as Mycobacterium tuberculosis. Multiple methods with specific performance characteristics exist for detecting recent transmission chains, usually by clustering strains based on genotype similarities. With such a large variety of methods available, informed selection of an appropriate approach for determining transmissions within a given setting/time period is difficult. Methods This study combines whole genome sequence (WGS) data derived from 324 isolates collected 2005–2010 in Kinshasa, Democratic Republic of Congo (DRC), a high endemic setting, with phylodynamics to unveil the timing of transmission events posited by a variety of standard genotyping methods. Clustering data based on Spoligotyping, 24-loci MIRU-VNTR typing, WGS based SNP (Single Nucleotide Polymorphism) and core genome multi locus sequence typing (cgMLST) typing were evaluated. Findings Our results suggest that clusters based on Spoligotyping could encompass transmission events that occurred almost 200 years prior to sampling while 24-loci-MIRU-VNTR often represented three decades of transmission. Instead, WGS based genotyping applying low SNP or cgMLST allele thresholds allows for determination of recent transmission events, e.g. in timespans of up to 10 years for a 5 SNP/allele cut-off. Interpretation With the rapid uptake of WGS methods in surveillance and outbreak tracking, the findings obtained in this study can guide the selection of appropriate clustering methods for uncovering relevant transmission chains within a given time-period. For high resolution cluster analyses, WGS-SNP and cgMLST based analyses have similar clustering/timing characteristics even for data obtained from a high incidence setting.}}, 
+pages = {410--416}, 
+volume = {37}
+}
+
+@article{roetzer2013, 
+year = {2013}, 
+keywords = {mtb,transmission-clustering}, 
+title = {{Whole Genome Sequencing versus Traditional Genotyping for Investigation of a Mycobacterium tuberculosis Outbreak: A Longitudinal Molecular Epidemiological Study}}, 
+author = {Roetzer, Andreas and Diel, Roland and Kohl, Thomas A. and Rückert, Christian and Nübel, Ulrich and Blom, Jochen and Wirth, Thierry and Jaenicke, Sebastian and Schuback, Sieglinde and Rüsch-Gerdes, Sabine and Supply, Philip and Kalinowski, Jörn and Niemann, Stefan}, 
+journal = {PLoS Medicine}, 
+doi = {10.1371/journal.pmed.1001387}, 
+pmid = {23424287}, 
+pmcid = {PMC3570532}, 
+abstract = {{Understanding Mycobacterium tuberculosis (Mtb) transmission is essential to guide efficient tuberculosis control strategies. Traditional strain typing lacks sufficient discriminatory power to resolve large outbreaks. Here, we tested the potential of using next generation genome sequencing for identification of outbreak-related transmission chains. During long-term (1997 to 2010) prospective population-based molecular epidemiological surveillance comprising a total of 2,301 patients, we identified a large outbreak caused by an Mtb strain of the Haarlem lineage. The main performance outcome measure of whole genome sequencing (WGS) analyses was the degree of correlation of the WGS analyses with contact tracing data and the spatio-temporal distribution of the outbreak cases. WGS analyses of the 86 isolates revealed 85 single nucleotide polymorphisms (SNPs), subdividing the outbreak into seven genome clusters (two to 24 isolates each), plus 36 unique SNP profiles. WGS results showed that the first outbreak isolates detected in 1997 were falsely clustered by classical genotyping. In 1998, one clone (termed “Hamburg clone”) started expanding, apparently independently from differences in the social environment of early cases. Genome-based clustering patterns were in better accordance with contact tracing data and the geographical distribution of the cases than clustering patterns based on classical genotyping. A maximum of three SNPs were identified in eight confirmed human-to-human transmission chains, involving 31 patients. We estimated the Mtb genome evolutionary rate at 0.4 mutations per genome per year. This rate suggests that Mtb grows in its natural host with a doubling time of approximately 22 h (400 generations per year). Based on the genome variation discovered, emergence of the Hamburg clone was dated back to a period between 1993 and 1997, hence shortly before the discovery of the outbreak through epidemiological surveillance. Our findings suggest that WGS is superior to conventional genotyping for Mtb pathogen tracing and investigating micro-epidemics. WGS provides a measure of Mtb genome evolution over time in its natural host context. Please see later in the article for the Editors' Summary}}, 
+pages = {e1001387}, 
+number = {2}, 
+volume = {10}
+}
+
+@article{meila2007, 
+year = {2007}, 
+keywords = {stats,clustering}, 
+title = {{Comparing clusterings—an information based distance}}, 
+author = {Meilă, Marina}, 
+journal = {Journal of Multivariate Analysis}, 
+issn = {0047-259X}, 
+doi = {10.1016/j.jmva.2006.11.013}, 
+abstract = {{This paper proposes an information theoretic criterion for comparing two partitions, or clusterings, of the same data set. The criterion, called variation of information (VI), measures the amount of information lost and gained in changing from clustering C to clustering C′. The basic properties of VI are presented and discussed. We focus on two kinds of properties: (1) those that help one build intuition about the new criterion (in particular, it is shown the VI is a true metric on the space of clusterings), and (2) those that pertain to the comparability of VI values over different experimental conditions. As the latter properties have rarely been discussed explicitly before, other existing comparison criteria are also examined in their light. Finally we present the VI from an axiomatic point of view, showing that it is the only “sensible” criterion for comparing partitions that is both aligned to the lattice and convexely additive. As a consequence, we prove an impossibility result for comparing partitions: there is no criterion for comparing partitions that simultaneously satisfies the above two desirable properties and is bounded.}}, 
+pages = {873--895}, 
+number = {5}, 
+volume = {98}
+}
+
+@article{smith2020, 
+year = {2020}, 
+keywords = {nanopore,mtb,diagnostics,amr,benchmark,transmission-clustering,variant-calling}, 
+title = {{Assessing Nanopore sequencing for clinical diagnostics: A comparison of NGS methods for Mycobacterium tuberculosis}}, 
+author = {Smith, Carol and Halse, Tanya A and Shea, Joseph and Modestil, Herns and Fowler, Randal C and Musser, Kimberlee A and Escuyer, Vincent and Lapierre, Pascal}, 
+journal = {Journal of Clinical Microbiology}, 
+issn = {0095-1137}, 
+doi = {10.1128/jcm.00583-20}, 
+pmid = {33055186}, 
+abstract = {{Next-generation sequencing technologies are being rapidly adopted as a tool of choice for diagnostic and outbreak investigation in public health laboratories. However, costs of operation and the need for specialized staff remain major hurdles for laboratories with limited resources for implementing these technologies. This project aimed to assess the feasibility of using Oxford Nanopore MinION whole-genome sequencing data of Mycobacterium tuberculosis isolates for species identification, in silico spoligotyping, detection of mutations associated with antimicrobial resistance (AMR) to accurately predict drug susceptibility profiles, and phylogenetic analysis to detect transmission between cases. The results were compared prospectively in real-time, to those obtained with our current clinically validated Illumina MiSeq sequencing assay for M. tuberculosis and phenotypic drug susceptibility testing results when available. Our assessment of 431 sequenced samples over a 32-week period demonstrates that, when using the proper quality controls and thresholds, the MinION can achieve levels of genotyping analysis and phenotypic resistance predictions comparable to those of the Illumina MiSeq, at a very competitive cost per sample. Our results indicate that nanopore sequencing can be a suitable alternative to, or complement, currently used sequencing platforms in a clinical setting and has the potential to be widely adopted in public health laboratories in the near future.}}
+}
+
+@article{greig2021, 
+year = {2021}, 
+keywords = {nanopore,outbreak,transmission-clustering}, 
+title = {{Analysis of a small outbreak of Shiga toxin-producing Escherichia coli O157:H7 using long-read sequencing}}, 
+author = {Greig, David R and Jenkins, Claire and Gharbia, Saheer E and Dallman, Timothy J}, 
+journal = {Microbial Genomics}, 
+doi = {10.1099/mgen.0.000545}, 
+pmid = {33683192}, 
+abstract = {{Compared to short-read sequencing data, long-read sequencing facilitates single contiguous de novo assemblies and characterization of the prophage region of the genome. Here, we describe our methodological approach to using Oxford Nanopore Technology (ONT) sequencing data to quantify genetic relatedness and to look for microevolutionary events in the core and accessory genomes to assess the within-outbreak variation of four genetically and epidemiologically linked isolates. Analysis of both Illumina and ONT sequencing data detected one SNP between the four sequences of the outbreak isolates. The variant calling procedure highlighted the importance of masking homologous sequences in the reference genome regardless of the sequencing technology used. Variant calling also highlighted the systemic errors in ONT base-calling and ambiguous mapping of Illumina reads that results in variations in the genetic distance when comparing one technology to the other. The prophage component of the outbreak strain was analysed, and nine of the 16 prophages showed some similarity to the prophage in the Sakai reference genome, including the stx2a -encoding phage. Prophage comparison between the outbreak isolates identified minor genome rearrangements in one of the isolates, including an inversion and a deletion event. The ability to characterize the accessory genome in this way is the first step to understanding the significance of these microevolutionary events and their impact on the evolutionary history, virulence and potentially the likely source and transmission of this zoonotic, foodborne pathogen.}}
+}
+
+@article{xu2020, 
+year = {2020}, 
+keywords = {nanopore,transmission-clustering,virus}, 
+title = {{Nanopore metagenomic sequencing to investigate nosocomial transmission of human metapneumovirus from a unique genetic group among haematology patients in the United Kingdom}}, 
+author = {Xu, Yifei and Lewandowski, Kuiama and Jeffery, Katie and Downs, Louise O. and Foster, Dona and Sanderson, Nicholas D. and Kavanagh, James and Vaughan, Ali and Salvagno, Claudia and Vipond, Richard and Carroll, Miles and Danby, Robert and Peto, Timothy and Crook, Derrick and Walker, A. Sarah and Matthews, Philippa C. and Pullan, Steven T.}, 
+journal = {Journal of Infection}, 
+issn = {0163-4453}, 
+doi = {10.1016/j.jinf.2020.02.003}, 
+pmid = {32092386}, 
+abstract = {{Background Human metapneumovirus (HMPV) infection causes a spectrum of respiratory tract disease, and may be a significant pathogen in the context of immunocompromise. Here, we report direct-from-sample metagenomic sequencing of HMPV using Oxford Nanopore Technology. Methods We applied this sequencing approach to 25 respiratory samples that had been submitted to a clinical diagnostic laboratory in a UK teaching hospital. These samples represented 13 patients under the care of a haematology unit over a 20-day period in Spring 2019 (two sampled twice), and ten other patients elsewhere in the hospital between 2017–2019. Results We generated HMPV reads from 20/25 samples (sensitivity 80\% compared to routine diagnostic testing) and retrieved complete HMPV genomes from 15/20 of these. Consensus sequences from Nanopore data were identical to those generated by Illumina, and represented HMPV genomes from two distinct sublineages, A2b and B2. Sequences from ten haematology patients formed a unique genetic group in the A2b sublineage, not previously reported in the UK. Among these, eight HMPV genomes formed a cluster (differing by ≤3 SNPs), likely to reflect nosocomial transmission, while two others were more distantly related and may represent independent introductions to the haematology unit. Conclusion Nanopore metagenomic sequencing can be used to diagnose HMPV infection, although more work is required to optimise sensitivity. Improvements in the use of metagenomic sequencing, particularly for respiratory viruses, could contribute to antimicrobial stewardship. Generation of full genome sequences can be used to support or rule out nosocomial transmission, and contribute to improving infection prevention and control practices.}}, 
+pages = {571--577}, 
+number = {5}, 
+volume = {80}
+}
