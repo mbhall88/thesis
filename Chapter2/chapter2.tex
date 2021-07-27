@@ -33,7 +33,7 @@ While the bioinformatic work (except the Illumina variant-calling) in this chapt
 % zika work https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-016-0356-2
 % SARS-CoV-2 https://www.sciencedirect.com/science/article/pii/S1473309920305624
 \mtb{} is a contagious bacterial pathogen that causes the disease Tuberculosis (TB) and accounts for more deaths than any other pathogen each year. As such, detecting chains of \mtb{} transmission is of the utmost importance. Whole-genome sequencing (WGS) is establishing itself as a key tool for identifying possible transmission clusters and is being used by many leading public health agencies to aid contact-tracing. Illumina is considered the gold-standard for this type of WGS work. However, in many high-burden TB settings, Illumina is not readily available and requires considerable time and resources to start and maintain. \ont{} has shown itself to be adept in these types of settings, having been used to great effect during Zika and Ebola outbreaks. Even in environments where resource availability may not be a problem, \ont{}'s rapid turnaround time has been used for monitoring COVID-19 and informing infection control measures. The time and resources required to set up \ont{} sequencing are far lower than Illumina, but despite this, there has been little work done to assess its suitability for \mtb{} WGS-based transmission clustering. The lack of work in this space likely stems from the long-held belief that due to its higher sequencing error rate, \ont{} is not capable of such fine-grained analyses. However, \ont{} has seen considerable improvements in its accuracy in recent years and studies using variant calls from the technology are becoming increasingly common. In particular, Public Health England (PHE) has investigated the use of \ont{} for the analysis of Shiga toxin-producing \ecoli{} and found it to be well-suited to the application. \\
-In this chapter, we evaluate whether \ont{} sequencing can provide \mtb{} transmission clusters consistent with Illumina. To facilitate this investigation, we collect a new dataset of 150 samples - from Madagascar, South Africa, and England - sequenced on both Illumina and \ont{} platforms. We first assess \ont{} variant calls and outline a filtering strategy to provide Illumina-level precision. We use these variant calls to cluster samples based on SNP distance thresholds and find \ont{} does not miss any samples from their expected cluster. Finally, we show that reliable clustering can be performed on samples from a mixture of Illumina and \ont{} modalities. \\
+In this chapter, we evaluate whether \ont{} sequencing can provide \mtb{} transmission clusters consistent with Illumina. To facilitate this investigation, we collect a new dataset of 150 samples - from Madagascar, South Africa, and England - sequenced on both Illumina and \ont{} platforms. We first assess \ont{} variant calls and outline a filtering strategy to provide Illumina-level precision. We use these variant calls to cluster samples based on SNP (single nucleotide polymorphism) distance thresholds and find \ont{} does not miss any samples from their expected cluster. Finally, we show that reliable clustering can be performed on samples from a mixture of Illumina and \ont{} modalities. \\
 \mtb{} has a "closed" pan-genome; most (but not all) gene content is shared by all species members. In \autoref{chap:denovo} we sought to improve variant calling of bacterial pan-genomes with genome graphs. The work in that chapter was performed on \ecoli{}, which has an "open" pan-genome. In the interest of understanding how such genome graph methods can aid in closed pan-genomes, we additionally assess transmission clusters produced from \pandora{} variant calls. We construct two \mtb{} reference graphs from different densities of population variation towards this end. While the clustering from \pandora{} does not quite perform to the standards of the single-reference caller bcftools, we gain many insights for the improvement of \pandora{} and the construction of genome graphs.
 
 %=========================================================================
@@ -43,7 +43,7 @@ In this chapter, we evaluate whether \ont{} sequencing can provide \mtb{} transm
 
 The data used for the work in this chapter, and \autoref{chap:dst}, are patient-derived \mtb{} isolates from culture. We gathered samples from Madagascar (118), South Africa (83), and England's National Mycobacteria Reference Service in Birmingham (46); giving us a total of 247 samples.  
 Each sample was sequenced on both \ont{} and Illumina platforms. Our aim was to perform all sequencing for a sample from a single DNA extraction. This ensures that any variation identified between technologies for the same sample would be due to differences in the sequencing platform and not \textit{in vitro} evolution.  
-As these samples are not reference isolates, and we want to be able to compare both Illumina and Nanopore to a "truth", we also sequenced 35 of the Malagasy isolates with PacBio.
+As these samples are not reference isolates, and we want to be able to compare both Illumina and \ont{} to a "truth", we also sequenced 35 of the Malagasy isolates with PacBio.
 
 \subsubsection{Illumina sequencing}
 
@@ -81,7 +81,7 @@ All decontaminated fastq files were subsampled to a depth of 60x (Illumina) and 
 The last step in the QC pipeline is to assign lineages for each sample. A panel of lineage-defining SNPs \cite{Shitikov2017,Rutaihwa2019,stucki2016} is used in conjunction with a sample's Illumina VCF from \autoref{sec:illumina-var-call} for the lineage assignment. At each lineage-defining position in the sample's VCF we determine if the called allele is the same as the panel allele. If it is, we add the full lineage that allele defines (e.g. 4.1.1) to a list of called lineages. For this analysis, if more than one heterozygous call was made at lineage-defining positions, we abandon lineage assignment for that sample. After classifying all of a sample's lineage-defining positions we then produce a lineage assignment based on the list of called lineages. The most recent common ancestor of all the called lineages is used as the lineage assignment. For example, if the called lineages were [4, 4.2.3, 4.2.5] the lineage assignment would be 4.2. If there is more than one called lineage from a different major lineage group, a mixed lineage assignment is given. For example [4, 4.2.3, 4.2.5, 3.2] would still be called lineage 4.2, however, [4, 4.2.3, 4.2.5, 3.2, 3.1] would be called mixed.
 
 The purpose of QC is to ensure all samples used in later analysis are of the highest quality. By highest quality we mean all samples have perfectly matched Illumina and \ont{} data, sufficient read depth of coverage on both sequencing technologies (Illumina $\ge 20$ and \ont{} $\ge 30$), no contamination, and no evidence of a mixed \mtb{} population. 
-There were 58 samples that failed to pass our QC measures and 39 were found to have non-matched Illumina and Nanopore data. In total, we have 150 samples that have passed QC and are used in the remainder of this chapter and \autoref{chap:dst}.
+There were 58 samples that failed to pass our QC measures and 39 were found to have non-matched Illumina and \ont{} data. One of the samples that failed QC is part of the eight PacBio samples we generated assemblies for in \autoref{sec:asm_results} and will be excluded from any further analysis. In total, we have 150 samples that have passed QC and are used in the remainder of this chapter and \autoref{chap:dst}.
 
 %=========================================================================
 
@@ -122,39 +122,36 @@ Index    & 142            & 0:01             & 1.5              & 361           
 \label{sec:var-calls}
 One approach to determining genetic distance is to count the number of SNPs that two samples differ by. These distances are then used to infer likely transmission clusters based on some predefined number of expected SNPs.
 Filtering of variant calls is integral to creating trusted variant calls on which to base such distances. There are many such filters used for Illumina genomic data
-and they can produce inconsistent results\cite{walter2020}. Before
-attempting to define SNP thresholds for Nanopore data, we explore the
+and they can produce inconsistent results \cite{walter2020}. Before
+attempting to define SNP thresholds for \ont{} data, we explore the
 impact of a range of filtering parameters for both bcftools and \pandora{}.  
 The aim of this filter calibration is ultimately to determine if SNP-calling precision for \ont{} is comparable with Illumina, and if not, how close can we get it.
 We evaluate the resulting, filtered SNP calls
 against the COMPASS \cite{Jajou2019} Illumina SNP calls for the seven
 samples with high-quality PacBio assemblies (see \autoref{sec:asm_results}) to ensure no bias for
-Illumina or Nanopore.
+Illumina or \ont{}.
 For others interested in investigating variant filters for \ont{} data, we also hope this calibration acts as a good starting point for deeper analysis.
 
 \subsection{Validating variant calls}
 
-We evaluate the precision and recall of the SNP calls using the method outlined in \todo{link to varifier stuff in chapter 1} - \vrb{varifier} - with a flank length of 100bp. The samples we evaluated are those seven with PacBio assemblies (see Section \autoref{sec:asm_results}). As a truth genome for each, we use the unpolished \vrb{flye} PacBio assembly, along with a mask for low-quality regions. These low-quality regions were identified by aligning the sample's Illumina reads to the assembly with \vrb{bwa mem} and flagging any position with less than 10 reads mapping to it or less than 90\% agreement. From the varifier output, we use the edit distance measure for both precision and recall. All results were visualised in Python using the matplotlib (version 3.1.3) (Hunter 2007) and seaborn (version 0.11.1) (Waskom 2020) libraries.
+We evaluate the precision and recall of SNP calls using the method outlined in \todo{link to varifier stuff in chapter 1} - \vrb{varifier} - with a flank length of 100bp. The samples we evaluated are those seven with PacBio assemblies (see \autoref{sec:asm_results}) that passed QC. As a truth genome for each, we use the unpolished \vrb{flye} PacBio assembly, along with a mask for low-quality regions. These low-quality regions were identified by aligning the sample's Illumina reads to the assembly with \vrb{bwa mem} and flagging any position with less than 10 reads mapping to it or less than 90\% agreement (see \autoref{app:asm_disagree}). 
 
 \subsection{Illumina variant calling}
 \label{sec:illumina-var-call}
 
-Illumina variant calls were made by Fan Yang-Turner (see \autoref{sec:ch2-acknowledge}) with the COMPASS pipeline used by PHE. Briefly, reads are mapped to H37Rv, and \vrb{samtools mpileup} is used to identify SNPs \cite{samtools2009}. SNPs are filtered based on the following criteria: i) must have at least five high-quality supporting reads, ii) must have at least one read in each direction, iii) 75\% of reads must be high-quality, iv) the diploid genotype must be homozygous, v) fraction of reads supporting the major allele must be at least 90\%. In addition, any SNPs falling within masked sites - as defined by aligning the \mtb{} reference to itself and identifying repetitive regions - are excluded.
+Illumina variant calls were made by Fan Yang-Turner (see \autoref{sec:ch2-acknowledge}) with the COMPASS pipeline used by PHE. Briefly, reads are mapped to H37Rv, and \vrb{samtools mpileup} is used to identify SNPs \cite{samtools2009}. SNPs are filtered based on the following criteria: i) must have at least five high-quality supporting reads, ii) must have at least one read in each direction, iii) 75\% of reads must be high-quality, iv) the diploid genotype must be homozygous, v) fraction of reads supporting the major allele must be at least 90\%. In addition, any SNPs falling within masked sites - as defined by aligning the H37Rv to itself and identifying repetitive regions \cite{tbmask2014} - are excluded. This is the same mask as was used in \autoref{sec:tbprg}.
 
 \subsection{\ont{} variant calling: \vrb{bcftools}}
 \label{sec:bcftools-filters}
 
-As there is no standard variant caller used for \mtb{} \ont{} data, we chose to try bcftools, as it has a long history of use in bioinformatics, is one of the main variant callers used for Illumina data  and is readily available to all users, and is much more user-friendly than other available tools. Another main reason for its use is that it is the updated form of the samtools pipeline used by COMPASS. The parameters used are
-relevant to the variant calls produced by the multiallelic
-model\todo{http://dx.doi.org/10.1099/mgen.0.000418}.
+As there is no standard variant caller used for \mtb{} \ont{} data, we chose to use bcftools \cite{bcftools2021}, as it has a long history of use in bioinformatics and is one of the main variant callers used for Illumina data. It is readily available to all users, and is much more user-friendly than other available tools; some of which have only be trained for Humans \cite{clair2020}, or require the raw \ont{} data \cite{nanopolish2015}. Another main reason for its use is that it is the updated form of the samtools pipeline used by COMPASS and thus provides a somewhat "fair" comparison.
 
-Nanopore reads were aligned to the \mtb{} reference genome using minimap2 (version 2.17), with options to produce SAM output containing no secondary alignments. The subsequent SAM file is provided as input to the bcftools (version 1.11) subcommand \vrb{mpileup} with the 'skip indels' option. The resulting pileup is then used to call SNPs with \vrb{bcftools call} using the multiallelic caller with a haploid model and an option to skip indel variants.
+\ont{} reads were aligned to the H37Rv using minimap2 (version 2.17), with options to produce SAM output containing no secondary alignments. The subsequent SAM file is provided as input to the bcftools (version 1.11) subcommand \vrb{mpileup} with the 'skip indels' option. The resulting pileup is then used to call SNPs with \vrb{bcftools call} using the multiallelic caller with a haploid model and an option to skip indel variants.
 There are a number of fields in the resulting VCF relating to the information about the reads that support each position. We filter VCF positions based on whether certain fields meet a given criteria.
 After a thorough examination of the how filtering based on each field impacts precision and recall, we settled on five filters for bcftools. First, we filter out positions with a quality (QUAL field) score of less than 60. The quality is a log-scaled probability for the assertion made by the alternate allele. Second, read position bias (RPB) of at least 0.05 is required. RPB indicates whether there is a bias for support from the ends of reads, as they are usually low quality. Third, we filter out positions with a segregation-based metric (SGB) less than -0.5. SGB is a measure of how read depths across alleles match expected depths. Fourth, variant distance bias (VDB) less than 0.002 is filtered out. VDB is a measure of whether a variant's position within the reads that support it is randomly distributed or biased (e.g. near the start). Fifth, the fraction of reads supporting the called allele (FRS) must be 90\% or more.
 
-\autoref{fig:bcftools-filters} shows the precision (proportion
-of calls that are correct) and recall (proportion of variants found) for
-a selection of these bcftools VCF fields. The trade-off between
+\autoref{fig:bcftools-filters} shows the how the addition of each of these filters impacts precision (proportion
+of calls that are correct) and recall (proportion of variants found) for bcftools compared with COMPASS (Illumina). The trade-off between
 precision and recall is dependent on the question one is trying to
 answer. For the purposes of transmission clustering, we place higher importance on
 precision as we seek to ensure the calls used are of the highest
@@ -162,31 +159,28 @@ quality. The consequence of this is we miss some variants - compared to
 COMPASS.
 
 The filtering we use for the remainder of the transmission inference
-work is to remove any VCF record (variant) with a quality score (QUAL)
-of less than 60,~ a read position bias (RPB) of less than 0.05, variant
-distance bias (VDB) less than 0.002, a fraction of read-support (FRS)
-less than 0.9, and a segregation-based metric (SGB)~ greater than -0.5.
-These filters, represented by the yellow box in
-Figure~{\ref{fig:bcftools-filters}}, lead to median precision and
+work is to apply all five filters mentioned above. These filters, represented by the yellow box in
+\autoref{fig:bcftools-filters}, lead to median precision and
 recall of 99.94\% and 84.26\%, respectively for the seven validation
-samples. When compared to the COMPASS median precision and recall values
-of 100\% and 92.58\%, respectively,~ we produce Nanopore variant calls
-with equivalent precision to Illumina, but with less recall.
+samples with PacBio assemblies. This is compared to the COMPASS median precision and recall values
+of 100\% and 92.58\%, respectively.
+
+In summary, we produce \ont{} variant calls with equivalent precision to Illumina, but with less recall.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/bcftools-precision-recall-filters.png}
 \caption{{Precision (left) and recall (right) of SNPs for COMPASS (red) and a
-selection of bcftools filters. `\#nofilter' (blue) is bcftools with no
-filtering of variants. `QUAL' (purple) is bcftools SNPs with a quality score of
-60 or more. `+RPB+VDB+SGB' (grey) indicates bcftools variants with the INFO
+selection of bcftools filters. \vrb{\#nofilter} (blue) is bcftools with no
+filtering of variants. \vrb{QUAL} (purple) is bcftools SNPs with a quality score of
+60 or more. \vrb{+RPB+VDB+SGB} (grey) indicates bcftools variants with the INFO
 field values~\(\ge\)0.05,~\(\ge\)0.002,
-and~\(\le\)-0.5, respectively, plus QUAL. `+FRS' (yellow) shows
+and~\(\le\)-0.5, respectively, plus QUAL. \vrb{+FRS} (yellow) shows
 bcftools SNPs with all previous filters, plus only SNPs where the
 fraction of reads supporting the variant is at least 90\%. Note: the
-precision plot y-axis was cut causing some `\#nofilter' points to be
+precision plot y-axis was cut causing some \vrb{\#nofilter} points to be
 hidden.
-{\label{fig:bcftools-filters}}%
+{\label{fig:bcftools-filters}}
 }}
 \end{center}
 \end{figure}
@@ -194,18 +188,15 @@ hidden.
 \subsection{\ont{} variant calling: \pandora{}}
 \label{sec:pandora-filters}
 
-When assessing the best filters for increasing the precision of variant calls from \pandora{}, we are also interested in determining whether \prg{} density has a noticeable impact on performance. We use the sparse and dense \prg{}s from \autoref{sec:tbprg} and look at precision and recall these produce for the same filters.
+When assessing the best filters for increasing the precision of variant calls from \pandora{}, we are also interested in determining whether \prg{} density has a noticeable impact on performance. We use the sparse and dense \prg{}s from \autoref{sec:tbprg} and look at the precision and recall these produce for the same filters.
 
 \subsubsection{Single-sample}
 \label{sec:map-var-calls}
 
-For each sample, we discover \denovo{} variants using the method outlined in \autoref{chap:denovo} using the \vrb{discover} command of \pandora{} (version 0.8.0), using default parameters except for limiting the number of novel variants for a candidate region to 10. Novel variants are added to the relevant \prg{} using the same method as \todo{reference chapter 1 section that outlines how we feed de novo variants back into the PRG} and the resulting, update \prg{}s are indexed with \pandora{}. The \vrb{map} routine of \pandora{} is then used to genotype the sample's reads and produce a VCF. To be able to compare the \pandora{} VCF to the truth assemblies we tell \pandora{} to output coordinates with respect to the H37Rv reference sequence for each locus. Then, we convert these locus positions to the absolute position within H37Rv. Running \pandora{} in this way leads to some alleles being quite long and having a lot of redundant information, so we use bcftools norm to trim unused alleles and reduce variants down to their most succinct representation.
+For each sample, we discover \denovo{} variants using the method outlined in \autoref{chap:denovo} using the \vrb{discover} command of \pandora{} (version 0.8.0). We use default parameters, except for limiting the number of novel variants from a candidate region to 10. Novel variants are added to the relevant local \prg{} using the same method as \todo{reference chapter 1 section that outlines how we feed de novo variants back into the PRG} and the resulting updated \prg{} is indexed with \pandora{}. The \vrb{map} routine of \pandora{} is then used to genotype a sample's reads and produce a VCF. To be able to compare the \pandora{} VCF to the truth assemblies we tell \pandora{} to output coordinates with respect to the H37Rv reference sequence for each locus. We then convert these locus positions to the absolute position within H37Rv. Running \pandora{} in this way leads to some alleles being quite long and having a lot of redundant information, so we use \vrb{bcftools norm} to trim unused alleles and reduce variants down to their most succinct representation. \\
 The \pandora{} VCF fields we use for filtering are: the depth of coverage on the called allele, which we require at least 3 reads; we keep positions with a strand bias of at least 1\%, which is the lowest depth on the forward or reverse strand divided by the total depth; a genotype confidence score no less than 5; an FRS of at least 90\%  - calculated the same way as in \autoref{sec:bcftools-filters}.
-The results of incrementally applying these filters, along with no filters and COMPASS, are shown in \autoref{fig:pandora-filters-snps}. \pandora{}'s best median precision (100\%) and
-is with a sparse \prg{} and all filters applied. With all filters, the sparse \prg{} leads to a median recall of 71.99\%. When compared to the COMPASS median precision and recall values
-of 100\% and 92.58\%, respectively, \pandora{} produces Nanopore variant calls
-with equivalent precision to Illumina, but with 20.59\% less recall. Part of the recall disparity between \pandora{} and COMPASS is explained by the masking of loci in the reference graph (see \autoref{sec:tbprg} and \autoref{app:mask}). Despite this large difference in recall, we chose to use all of the filters outlined above because, as mentioned earlier, precision is far more important than recall for the transmission cluster work.
-In nearly every filtering combination, the sparse \prg{} lead to higher recall \emph{and} precision, albeit quite marginal. As a result, the remaining work featuring \pandora{} in this chapter will use the sparse \prg{}. Given the increased computational cost of using the dense \prg{}, without any benefit for precision and recall.
+The results of incrementally applying these filters, along with no filters and COMPASS, are shown in \autoref{fig:pandora-filters-snps}. Of the two \prg{}s used, \pandora{}'s best median precision (100\%) is with the sparse \prg{} and all filters applied. With all filters, the sparse \prg{} leads to a median recall of 71.99\%. When compared to the COMPASS median precision and recall values of 100\% and 92.58\%, respectively, \pandora{} produces \ont{} SNP calls with equivalent precision to Illumina, but with 20.59\% less recall (SNPs \emph{and} indels are assessed in \autoref{app:pandora-all-vars}). Part of the recall disparity between \pandora{} and COMPASS is explained by the masking of loci in the reference graph (see \autoref{sec:tbprg} and \autoref{app:mask}). Despite this large difference in recall, we chose to use all of the filters outlined above because, as mentioned earlier, precision is far more important than recall for the transmission cluster work.
+In nearly every filtering combination, the sparse \prg{} lead to higher recall \emph{and} precision, albeit marginally. As a result, the remaining work featuring \pandora{} in this chapter will use the sparse \prg{} given the increased computational cost of using the dense \prg{}, without any benefit for precision and recall.
 
 \begin{figure}
 \begin{center}
@@ -216,32 +207,21 @@ In nearly every filtering combination, the sparse \prg{} lead to higher recall \
 \end{center}
 \end{figure}
 
-Although we only use SNPs for identifying transmission clusters, we also assessed \pandora{} variant calls for all variants, including indels up to a length of 20bp in \autoref{fig:pandora-filters-all}.  We did this for the sake of future work that might be interested in using \pandora{} indel calls, such as predicting drug resistance. Again, the sparse \prg{} gave better precision and recall than the dense one. Using all variants, there was a recall improvement to 75.48\% (all filters) - up 3.49\% from SNPs only. Precision on the other hand sees a drop to 95.90\% when assessing all variants - compared to 100\% for SNPs only. Given the large drop in precision it is clear that \pandora{} indel-calling needs further improvement, however, indel calling (deletions especially) are a known limitation of \ont{} \cite{jain2018,wick2019}.
-
-\begin{figure}
-\begin{center}
-\includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora-precision-recall-filters-all-variants.png}
-\caption{{Precision (bottom) and recall (top) of SNPs for COMPASS (purple) and all variants (maximum indel length of 20bp) for \pandora{} with sparse (red) and dense (blue) \prg{}s. The \pandora{} boxes start with no filters on the left, with each box moving to the right adding a filter to the previous box. The COMPASS box is a reference to the precision and recall of Illumina variant calls. Linear PRG density refers to the fact that COMPASS uses a single, linear reference genome as opposed to \pandora{}, which uses a genome graph. The black points refer to single data points for the seven samples used. MIN\_COV=minimum depth of coverage;MIN\_SB=minimum strand bias;MIN\_GT\_CONF=minimum genotype confidence score;MIN\_FRS=minimum fraction of read support.
-{\label{fig:pandora-filters-all}}%
-}}
-\end{center}
-\end{figure}
-
 \subsubsection{Multi-sample}
 
-\pandora{}'s \vrb{map} routine infers a consensus sequence for a single sample and outputs variant calls with respect to that. However, \pandora{} also has a multi-sample counterpart - \vrb{compare}. The \vrb{compare} routine infers a consensus sequence for \emph{all} samples and outputs a locus presense-absence matrix, along with a VCF with genotypes for all samples with respect to the consensus sequence \todo{link to ch1 or 2 section describing compare}. As it was designed for analysing collection of (potentially divergent) samples, we use the \vrb{compare} protocol to assess its ability to describe transmission clusters. 
+\pandora{}'s \vrb{map} routine infers a consensus sequence for a single sample and outputs variant calls with respect to that. However, \pandora{} also has a multi-sample counterpart - the \vrb{compare} command. The \vrb{compare} routine infers a single consensus sequence for \emph{all} samples and outputs a locus presense-absence matrix, along with a VCF of genotypes for all samples with respect to the consensus sequence \todo{link to ch1 or 2 section describing compare}. As it was designed for analysing collections of (potentially divergent) samples, we use the \vrb{compare} protocol to assess its ability to describe transmission clusters. 
 
-The process for calling variants using compare is to first take the novel variants discovered for each sample in \autoref{sec:map-var-calls}. Instead of creating an updated \prg{} for each sample, we take all novel variants for all samples and add them to the relevant locus' original MSA. We then update the MSA, rebuild the \prg{}s for each locus, combine all \prg{}s into a single PanRG and then index with \pandora{}. In the end, we have a \prg{} that has novel variants from all samples contained within it, rather than the \prg{}s used by `map` which only have the novel variants for a single sample.
-Next, we run `pandora compare` using the updated sparse and dense \prg{}s and filter the resulting VCF as-per \autoref{sec:pandora-filters}.
+The process for calling variants using \vrb{compare} is to first aggregate the novel variants discovered for each sample in \autoref{sec:map-var-calls}. Instead of creating an updated \prg{} for each sample, we take all novel variants for all samples and add them to the relevant locus' original MSA. We then update the MSA for each locus (from \autoref{sec:tbprg}), rebuild the \prg{}s for each locus, combine all local (locus) \prg{}s into a single pan-genome \prg{} and then index it with \pandora{}. In the end, we have a \prg{} that has novel variants from all samples contained within it, rather than the \prg{}s used by \vrb{map}, which only have the novel variants for a single sample.
+Next, we run \vrb{pandora compare} using the updated sparse and dense \prg{}s and filter the resulting VCF as-per \autoref{sec:pandora-filters}.
 
-As a result of its design, it is not possible to provide `compare` with a reference to base VCF coordinates off (as in \autoref{sec:map-var-calls}). Therefore, we cannot assess the precision and recall for the seven samples as above. We maintain the same filtering strategy as the single-sample approach though, as all of those fields are available in the VCF from `compare`.
+As a result of its design, it is not possible to provide \vrb{compare} with a reference to base VCF coordinates on (as in \autoref{sec:map-var-calls}). Therefore, we cannot assess the precision and recall for the seven samples as above. We maintain the same filtering strategy as the single-sample approach though, as all of those fields are available in the VCF from \vrb{compare}.
 
 \subsection{Computational performance}
 \label{sec:var-call-comp-perf}
 
-In addition to the quality of the variant calls, the computational cost of running them is also important. The CPU time and maximum memory usage for performing the \ont{} variant calling is shown in \autoref{fig:var-comp-perf}. \pandora{}'s performance is broken down into the individual stages, while bcftools is represented by a single job. The median maxmimum memory for bcftools was 8.2GB, although, the maximum was as high as 58.5GB. This is compared to the highest \pandora{} step - updating the MSAs with novel variants - with a median maximum memory usage of 9.7GB and 13.3GB for the sparse and dense \prg{}s respectively. The highest memory usage for \pandora{} was 18.6GB during the updating of MSAs, nearly 40GB lower than the peak of bcftools. The median CPU time for bcftools was 35129 seconds, or 9.75 hours, with the longest run coming in at 138364 seconds (38.4 hours). To be able to compare this with \pandora{} as a whole, we can sum the median CPU time over each step, which gives 21704 and 53194 seconds, or 6.0 and 14.7 hours, for the sparse and dense \prg{}s respectively. As with the memory usage, the longest runtime component of the \pandora{} pipeline was updating the MSAs with \denovo{} variants.
+In addition to the quality of the variant calls, the computational cost of producing them is also important. The CPU time and maximum memory usage for performing the \ont{} variant calling is shown in \autoref{fig:var-comp-perf}. \pandora{}'s performance is broken down into the individual stages, while bcftools is represented by a single job (\vrb{pileup\_nanopore}). The median maximum memory for bcftools was 8.2GB, although, the maximum was as high as 58.5GB. This is compared to the highest \pandora{} step - updating the MSAs with novel variants - with a median maximum memory usage of 9.7GB and 13.3GB for the sparse and dense \prg{}s respectively. The highest memory usage for \pandora{} was 18.6GB during the updating of MSAs, nearly 40GB lower than the peak of bcftools. The median CPU time for bcftools was 35129 seconds, or 9.75 hours, with the longest run coming in at 138364 seconds (38.4 hours). To be able to compare this with \pandora{} as a whole, we can sum the median CPU time over each step, which gives 21704 and 53194 seconds, or 6.0 and 14.7 hours, for the sparse and dense \prg{}s respectively. As with the memory usage, the longest runtime component of the \pandora{} pipeline was updating the MSAs with \denovo{} variants.
 
-The computational performance of \pandora{} `compare` is not directly comparable to bcftools and \pandora{} `map` as it runs on all samples at the same time. Additionally, the novel variant discovery phase of pandora map for all samples technically contributes to the overall runtime of compare. As the performance of this discovery step has already been reported, we outline the remainder of the steps involved in compare. In total, the remainder of the sparse and dense \prg{} steps took 58.4 and 83.1 CPU hours respectively. The actual wall clock time for these steps was 5.5 and 7.3 hours. The maximum memory was again obtained during the updating of the MSAs and peaked at 38 and 37GB for the sparse and dense \prg{}s respectively.
+The computational performance of \pandora{} \vrb{compare} is not directly comparable to bcftools and \pandora{} \vrb{map} as it runs on all samples at the same time. Additionally, the novel variant discovery phase of pandora map for all samples technically contributes to the overall runtime of compare. As the performance of this discovery step has already been reported, we outline the remainder of the steps involved in compare in \autoref{tab:compare-perf}. In total, the remainder of the sparse and dense \prg{} steps took 58.4 and 83.1 CPU hours respectively. The actual wall clock time for these steps was 5.5 and 7.3 hours. The maximum memory was again obtained during the updating of the MSAs and peaked at 38 and 37GB for the sparse and dense \prg{}s respectively.
 
 \begin{figure}
      \centering
@@ -258,14 +238,29 @@ The computational performance of \pandora{} `compare` is not directly comparable
          \caption{}
          \label{fig:max-mem}
      \end{subfigure}
-        \caption{The CPU time (in seconds; y-axis; \textbf{a}) and maximum memory usage (in megabytes; y-axis; \textbf{b}) for each \ont{} variant-calling job. Sparse (red) and dense (blue) refer to \pandora{} steps with the respective density \prg{}. \vrb{bcftools} (purple) only has one step (\vrb{pileup\_nanopore}). The violins represent the distribution of CPU time over all samples. }
+        \caption{The CPU time (in seconds; y-axis; \textbf{a}) and maximum memory usage (in megabytes; y-axis; \textbf{b}) for each \ont{} variant-calling job. Sparse (red) and dense (blue) refer to \pandora{} steps with the respective density \prg{}. \vrb{bcftools} (purple) only has one step (\vrb{pileup\_nanopore}). The violins represent the distribution of CPU time over all samples.}
         \label{fig:var-comp-perf}
 \end{figure}
+
+\begin{table}
+\centering
+\begin{tabularx}{\textwidth}{|l|X|X|X|X|X|X|}
+\hline
+         & \multicolumn{3}{l|}{Sparse}                          & \multicolumn{3}{l|}{Dense}                           \\ \hline
+Step     & CPU time (sec) & Real time (H:m) & Max. RAM (GB) & CPU time (sec) & Real time (H:m) & Max. RAM (GB) \\ \hline
+Update MSA      & 114677         & 1:01             & 38              & 130221         & 1:15             & 37              \\ \hline
+Make PRG & 4700           & 0:05             & 1.2              & 5403           & 0:06             & 1.1              \\ \hline
+Index    & 538            & 0:01             & 2.1              & 1224            & 0:02             & 2.4              \\ \hline
+Compare    & 90486            & 4:25             & 5.4              & 162294            & 6:04             & 6.1              \\ \hline
+\end{tabularx}
+\caption{CPU and wall clock time, and memory (RAM) usage for the main steps of running \pandora{}'s multi-sample routine \vrb{compare}. Sparse and Dense refer to two different densities with respect to the number of variants used. All steps were run on a single compute node with 32 CPU cores. MSA=multiple sequence alignment;PRG=population reference graph.}
+\label{tab:compare-perf}
+\end{table}
 
 \subsection{Summary}
 \label{sec:var-summary}
 
-In summary, \autoref{fig:prec-recall-filters} shows that our selection of filters for \ont{} variant callers provide precision on-par with Illumina. However, this precision comes at the cost of a loss in recall. The remainder of this chapter explores how the SNP calls from \ont{} can be used for calculate distances between samples, and define putative transmission clusters from these distances. We are especially interested in how similar the pairwise distances are between samples and sequencing modality and whether the same distance thresholds used for Illumina can also be used for \ont{}.
+In summary, \autoref{fig:prec-recall-filters} shows that our selection of filters for \ont{} variant callers provide precision on-par with Illumina. However, this precision comes at the cost of a loss in recall. The remainder of this chapter explores how the SNP calls from \ont{} can be used to calculate distances between samples, and define putative transmission clusters from these distances. We are especially interested in how similar the pairwise distances are between samples and sequencing modality and whether the same distance thresholds used for Illumina can also be used for \ont{}.
 
 \begin{figure}
 \begin{center}
@@ -281,65 +276,37 @@ In summary, \autoref{fig:prec-recall-filters} shows that our selection of filter
 \section{Pairwise SNP distance comparison for Illumina and \ont{} sequencing data}
 \label{sec:snp-dist}
 
-When attempting to infer transmission clusters, the accepted approach is
+When attempting to infer transmission clusters, the one approach is
 to define a SNP distance threshold and say that any genomes within this
 distance of each other are clustered (possible transmissions). It follows that the SNPs used must
 be trusted. Having shown that SNP precision on-par with Illumina can be
-achieved with \ont{} data, we investigate the pairwise SNP distance
-between samples produced by both sequencing technologies. The intention
+achieved with \ont{} data (see \autoref{sec:var-calls}), we investigate the pairwise SNP distance
+between samples produced by both Illumina and \ont{} sequencing technologies. The intention
 here is to determine whether the thresholds typically used for Illumina
-data can also be used for Nanopore, or whether adjustments need to be
+data can also be used for \ont{}, or whether adjustments need to be
 made.
 
 To determine the distance between samples, we first generate sample consensus sequences. We do this for each variant-caller: COMPASS (Illumina), bcftools (\ont{}), and \pandora{}'s single-sample mode (\ont{}) (not \pandora{}'s multi-sample mode). A consensus sequence is obtained by applying the calls from a given VCF (from \autoref{sec:var-calls}) to the \mtb{} reference genome. We nullify (mark as \vrb{N}) any positions where i) the position failed filtering, ii) the reference genome position does not appear in the VCF file (except for \pandora{} single-sample), iii) the called genotype is null, or iv) the position is within the reference genome mask. All sample consensus sequences for a variant-caller are joined into a single FASTA file and a pairwise distance matrix is calculated using \vrb{snp-dists} (version 0.7.0) \cite{snp-dists}. In the case of \pandora{} \vrb{compare} (multi-sample mode), we cannot follow this approach for generating a consensus sequence and distance matrix, due to the inability to translate the coordinates from a graph to a linear reference. Instead of a consensus sequence, we generate a genotype array by extracting the called genotype for each sample at each site (VCF record). Where a site has failed a filter, we use a genotype value of -2. To calculate the distance between two samples, we compare their genotype arrays; if either sample's genotype is $<0$ (i.e. null or filtered) or the genotypes are the same, we record a distance of 0, otherwise 1. The sum of these comparisons for each genotype is the distance between the two samples.
 
-The pairwise SNP distance relationship can be seen in
-\autoref{fig:dotplot}. For a given pair of samples, we
-plot their SNP distance, based on the COMPASS (Illumina) variant calls,
-against the SNP distance for the same pair, based on the \ont{} variant calls.
+The pairwise SNP distance relationship can be seen in \autoref{fig:dotplot}. For a given pair of samples, we plot their SNP distance, based on the COMPASS (Illumina) variant calls (x-axis), against the SNP distance for the same pair, based on the \ont{} variant calls (y-axis). All pairwise comparisons between a sample and itself were removed from the visualisation, and only a single value was used for each pair (i.e. we keep sample1 vs. sample2 and discard sample2 vs. sample1 as they are the same). RANSAC Robust Linear Regression \cite{fischler1981}, as implemented in the Python library \vrb{scikit-learn} \cite{scikitlearn}, was used for determining a linear equation and line-of-best fit for the relationship between pairwise Illumina and \ont{} SNP distance.
 
-All pairwise comparisons between a sample and itself were removed from the visualisation, and only a single value was used for each pair (i.e. we keep sample1 vs. sample2 and discard sample2 vs. sample1 as they are the same). RANSAC Robust Linear Regression \cite{fischler1981}, as implemented in the Python library \vrb{scikit-learn} \cite{scikitlearn}, was used for determining a linear equation and line-of-best fit for the relationship between pairwise Illumina and \ont{} SNP distance.
+If the same thresholds used for Illumina can also be used for \ont{}, we would expect the distances to be the same and the bulk of the points in the plot to fall on the dashed, diagonal identity line in \autoref{fig:dotplot}. What we see instead is a linear relationship that falls \emph{under} this identity line - for all \ont{} variant callers. Given the filtered \ont{} SNP calls made by bcftools and \pandora{} have lower recall than Illumina (see \autoref{sec:var-summary}), this is expected, as they miss some SNPs found by Illumina.
 
- If the same thresholds used for Illumina can
-also be used for Nanopore, we would expect the distances to be the same
-and the bulk of the points in the plot to fall on the dashed, diagonal
-identity line. What we see instead is a linear relationship that falls
-\emph{under} this identity line - for all \ont{} variant callers. Given the filtered Nanopore
-SNP calls made by bcftools and \pandora{} have lower recall than Illumina (see \autoref{sec:var-summary}), this
-is expected, as we miss some SNPs found by Illumina.
-
-One important observation though is highlighted by the zoomed inset in
-\autoref{fig:dotplot}. As SNP thresholds used for \mtb{}
-are generally well below 100 \cite{stimson2019}, it makes more sense to base SNP distance
-relationships on those samples that are ``close''. And indeed, when we
-zoom in on pairs of samples within 100 (Illumina) SNPs of each other, we
-see an association that falls closer to the identity line. Fitting a
-linear model to this close subset of pairwise distances, yields a
-relationship defined by the equation $y=0.806x+0.593$ for bcftools, $y=0.575x+13.544$ for \pandora{} single-sample, and $y=0.342x+0.765$ for \pandora{} multi-sample.
-Replacing $x$ with an Illumina SNP threshold gives the
-(predicted) equivalent Nanopore SNP threshold based on these
-relationships. For example, at an Illumina SNP threshold of 12, the
-linear equation would predict a corresponding bcftools Nanopore SNP distance of
-10.
+One important observation though is highlighted by the zoomed inset in \autoref{fig:dotplot}. As SNP thresholds used for \mtb{} are generally well below 100 \cite{stimson2019}, it makes more sense to base SNP distance relationships on those samples that are "close". And indeed, when we zoom in on pairs of samples within 100 (Illumina) SNPs of each other, we see an association that is closer to the identity line. Fitting a linear model to this close subset of pairwise distances yields a relationship defined by the equation $y=0.806x+0.593$ for bcftools, $y=0.575x+13.544$ for \pandora{} single-sample, and $y=0.342x+0.765$ for \pandora{} multi-sample. Replacing $x$ with an Illumina SNP threshold gives the (predicted) equivalent \ont{} SNP threshold based on these relationships. For example, at an Illumina SNP distance of 12, the linear equation would predict a corresponding bcftools \ont{} SNP distance of 10.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/combined-dotplots.png}
-\caption{{Pairwise SNP distance relationship between Illumina (COMPASS; x-axis)
-and \ont{} (bcftools (red), and \pandora{} single-sample (blue) and multi-sample (purple) mode; y-axis) data. Each point represents the SNP
-distance between two samples for the two sequencing modalities. The black, dashed line shows the identity
-line (i.e. y=x) and the coloured lines shows the line of best fit based on
-the robust linear model fit to the data. The zoomed inset shows all
-pairs where the COMPASS distance is~\(\le100\).
-{\label{fig:dotplot}}%
+\caption{{Pairwise SNP distance relationship between Illumina (COMPASS; x-axis) and \ont{} (bcftools (red), and \pandora{} single-sample (blue) and multi-sample (purple) mode; y-axis) data. Each point represents the SNP distance between two samples for the two sequencing modalities. The black, dashed line shows the identity line (i.e. $y=x$) and the coloured lines shows the line of best fit based on the robust linear model fit to the data. The zoomed inset shows all pairs where the COMPASS distance is $\le 100$.
+{\label{fig:dotplot}}
 }}
 \end{center}
 \end{figure}
 
 %  see https://github.com/mbhall88/head_to_head_pipeline/issues/61 for a full investigation of the outliers discussed below
-In the middle-left of the inset in \autoref{fig:dotplot} a small cluster of \pandora{} single-sample (blue) points can be seen. These have an approximate pairwise \ont{} distance of 100, but \texttildelow 10 for Illumina. Upon further investigation, the cause of the large discprepancy in distance was due to \pandora{} single-sample failing to identify a number of heterozygous calls. Two samples in particular occur as one member in all of the major outlying pairs. 94\% of the false positive differences leading to the large \ont{} distances occur at positions that are filtered due to evidence of heterozygosity in COMPASS. That is, in the Illumina consensus sequence these positions are ignored and do not count as a difference. However, \pandora{} did not have sufficient read depth on both alleles to trigger the FRS filter (see \autoref{sec:pandora-filters}) - leading to a passing variant call that differs from the sample it is being compared with.
+In the middle-left of the inset in \autoref{fig:dotplot} a small cluster of \pandora{} single-sample (blue) points can be seen. These have an approximate pairwise \ont{} distance of 100, but \texttildelow10 for Illumina. Upon further investigation, the cause of the large discrepancy in distance was due to \pandora{} single-sample failing to identify (and filter) a number of heterozygous calls. Two samples in particular occur as one member in all of the major outlying pairs. 94\% of the false positive differences leading to the large \ont{} distances occur at positions that are filtered due to evidence of heterozygosity in COMPASS. That is, in the Illumina consensus sequence these positions are ignored due to filtering and do not count as a difference. However, \pandora{} did not have sufficient read depth on both alleles to trigger the FRS filter (see \autoref{sec:pandora-filters}) - leading to a passing variant call that differs from the sample it is being compared with. \\
 
-
+\noindent
 The relationship between Illumina and \ont{} distances is indeed linear for all three variant-calling methodologies. While the relationship is not identical (i.e. a distance of 12 for Illumina does not necessarily mean a distance of 12 for \ont{}), we will attempt to use linear models fit to the relationship to infer what \ont{} SNP distance threshold is likely to align with a given Illumina threshold for defining putative transmission clusters.
 
 %=========================================================================
@@ -347,85 +314,80 @@ The relationship between Illumina and \ont{} distances is indeed linear for all 
 \section{SNP threshold-based \ont{} transmission clustering}
 \label{sec:clustering}
 
-It is one thing to look at the relationship between Illumina and
-Nanopore pairwise SNP distance, but ultimately the most important
-question is: do Nanopore SNPs lead to transmission clusters consistent
-with those obtained with Illumina SNPs? To answer this question, we
-compare Illumina- and Nanopore-based clusters for{ four
-clinically-interesting (Illumina) SNP thresholds -} 0, 2, 5, and 12. 
+It is one thing to look at the relationship between Illumina and \ont{} pairwise SNP distance, but ultimately the most important question is: do \ont{} SNPs lead to transmission clusters consistent with those obtained with Illumina SNPs? To answer this question, we compare Illumina- and \ont{}-based clusters for four clinically-interesting (Illumina) SNP thresholds - 0, 2, 5, and 12. 
 
-Selecting a SNP threshold to infer transmission clusters from has seen a
-variety of values recommended \cite{stimson2019}. As we seek to show
-concordance of \ont{} data with PHE's Illumina-based strategy, we opt
-to investigate Illumina threshold values 0, 2, 5, and 12. PHE define two cases as clustered
-if they have a SNP distance $\le$ 12 as "\emph{although 12
-SNPs represents the maximum SNP difference between 2 isolates for which
-epidemiological links have previously been identified
-\cite{walker2013} and is a conservative measure for reporting
-isolate relatedness}"\cite{phe-tb-england}. Five was likewise selected as
-it was found by \cite{walker2013} to indicate membership in a recent
-transmission chain. Threshold values 0 and 2 were chosen to provide
-insight into the level of granularity possible and is of clinical
-interest in certain settings (personal correspondence). For each of these four thresholds, we investigate what corresponding \ont{} SNP distance threshold yields the most similar clustering.
+Selecting a SNP threshold to infer transmission clusters from has seen a variety of values recommended \cite{stimson2019}. As we seek to show concordance of \ont{} data with PHE's Illumina-based strategy, we opt to investigate Illumina threshold values 0, 2, 5, and 12. PHE define two cases as clustered if they have a SNP distance $\le 12$ as "\emph{12 SNPs represents the maximum SNP difference between 2 isolates for which epidemiological links have previously been identified \cite{walker2013} and is a conservative measure for reporting isolate relatedness}"\cite{phe-tb-england}. Five was likewise selected as it was found by \cite{walker2013} to indicate membership in a recent transmission chain. Threshold values 0 and 2 were chosen to provide insight into the level of granularity possible and is of clinical interest in certain settings (personal correspondence). For each of these four thresholds, we investigate what corresponding \ont{} SNP distance threshold yields the most similar clustering.
 
 \subsection{Transmission cluster similarity}
 \label{sec:cluster-similarity}
 
-We use the distance matrices from \autoref{sec:snp-dist} to infer transmission clusters. In order to cluster samples, for a given SNP threshold $t$, we use only pairs of samples in the distance matrix with a distance $\le t$ to define a graph, $G=(V,E)$, where samples (nodes, $V$) are connected by weighted edges ($E$), with the weight of an edge indicating the distance between the two samples it connects. Clusters are defined as the set of connected components $\{C_1, C_2...C_N\}\in G$, where $N$ is the number of clusters. That is, a cluster (connected component), $C_i$, is a subgraph of $G$ where a path exists between any two samples in $C_i$, but no path exists to any samples in the rest of $G$. With this definition, all clusters have a minimum of two members. \\
-To assess how closely \ont{} SNP-based clustering approximates Illumina SNP-based clustering we use a similarity measure on sets, the Tversky Index \cite{tversky1977}. We define the Illumina clustering as $G$ and the \ont{} clustering as $H$ and formulate the Tversky Index as 
+We use the distance matrices from \autoref{sec:snp-dist} to infer transmission clusters. In order to cluster samples, for a given SNP threshold $t$, we use only pairs of samples in the distance matrix with a distance $\le t$ to define a graph, $G=(V,E)$, where samples (nodes, $V$) are connected by weighted edges ($E$), with the weight of an edge indicating the distance between the two samples it connects. Clusters are defined as the set of connected components $\{C_1, C_2...C_N\}\in G$, where $N$ is the number of clusters. That is, a cluster (connected component), $C_i$, is a subgraph of $G$ where a path exists between any two samples in $C_i$, but no path exists to any samples in the rest of $G$. With this definition, all clusters have a minimum of two members. 
+
+To assess how closely \ont{} SNP-based clustering approximates Illumina SNP-based clustering we adapt a similarity measure on sets, the Tversky Index \cite{tversky1977}. We define the Illumina clustering as $G$ and the \ont{} clustering as $H$. We are interested in being able to quantify the recall and precision of the \ont{} clustering, with respect to Illumina. In this sense recall would describe when samples that are clustered in $G$ are not clustered (or are in the wrong cluster) in $H$. Likewise, precision in this context tells us when extra samples are added to existing clusters by $H$, or when clusters in $G$ are joined in $H$. 
+
+In order to be able to define precision and recall when comparing two clustering graphs $G$ and $H$ we define the Tversky Index
 
 \begin{equation}
-   TI=\frac{\sum_{n}^{V_G}\frac{\left|C_{n,G}\cap C_{n,H}\right|}{\left|C_{n,G}\cap C_{n,H}\right|+\alpha |C_{n,G}-C_{n,H}|+\beta |C_{n,H}-C_{n,G}|}}{|V_G|}
+\label{eq:tversky-index}
+   TI(n, G, H)=\frac{\left|C_{n,G}\cap C_{n,H}\right|}{\left|C_{n,G}\cap C_{n,H}\right|+\alpha |C_{n,G}-C_{n,H}|+\beta |C_{n,H}-C_{n,G}|}
 \end{equation}
 
-where $V_G$ is the set of samples (nodes) in $G$ and $C_{n,G}$ is the cluster in $G$ that sample $n$ is a member of. When $\alpha = 1$ and $\beta=0$ we get the Sample-Averaged Cluster Recall (SACR) and when $\alpha = 0$ and $\beta = 1$ we get the Sample-Averaged Cluster Precision (SACP). SACR states, on average, what proportion of the samples clustered together in $G$ (Illumina) are also clustered together in $H$ (\ont{}) - it is a measure of how many true positives \ont{} retains. Inversely, SACP states, on average, what proportion of the samples clustered together in $H$ are also clustered together in $G$ - it is a measure of how many extra samples \ont{} adds to clusters. \\
-SACR and SACP do not inherently account for when $H$ has clusters containing no samples in $G$. In order to quantify any extra clustering by $H$, we characterise the Excess Clustering Rate (XCR) as the proportion of singletons (unconnected nodes) in $G$ are (incorrectly) non-singletons in $H$. We define this as
+where $C_{n,G}$ is the cluster in $G$ that sample $n$ is a member of. When $\alpha = 1$ and $\beta=0$ in \autoref{eq:tversky-index}, we get a metric analogous to recall - as described above. Therefore, we define recall, $R$, for a single sample $n$ as
+
+\begin{equation}
+\label{eq:recall}
+   R(n, G, H)=\frac{\left|C_{n,G}\cap C_{n,H}\right|}{\left|C_{n,G}\cap C_{n,H}\right|+|C_{n,G}-C_{n,H}|}=\frac{\left|C_{n,G}\cap C_{n,H}\right|}{|C_{n,G}|}
+\end{equation}
+
+When $\alpha = 0$ and $\beta = 1$ in \autoref{eq:tversky-index}, we get a metric analogous to precision. As such, we define precision $P$, for a single sample $n$ as
+
+\begin{equation}
+\label{eq:precision}
+   P(n, G, H)=\frac{\left|C_{n,G}\cap C_{n,H}\right|}{\left|C_{n,G}\cap C_{n,H}\right|+|C_{n,H}-C_{n,G}|}=\frac{\left|C_{n,G}\cap C_{n,H}\right|}{|C_{n,H}|}
+\end{equation}
+
+With these definitions for a single sample, we can assess the recall and precision of the \ont{} clustering, $H$, with respect to the Illumina clustering, $G$, by averaging each metric over all samples in $G$. This gives us the Sample-Averaged Cluster Recall (SACR)
+
+\begin{equation}
+\label{eq:sacr}
+   SACR=\frac{\sum_{n}^{V_G}R(n, G, H)}{|V_G|}
+\end{equation}
+
+where $V_G$ is the set of samples (nodes) in $G$ (Illumina graph). Likewise, we define the Sample-Averaged Cluster Precision (SACP) as 
+
+\begin{equation}
+\label{eq:sacp}
+   SACP=\frac{\sum_{n}^{V_G}P(n, G, H)}{|V_G|}
+\end{equation}
+
+SACR states, on average, what proportion of the samples clustered together in $G$ are also clustered together in $H$ (\ont{}) - it is a measure of how many true positives \ont{} retains. Inversely, SACP states, on average, what proportion of the samples clustered together in $H$ are also clustered together in $G$ - it is a measure of how many extra samples \ont{} adds to clusters. However, SACR and SACP do not inherently account for when $H$ has clusters containing no samples in $G$. In order to quantify any extra clustering by $H$, we denote the Excess Clustering Rate (XCR) as the proportion of singletons (unconnected nodes) in $G$ that are (incorrectly) non-singletons in $H$. We define this as
 
 \begin{equation}
 \label{eq:xcr}
     XCR = \frac{|S_G-S_H|}{|S_G|}
 \end{equation}
 
-where $S_G$ is the set of singletons in $G$ and $S_H$ is the set of singletons in $H$.
+where $S_G$ and $S_H$ are the sets of singletons in the respective graphs. \\
 
-We implement SACR, SACP and XCR calculation in the Python programming language with
-the~\texttt{networkx} library \cite{networkx}. For a given threshold,
-we create the Illumina clustering (graph), $G$, and the
-\ont{} clustering, $H$. For each sample (node)
-in $G$, we count the number of samples in its cluster
-(neighbours) in both $G$ and $H$. To
-determine SACR we divide the number of neighbours by the number of
-samples in its cluster in $G$. Likewise, we determine
-SACP by dividing the number of neighbours by the number of samples in
-the sample's cluster in $H$. Both SACR and SACP are the
-mean for all samples in $G$. 
+\noindent
+We assess the cluster similarities using the Python programming language with the \vrb{networkx} library \cite{networkx}. For a given threshold, we create the Illumina clustering (graph), $G$, and the \ont{} clustering, $H$ - as described above - and use these to calculate the SACR, SACP, and XCR using \autoref{eq:sacr}, \autoref{eq:sacp}, and \autoref{eq:xcr} respectively.
 
-To summarise, for each sample in an Illumina-defined cluster, SACR is the
-proportion of samples in its Illumina cluster also in its \ont{}
-cluster - averaged over all samples. SACP is the proportion of samples
-in its \ont{} cluster also in its Illumina cluster - averaged
-over all samples. SACR indicates whether samples have been missed from
-Nanopore clustering (false negatives) and SACP reveals if additional
-samples are being added to Nanopore clusters (false positives). One
-shortcoming of SACR and SACP is they do not account for when the
-Nanopore clustering contains clusters where no member of the cluster is
-part of an Illumina cluster. To that end, XCR is the proportion of Illumina non-clustered
-(singleton) samples that are added to a cluster by Nanopore. An XCR value of 0.1 would
-indicate that 10\% of non-clustered samples were actually part of a
-cluster in the Nanopore clustering. An illustrated, worked example of these metrics can be found in \autoref{app:cluster-example}.
+\subsubsection{Summary}
 
-Of the metrics outlined above, our major focus is SACR as missing samples from clusters is of particular concern for public health authorities.
+To summarise, for each sample in an Illumina-defined cluster, SACR is the proportion of samples in its Illumina cluster also in its \ont{} cluster - averaged over all samples. SACP is the proportion of samples in its \ont{} cluster also in its Illumina cluster - averaged over all samples. SACR indicates whether samples have been missed from \ont{} clustering (false negatives) and SACP reveals if additional samples are being added to \ont{} clusters (false positives). One shortcoming of SACR and SACP is they do not account for when the \ont{} clustering contains clusters where no member of the cluster is part of an Illumina cluster. To that end, XCR is the proportion of Illumina non-clustered (singleton) samples that are added to a cluster by \ont{}. An XCR value of 0.1 would indicate that 10\% of non-clustered samples were actually part of a cluster in the \ont{} clustering. An illustrated, worked example of these metrics can be found in \autoref{app:cluster-example}.
+
+Of the metrics outlined above, our major focus is SACR, as missing samples from clusters is of particular concern for public health authorities.
 
 \subsection{Evaluating \ont{} transmission clusters}
+\label{sec:eval-clusters}
 
 \subsubsection{bcftools}
 \label{sec:bcftools-clustering}
 
-For the four Illumina SNP distance thresholds of interest - 0, 2, 5, and 12 - the corresponding bcftools thresholds we use are 0, 2, 5, and 11. We chose to forego the model-based predicted thresholds and instead use the hand-picked ones based on the analysis in \autoref{app:dist-sweep}.
+For the four Illumina SNP distance thresholds of interest - 0, 2, 5, and 12 - the corresponding bcftools thresholds we use are 0, 2, 5, and 11. We chose to forego the model-based predicted thresholds and instead use the hand-picked ones based on a threshold parameter-sweep outlined in \autoref{app:dist-sweep}.
 
-\autoref{fig:bcftools-clusters} is a visualisation of these
-clustering results for bcftools. The graphs depict the true (Illumina/COMPASS) clusters for each SNP threshold. The inner and outer colours of each node
-represent the SACR and SACP values, respectively, for the cluster it is a member of.
+\autoref{fig:bcftools-clusters} is a visualisation of these clustering results for bcftools. The graphs depict the true (Illumina/COMPASS) clusters for each SNP threshold. The inner and outer colours of each node represent the SACR and SACP values, respectively, for the cluster it is a member of. The actual clustering produced by bcftools - without any annotations - can be see in \autoref{fig:bcftools-original-clusters}.
+% BOOKMARK
 
 The bcftools clustering results are summarised in \autoref{tab:bcftools-cluster-summary} for all four SNP thresholds analysed. Of note, bcftools
 achieves a SACR of 1.0 at all thresholds - meaning \ont{} does not miss any samples from
@@ -438,7 +400,7 @@ The lowest SACP was at threshold 12. This is explained by two cases of a cluster
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/bcftools_clusters.png}
 \caption{{Agreement of Illumina and bcftools (\ont{}) transmission clustering at SNP
 thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of
-each subplot indicates the Illumina (Ill.) and Nanopore (NP) threshold
+each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold
 used when clustering. Samples (nodes) are connected when the SNP
 distance between them is less than or equal to the relevant threshold.
 The inner and outer colours for each node indicates the SACR and SACP
@@ -475,7 +437,7 @@ For \pandora{} single-sample we also chose to use the hand-picked SNP distance t
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora_map_clusters.png}
 \caption{{Agreement of Illumina and \pandora{} single-sample (\ont{}) transmission clustering at SNP
 thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of
-each subplot indicates the Illumina (Ill.) and Nanopore (NP) threshold
+each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold
 used when clustering. Samples (nodes) are connected when the SNP
 distance between them is less than or equal to the relevant threshold.
 The inner and outer colours for each node indicates the SACR and SACP
@@ -512,7 +474,7 @@ The SNP thresholds we use for \pandora{} multi-sample clustering are 0, 1, 3, an
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora_compare_clusters.png}
 \caption{{Agreement of Illumina and \pandora{} multi-sample (\ont{}) transmission clustering at SNP
 thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of
-each subplot indicates the Illumina (Ill.) and Nanopore (NP) threshold
+each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold
 used when clustering. Samples (nodes) are connected when the SNP
 distance between them is less than or equal to the relevant threshold.
 The inner and outer colours for each node indicates the SACR and SACP
@@ -555,7 +517,7 @@ confidently recreated with \ont{} data, we turn to the question of whether the s
 \ont{} data. Being able to deduce transmission clusters from a mixture of sequencing
 modalities would allow greater integration across datasets from various
 sources and prevent laboratories from being locked into any one
-sequencing technology. As the uptake of Nanopore sequencing increases it seems
+sequencing technology. As the uptake of \ont{} sequencing increases it seems
 inevitable there will be cases where comparisons between these
 sequencing modalities is necessary. To address this question we simulate
 varying degrees of \ont{}/Illumina mixtures and look at how this impacts
@@ -568,7 +530,7 @@ between a sample's Illumina and \ont{} data.
 As the sequencing data originates from the same source we
 know the self-distance for any sample \emph{should} be 0. However, we
 also know there are major technological differences between Illumina and
-Nanopore, so it is wise to check just how similar they are.
+\ont{}, so it is wise to check just how similar they are.
 We plot these self-distances in \autoref{fig:self-dist} and see that 64\% (96) of the 150 samples have a distance of 0 between their Illumina (COMPASS) and \ont{} (bcftools) data, with 84\% (126) less than 2 SNPs apart. All samples have a self-distance less than 9, with the exception of sample \vrb{mada\_1-33}, which has a self-distance of 53. We investigated the possibility of a sample mix-up being the cause of this discrepancy but were unable to find any such convincing evidence. 
 
 \begin{figure}
@@ -585,7 +547,7 @@ We plot these self-distances in \autoref{fig:self-dist} and see that 64\% (96) o
 Next, we look at the pairwise SNP distance relationship, akin to that in \autoref{sec:snp-dist}. \autoref{fig:mixed-dotplot} shows the mixed SNP distances have a similar relationship to
 the single-technology correlation in \autoref{fig:dotplot}. The difference here, however, is that
 the y-axis represents the distance between one sample's Illumina data
-and the other's Nanopore. There are twice as many data points in this plot though as the distance between two samples is not necessarily reciprocal for mixed modality distances (as we saw with the self-distances). That is, for two samples $a$ and $b$, $distance(a_I,b_N) \neq distance(a_N, b_I)$, where $I$ and $N$ refer to Illumina and \ont{} data respectively. In the zoomed inset window of \autoref{fig:mixed-dotplot}, there is a cluster of outlying points with a higher mixed distance than Illumina distance. All of these points relate to combinations of 6 samples in particular. These were investigated for evidence of a sample swap or poor quality data, but nothing was found to support such a claim. In reality, it just seems the \ont{} data for some of the samples is quite different to the Illumina data of the other samples.
+and the other's \ont{}. There are twice as many data points in this plot though as the distance between two samples is not necessarily reciprocal for mixed modality distances (as we saw with the self-distances). That is, for two samples $a$ and $b$, $distance(a_I,b_N) \neq distance(a_N, b_I)$, where $I$ and $N$ refer to Illumina and \ont{} data respectively. In the zoomed inset window of \autoref{fig:mixed-dotplot}, there is a cluster of outlying points with a higher mixed distance than Illumina distance. All of these points relate to combinations of 6 samples in particular. These were investigated for evidence of a sample swap or poor quality data, but nothing was found to support such a claim. In reality, it just seems the \ont{} data for some of the samples is quite different to the Illumina data of the other samples.
 
 \begin{figure}
 \begin{center}
@@ -606,12 +568,12 @@ pairs.
 \end{figure}
 
 
-We now examine transmission clusters for mixtures of Nanopore and
+We now examine transmission clusters for mixtures of \ont{} and
 Illumina data using the same SNP thresholds used in \autoref{sec:clustering}. For the comparison of different
 modalities we use the Illumina SNP thresholds. The mixture
 ratios we investigate are 0.01, 0.05, 0.1, 0.25, 0.5, 0.75, and 0.9.
 That is, for a ratio of 0.25, we \emph{randomly} allocate 25\% of the samples
-to Nanopore and the remainder to Illumina. For each SNP threshold and
+to \ont{} and the remainder to Illumina. For each SNP threshold and
 ratio, we calculate the XCR, SACR and SACP that the clustering produces
 - using those ratio and threshold values. We repeat this process 1000
 times for each threshold and ratio to simulate different mixtures of
@@ -621,15 +583,15 @@ of sequencing datasets is likely to be.
 The results of these simulations
 are shown in \autoref{fig:mixed-sims}. We found that for
 all SNP thresholds and ratios, the median SACR was 1.0. In other words,
-regardless of the Nanopore/Illumina mixture ratio, for all thresholds we
+regardless of the \ont{}/Illumina mixture ratio, for all thresholds we
 used, no sample is missed from its expected clustering. The SACP values
-decrease somewhat as the ratio leans more towards Nanopore data.
+decrease somewhat as the ratio leans more towards \ont{} data.
 However, the lowest median SACP value was 0.845, which is also the SACP
-value obtained for the Nanopore-only clustering in
+value obtained for the \ont{}-only clustering in
 \autoref{sec:bcftools-clustering}. The XCR values tend to increase
-slightly as more Nanopore samples are added. In the most extreme case,
+slightly as more \ont{} samples are added. In the most extreme case,
 0.057 was the highest XCR value in any simulation (SNP threshold 5).
-Incidently, this is the same as the XCR obtained for the Nanopore-only
+Incidently, this is the same as the XCR obtained for the \ont{}-only
 clustering of the same SNP threshold, which equates to 7 of the 122
 non-clustered samples being clustered. However, regardless of the XCR,
 no samples that should have been clustered were missed (on average).
@@ -637,16 +599,16 @@ no samples that should have been clustered were missed (on average).
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/mixed_simulations.png}
-\caption{{Simulating varying ratios (X-axis) of Nanopore/Illumina sample mixtures.
+\caption{{Simulating varying ratios (X-axis) of \ont{}/Illumina sample mixtures.
 The different thresholds (subplots) indicate the cutoff for defining
 samples as part of a cluster. The Y-axis depicts the Sample-Averaged
 Cluster Precision and Recall (SACP/SACR) and Excess Clustering Rate
 (XCR) distributions over all simulation runs (XCR is shown as (1-XCR)
 for better axis-scaling). For each ratio/threshold combination we run
-1000 simulations where the Nanopore and Illumina data is randomly split
+1000 simulations where the \ont{} and Illumina data is randomly split
 into the relevant ratio and clusters are defined based on the relevant
 threshold. The titles for each subplot indicate the SNP threshold used
-when comparing Illumina (Ill.), Nanopore (NP), or mixed-technology
+when comparing Illumina (Ill.), \ont{} (NP), or mixed-technology
 sample pairs.
 {\label{fig:mixed-sims}}%
 }}

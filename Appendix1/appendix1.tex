@@ -12,6 +12,8 @@
 35 of the Malagasy samples were sequenced and processed at the Next Generation Genomics Core within Cold Spring Harbor Laboratory. Samples were quantified with a Qubit dsDNA HS Assay Kit and QC’d through a Pulsed Field Gel Electrophoresis system. Then, samples were sheared at 10kb using a Megaruptor device and size-selected to 8-10 kb with a Blue pippin instrument - followed by 0.45X ampure bead purification. The PacBio library protocol SMRTbell Express Template Prep Kit 2.0 was used for each sample. Briefly, the first step was the removal of single-stranded overhangs followed by DNA Damage Repair, End-Repair/A-tailing, Ligation of overhang barcoded adaptors and sample pooling. A total of 3 pools were produced: LID50532 (16 samples), LID50533 (10 samples), and LID50534 (9 samples). After pooling, 0.5X ampure bead clean up was performed. A Sequel I instrument was used to sequence the 3 library pools. Libraries were annealed for an hour and bounded for an hour using sequel binding kit 3.0. Bound SMRTbell complexes were then purified with ampure beads. The run was set up as 10kb length for 10 hours movie time. The Sequel 1M V2 SMRT cells were used for each library.  
 The circular consensus was called via the SMRTlink graphical user interface version 6.0.0.47841.
 
+% ===========================================================
+
 \section{Benchmark of long read genome assembly methods for \mtb{}}
 \label{app:asm}
 Samples with greater than 30x coverage across all three sequencing technologies were chosen to produce high-quality assemblies. In total, this left us with 9 Malagasy samples. There has been many new genome assembly methods produced since the last known assessment of \mtb{} long-read assemblies \cite{bainomugisa2018}. As such, we compare five assemblers and select the best for each sample. The reason for this comparison is that different assembly algorithms can produce quite varied results depending on sequencing technology used, species, or computational resource availability(CITE).  
@@ -39,6 +41,7 @@ Across the 9 samples, \vrb{flye} has the highest ALE score in five cases, whilst
 \end{figure}
 
 \subsection{Disagreement rate}
+\label{app:asm_disagree}
 
 The disagreement rate is an approximation of the per-base accuracy of the assembly. We map Illumina reads to the assembly and calculate what proportion of positions do 90\% of the reads agree with the assembly nucleotide.  
 
@@ -50,6 +53,8 @@ In 7/9 samples, a \vrb{HASLR} assembly had the lowest disagreement rate, followe
 \caption{The disagreement rate (Y-axis) for each assembler (X-axis), coloured by the sequencing technology. Disagreement rate is the percentage of sites in the assembly where Illumina reads do not have at least 90\% quorum. Each box/point represents different samples and polished status for the relevant assembler/technology combination.}
 \label{fig:disagree_rate}
 \end{figure}
+
+As part of calculating the disagreement rate, we also produced a BED file listing all positions with less than 90\% agreement. This BED file can be used as a genome mask when using the assembly for later analysis.
 
 \subsection{Number of contigs}
 
@@ -85,6 +90,8 @@ The decontamination step in the assembly pipeline revealed that one sample, \vrb
 
 In conclusion, considering all assessment metrics, \vrb{flye} and \vrb{spades} assemblies were consistently the better performing methods across all of the criteria outlined in this section. As most of the validation analyses that these assemblies will be used for involve comparing Illumina and \ont{} data to a "neutral truth", the unpolished PacBio CCS assemblies from \vrb{flye} were selected for use. The differences between the polished and unpolished CCS assemblies was almost negligible and do not outweigh the benefit of having a single-technology PacBio assembly that can be used as an unbiased reference point for comparing the other two technologies.
 
+% ===========================================================
+
 \section{Masking of the \mtb{} reference graph}
 \label{app:mask}
 
@@ -109,6 +116,22 @@ The third strategy is the one we ended up using - removing loci with 30\% or mor
      \end{subfigure}
         \caption{\textbf{a)} Proportion of loci lost (y-axis) when removing those with a certain fraction (x-axis) of their positions within the genome mask. \textbf{b)} Proportion of total genome positions lost (y-axis) when removing loci with a certain fraction (x-axis) of their positions within the genome mask.}
         \label{fig:loci-mask}
+\end{figure}
+
+% ===========================================================
+
+\section{Precision and recall of all variant calls from \pandora{}}
+\label{app:pandora-all-vars}
+
+Although we only use SNPs for identifying transmission clusters, we also assessed \pandora{} variant calls for all variants, including indels up to a length of 20bp, in \autoref{fig:pandora-filters-all} (\pandora{} SNPs are evaluated in \autoref{sec:map-var-calls}). We did this for the sake of future work that might be interested in using \pandora{} indel calls, such as predicting drug resistance. Again, the sparse \prg{} gave better precision and recall than the dense one. Using all variants, there was a recall improvement to 75.48\% (all filters) - up 3.49\% from SNPs only. Precision on the other hand sees a drop to 95.90\% when assessing all variants - compared to 100\% for SNPs only. Given the large drop in precision it is clear that \pandora{} indel-calling needs further improvement, however, indel calling (deletions especially) are a known limitation of \ont{} \cite{jain2018,wick2019}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Appendix1/Figs/pandora-precision-recall-filters-all-variants.png}
+\caption{{Precision (bottom) and recall (top) of SNPs for COMPASS (purple) and all variants (maximum indel length of 20bp) for \pandora{} with sparse (red) and dense (blue) \prg{}s. The \pandora{} boxes start with no filters on the left, with each box moving to the right adding a filter to the previous box. The COMPASS box is a reference to the precision and recall of Illumina variant calls. Linear PRG density refers to the fact that COMPASS uses a single, linear reference genome as opposed to \pandora{}, which uses a genome graph. The black points refer to single data points for the seven samples used. MIN\_COV=minimum depth of coverage;MIN\_SB=minimum strand bias;MIN\_GT\_CONF=minimum genotype confidence score;MIN\_FRS=minimum fraction of read support.
+{\label{fig:pandora-filters-all}}%
+}}
+\end{center}
 \end{figure}
 
 % ===========================================================
@@ -204,3 +227,122 @@ For the Illumina SNP thresholds 0, 2, 5, and 12, the corresponding \pandora{} mu
 \end{figure}
 
 In summary, the model-based thresholds chosen for the \ont{} variant callers are not the best-performing. For all further transmission cluster work, the hand-picked thresholds are used instead.
+
+% ===========================================================
+
+\section{Transmission clusters}
+
+These are the transmission clusters produced by each variant caller in \autoref{sec:eval-clusters}.
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compass_clusters_t0.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compass_clusters_t2.png}
+         \caption{}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compass_clusters_t5.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compass_clusters_t12.png}
+         \caption{}
+     \end{subfigure}
+        \caption{Transmission clusters from COMPASS SNP calls. Each node represents a sample with edges between samples indicating a SNP distance $\le$ the SNP threshold used for the graph. The SNP thresholds for each graph can be found in the title of each subplot. They are 0, 2, 5, and 12 for \textbf{a}, \textbf{b}, \textbf{c}, and \textbf{d} respectively}
+        \label{fig:compass-original-clusters}
+\end{figure}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/bcftools_clusters_t0.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/bcftools_clusters_t2.png}
+         \caption{}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/bcftools_clusters_t5.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/bcftools_clusters_t11.png}
+         \caption{}
+     \end{subfigure}
+        \caption{Transmission clusters from bcftools SNP calls. Each node represents a sample with edges between samples indicating a SNP distance $\le$ the SNP threshold used for the graph. The SNP thresholds for each graph can be found in the title of each subplot. They are 0, 2, 5, and 11 for \textbf{a}, \textbf{b}, \textbf{c}, and \textbf{d} respectively}
+        \label{fig:bcftools-original-clusters}
+\end{figure}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/map_clusters_t16.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/map_clusters_t18.png}
+         \caption{}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/map_clusters_t18.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/map_clusters_t27.png}
+         \caption{}
+     \end{subfigure}
+        \caption{Transmission clusters from \pandora{} single-sample SNP calls. Each node represents a sample with edges between samples indicating a SNP distance $\le$ the SNP threshold used for the graph. The SNP thresholds for each graph can be found in the title of each subplot. They are 16, 18, 18, and 27 for \textbf{a}, \textbf{b}, \textbf{c}, and \textbf{d} respectively}
+        \label{fig:map-original-clusters}
+\end{figure}
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compare_clusters_t0.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compare_clusters_t1.png}
+         \caption{}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compare_clusters_t3.png}
+         \caption{}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.45\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Appendix1/Figs/compare_clusters_t7.png}
+         \caption{}
+     \end{subfigure}
+        \caption{Transmission clusters from \pandora{} multi-sample SNP calls. Each node represents a sample with edges between samples indicating a SNP distance $\le$ the SNP threshold used for the graph. The SNP thresholds for each graph can be found in the title of each subplot. They are 0, 1, 3, and 7 for \textbf{a}, \textbf{b}, \textbf{c}, and \textbf{d} respectively}
+        \label{fig:compare-original-clusters}
+\end{figure}
+

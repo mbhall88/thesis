@@ -358,3 +358,46 @@ pages = {2078--2079},
 number = {16}, 
 volume = {25}
 }
+
+@article{clair2020, 
+year = {2020}, 
+keywords = {variant-calling,nanopore,machine-learning}, 
+title = {{Exploring the limit of using a deep neural network on pileup data for germline variant calling}}, 
+author = {Luo, Ruibang and Wong, Chak-Lim and Wong, Yat-Sing and Tang, Chi-Ian and Liu, Chi-Man and Leung, Chi-Ming and Lam, Tak-Wah}, 
+journal = {Nature Machine Intelligence}, 
+doi = {10.1038/s42256-020-0167-4}, 
+abstract = {{Single-molecule sequencing technologies have emerged in recent years and revolutionized structural variant calling, complex genome assembly and epigenetic mark detection. However, the lack of a highly accurate small variant caller has limited these technologies from being more widely used. Here, we present Clair, the successor to Clairvoyante, a program for fast and accurate germline small variant calling, using single-molecule sequencing data. For Oxford Nanopore Technology data, Clair achieves better precision, recall and speed than several competing programs, including Clairvoyante, Longshot and Medaka. Through studying the missed variants and benchmarking intentionally overfitted models, we found that Clair may be approaching the limit of possible accuracy for germline small variant calling using pileup data and deep neural networks. Clair requires only a conventional central processing unit (CPU) for variant calling and is an open-source project available at https://github.com/HKU-BAL/Clair. A lack of accurate and efficient variant calling methods has held back single-molecule sequencing technologies from clinical applications. The authors present a deep-learning method for fast and accurate germline small variant calling, using single-molecule sequencing data.}}, 
+pages = {220--227}, 
+number = {4}, 
+volume = {2}
+}
+
+@article{nanopolish2015, 
+year = {2015}, 
+keywords = {nanopore,assembly,variant-calling,polishing,nanopolish}, 
+title = {{A complete bacterial genome assembled de novo using only nanopore sequencing data}}, 
+author = {Loman, Nicholas J and Quick, Joshua and Simpson, Jared T}, 
+journal = {Nature Methods}, 
+issn = {1548-7091}, 
+doi = {10.1038/nmeth.3444}, 
+pmid = {26076426}, 
+abstract = {{By error-correcting long nanopore reads and calling a consensus sequence using nanopore signal data, an entire bacterial genome is assembled de novo. We have assembled de novo the Escherichia coli K-12 MG1655 chromosome in a single 4.6-Mb contig using only nanopore data. Our method has three stages: (i) overlaps are detected between reads and then corrected by a multiple-alignment process; (ii) corrected reads are assembled using the Celera Assembler; and (iii) the assembly is polished using a probabilistic model of the signal-level data. The assembly reconstructs gene order and has 99.5\% nucleotide identity.}}, 
+pages = {733--735}, 
+number = {8}, 
+volume = {12}
+}
+
+@article{bcftools2021, 
+year = {2021}, 
+keywords = {variant-calling,software}, 
+title = {{Twelve years of SAMtools and BCFtools}}, 
+author = {Danecek, Petr and Bonfield, James K and Liddle, Jennifer and Marshall, John and Ohan, Valeriu and Pollard, Martin O and Whitwham, Andrew and Keane, Thomas and McCarthy, Shane A and Davies, Robert M and Li, Heng}, 
+journal = {GigaScience}, 
+issn = {2047-217X}, 
+doi = {10.1093/gigascience/giab008}, 
+pmid = {33590861}, 
+abstract = {{Abstract Background SAMtools and BCFtools are widely used programs for processing and analysing high-throughput sequencing data. They include tools for file format conversion and manipulation, sorting, querying, statistics, variant calling, and effect analysis amongst other methods. Findings The first version appeared online 12 years ago and has been maintained and further developed ever since, with many new features and improvements added over the years. The SAMtools and BCFtools packages represent a unique collection of tools that have been used in numerous other software projects and countless genomic pipelines. Conclusion Both SAMtools and BCFtools are freely available on GitHub under the permissive MIT licence, free for both non-commercial and commercial use. Both packages have been installed >1 million times via Bioconda. The source code and documentation are available from https://www.htslib.org.}}, 
+pages = {giab008}, 
+number = {2}, 
+volume = {10}
+}

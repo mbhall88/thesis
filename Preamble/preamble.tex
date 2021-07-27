@@ -10,7 +10,9 @@
 \fi
 
 % Add spaces between paragraphs
-%\setlength{\parskip}{0.5em}
+\setlength{\parskip}{0.25em}
+% remove indent at start of paragraph
+% \setlength{\parindent}{0cm}
 % Ragged bottom avoids extra whitespaces between paragraphs
 \raggedbottom
 % To remove the excess top spacing for enumeration, list and description
@@ -196,6 +198,8 @@
 \nomenclature[z-TB]{TB}{Tuberculosis}
 \nomenclature[z-H37Rv]{H37Rv}{The \mtb{} strain with the best characterised reference genome. Interchangeably use to indicate the genome assembly.}
 \nomenclature[z-WGS]{WGS}{Whole-genome sequencing}
+\nomenclature[z-FRS]{FRS}{Fraction of read support}
+\nomenclature[z-PHE]{PHE}{Public Health England}
 
 
 % ********************************* Appendix ***********************************
@@ -228,7 +232,7 @@
 % ******************************** Todo Notes **********************************
 %% this configuration was adapted from https://tex.stackexchange.com/a/178806/133785
 \usepackage{xargs}                      % Use more than one optional parameter in a new commands
-\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}
+\usepackage[colorinlistoftodos,prependcaption,textsize=tiny]{todonotes}
 \newcommandx{\unsure}[2][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{#2}}
 \newcommandx{\change}[2][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{#2}}
 \newcommandx{\towrite}[2][1=]{\todo[linecolor=yellow,backgroundcolor=yellow!25,bordercolor=yellow,#1]{#2}}
