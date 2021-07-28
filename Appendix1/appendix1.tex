@@ -55,7 +55,7 @@ Across the 9 samples, \vrb{flye} has the highest ALE score in five cases, whilst
 \subsection{Disagreement rate}
 \label{app:asm_disagree}
 
-The disagreement rate is an approximation of the per-base accuracy of the assembly. We map Illumina reads to the assembly and calculate what proportion of positions do 90\% of the reads agree with the assembly nucleotide.  
+The disagreement rate is an approximation of the per-base accuracy of the assembly. We map Illumina reads to the assembly with \vrb{bwa mem} and calculate what proportion of positions do 90\% of the reads agree with the assembly nucleotide.  
 
 In 7/9 samples, a \vrb{HASLR} assembly had the lowest disagreement rate, followed by \vrb{unicycler} having the minimum in 2/9. Polished genomes produced the lowest disagreement rate in 8/9 samples and \ont{}-based assemblies had the best accuracy in 6/9 samples. While it isn't so surprising that assemblies polished with Illumina reads have a lower disagreement rate, it is unexpected that \ont{} would produce more accurate assemblies (\autoref{fig:disagree_rate}). One caveat to keep in mind here - and this is the reason for looking at many different metrics - is that there is an element of overfitting to this metric: we assess using Illumina, and so naturally, assemblies polished with Illumina produce better results. That is not to say this statistic is void, but that it should be used with caution.
 
@@ -66,11 +66,11 @@ In 7/9 samples, a \vrb{HASLR} assembly had the lowest disagreement rate, followe
 \label{fig:disagree_rate}
 \end{figure}
 
-As part of calculating the disagreement rate, we also produced a BED file listing all positions with less than 90\% agreement. This BED file can be used as a genome mask when using the assembly for later analysis.
+As part of calculating the disagreement rate, we also produce a BED file listing all positions with less than 90\% agreement. This BED file can be used as a genome mask when using the assembly for later analysis.
 
 \subsection{Number of contigs}
 
-As \mtb{} has only a single, circular chromosome, for an assembly to be structurally complete, there should only be a single contig in the final assembly. However, it is not always appropriate for an assembly method to produce a single contig as data quality, depth of sequencing, read length, and/or repetitive content of the genome can hamper this goal(CITE). Conversely, receiving a single contig as output is no guarantee of its quality for similar reasons to the previous, multi-contig scenario. For the purposes of this benchmark, considering on conjunction with the other metrics, the number of contigs can be a useful datum for selecting our favoured assembly. If an assembly has a single contig, and scores well on other metrics, we would be more inclined to choose it over another assembly with similar metrics, but many more contigs.
+As \mtb{} has only a single circular chromosome, for an assembly to be structurally complete, there should only be a single contig in the final assembly. However, it is not always appropriate for an assembly method to produce a single contig as data quality, depth of sequencing, read length, and/or repetitive content of the genome can hamper this goal. Conversely, receiving a single contig as output is no guarantee of its quality for similar reasons to the previous, multi-contig scenario. For the purposes of this benchmark, considered in conjunction with the other metrics, the number of contigs can be a useful datum for selecting our favoured assembly. If an assembly has a single contig, and scores well on other metrics, we would be more inclined to choose it over another assembly with similar metrics, but many more contigs.
 
 Across all combinations of assembly conditions, \vrb{spades} (8/18), \vrb{flye} (18/32) and \vrb{canu} (16/32) produced far more single-contig assemblies than the hybrid methods (\autoref{fig:num_contigs}). \vrb{unicycler} produced no single-contig genomes, whilst \vrb{HASLR} yielded only 2/32. When considering sequencing technology, PacBio (26/72) had many more single-contig assemblies than \ont{} (10/72). Note, \vrb{spades} assemblies use all three technologies and are not considered in the technology single-contig totals.
 
@@ -85,7 +85,7 @@ Across all combinations of assembly conditions, \vrb{spades} (8/18), \vrb{flye} 
 
 As mentioned earlier, comparing the assemblies to the \mtb{} reference genome (H37Rv) is not appropriate, however, it's length/size can be used as an aid for selection. The size of any lineage's genome is not expected to differ from the reference by more than \texttildelow 30 kilobases \cite{kato2001}. Considering the genome size in addition to disagreement rate is particularly informative. It would be quite easy for an assembly method to produce very accurate per-base contigs by refusing to produce sequence for "harder" parts of the genome. While such an assembly would score well on disagreement rate, it would not do so well when considering how close to the expected genome size it is. The length of the assembly also clearly shows when a method is outputting \textit{too much} sequence.
 
-When comparing the size of each assembly to that of H37Rv, we found a fairly even spread across assemblers for the closest size to H37Rv. For 3/9 samples, \vrb{canu} has the smallest size difference, followed by \vrb{spades} (2/9), \vrb{unicycler} (2/9), \vrb{HASLR} (1/9) and \vrb{flye} (1/9). An honourable mention should be made of \vrb{flye} and \vrb{spades} as they had much lower variation in size compared to the other approaches. In terms of sequencing technology, in 6/9 samples CCS produced the genome size closest to H37Rv. Polished assemblies had the closer size in 5/9 samples.
+When comparing the size of each assembly to that of H37Rv, we found a fairly even spread across assemblers for the closest size to H37Rv. For 3/9 samples, \vrb{canu} has the smallest size difference, followed by \vrb{spades} (2/9), \vrb{unicycler} (2/9), \vrb{HASLR} (1/9) and \vrb{flye} (1/9). An honourable mention should be made of \vrb{flye} and \vrb{spades} as they had much lower variation in size compared to the other approaches. In terms of sequencing technology, in 6/9 samples PacBio produced the genome size closest to H37Rv. Polished assemblies had the closer size in 5/9 samples.
 
 \begin{figure}
 \includegraphics[width=1.0\textwidth]{Appendix1/Figs/asm_len.png}
@@ -107,9 +107,11 @@ In conclusion, considering all assessment metrics, \vrb{flye} and \vrb{spades} a
 \section{Masking of the \mtb{} reference graph}
 \label{app:mask}
 
-We investigated three different strategies for masking the positions that go into the \mtb{} reference graph in \autoref{sec:tbprg}. The first of these was not to use a mask at all and apply all variants that passed all other filters in the \cryptic{} VCF. Compared to the final solution we chose - removing loci with 30\% or more positions in the mask - this lead to the sparse \prg{} MSA step having a peak memory usage of 357GB (1.7 times more than \autoref{tab:build-prg}) and a wall clock time of 13.5 hours (compared to 1.25). The dense \prg{} MSA step likewise saw higher memory usage (370GB) and wall clock time (44.6 hours). In addition, when updating these \prg{}s to include novel variants (\autoref{sec:pandora-filters}), the MSA stage took on the order of days to complete. 
-The second masking strategy was just to remove the VCF positions that occur within the H37Rv genome mask mentioned in \autoref{sec:tbprg}. This approach would ensure there would be sequence covering the whole H37Rv genome within the reference graph. This approach yields construction times similar to those in \autoref{tab:build-prg}. However, this caused the novel variant discovery stage of \pandora{} to hit the 7 day compute node run limit for some samples. The cause of this huge increase can be explained by the fact that the positions within the mask are, by definition, repetitive (low complexity). As such, we \pandora{} initiates \denovo{} variant discovery in these sections of the genome, the path enumeration step outlined in \autoref{sec:path-enum} gets caught in cycles within the de Bruijn graph - a limitation outlined in \autoref{sec:denovo-limits}.
-The third strategy is the one we ended up using - removing loci with 30\% or more positions in the mask. The 30\% figure was settled on as it provided a good balance between losing sections of the H37Rv genome (see \autoref{fig:loci-mask}) and providing acceptable computational performance for all steps in the reference graph construction and \pandora{} variant-calling pipeline.
+We investigated three different strategies for masking the positions that go into the \mtb{} reference graph in \autoref{sec:tbprg}. The first of these was not to use a mask at all and apply all variants that passed all other filters in the \cryptic{} VCF. Compared to the final method we chose, this lead to the sparse \prg{} MSA step having a peak memory usage of 357GB (1.7 times more than \autoref{tab:build-prg}) and a wall clock time of 13.5 hours (compared to 1.25). The dense \prg{} MSA step likewise saw higher memory usage (370GB) and wall clock time (44.6 hours). In addition, when updating these \prg{}s to include novel variants (\autoref{sec:pandora-filters}), the MSA stage took on the order of days to complete.
+
+The second masking strategy was to remove the VCF positions that occur within the H37Rv genome mask mentioned in \autoref{sec:tbprg}. This approach would ensure there would be sequence covering the whole H37Rv genome within the reference graph. This approach yields construction times similar to those in \autoref{tab:build-prg}. However, this caused the novel variant discovery stage of \pandora{} to hit the 7 day compute node run limit for some samples. The cause of this huge increase can be explained by the fact that the positions within the mask are, by definition, repetitive (low complexity). As such, when \pandora{} initiates \denovo{} variant discovery in these sections of the genome, the path enumeration step outlined in \autoref{sec:path-enum} gets caught in cycles within the de Bruijn graph - a limitation outlined in \autoref{sec:denovo-limits}.
+
+The third strategy is the one we ended up using - removing loci with $\ge 30\%$ of their positions in the mask. The 30\% figure was settled on as it provided a good balance between losing sections of the H37Rv genome (see \autoref{fig:loci-mask}) and providing acceptable computational performance for all steps in the reference graph construction and \pandora{} variant-calling pipeline.
 
 \begin{figure}
      \centering
@@ -135,7 +137,7 @@ The third strategy is the one we ended up using - removing loci with 30\% or mor
 \section{Precision and recall of all variant calls from \pandora{}}
 \label{app:pandora-all-vars}
 
-Although we only use SNPs for identifying transmission clusters, we also assessed \pandora{} variant calls for all variants, including indels up to a length of 20bp, in \autoref{fig:pandora-filters-all} (\pandora{} SNPs are evaluated in \autoref{sec:map-var-calls}). We did this for the sake of future work that might be interested in using \pandora{} indel calls, such as predicting drug resistance. Again, the sparse \prg{} gave better precision and recall than the dense one. Using all variants, there was a recall improvement to 75.48\% (all filters) - up 3.49\% from SNPs only. Precision on the other hand sees a drop to 95.90\% when assessing all variants - compared to 100\% for SNPs only. Given the large drop in precision it is clear that \pandora{} indel-calling needs further improvement, however, indel calling (deletions especially) are a known limitation of \ont{} \cite{jain2018,wick2019}.
+Although we only use SNPs for identifying transmission clusters, we also assessed \pandora{} variant calls for all variants - SNPs and indels up to a length of 20bp - in \autoref{fig:pandora-filters-all} (\pandora{} SNPs are evaluated in \autoref{sec:map-var-calls}). We did this for the sake of future work that might be interested in using \pandora{} indel calls, such as predicting drug resistance. Again, the sparse \prg{} gave better precision and recall than the dense one. Using all variants, there was a median recall improvement to 75.48\% (all filters) - up 3.49\% from SNPs only. Precision on the other hand sees a drop to 95.90\% (median) when assessing all variants - compared to 100\% for SNPs only. Given the large drop in precision it is clear that \pandora{} indel-calling needs further improvement, however, indel calling (deletions especially) is a known limitation of \ont{} \cite{jain2018,wick2019} and others have seen precision drops when adding indels to the evaluation \cite{clair2020}.
 
 \begin{figure}
 \begin{center}
@@ -148,10 +150,16 @@ Although we only use SNPs for identifying transmission clusters, we also assesse
 
 % ===========================================================
 
-\section{An illustrated example of clustering similarity metrics}
+\section{An illustrated example of cluster similarity metrics}
 \label{app:cluster-example}
 
-\autoref{sec:cluster-similarity} outlines three metrics - SACR, SACP and XCR - for evaluating the similarity between two different strategies for transmission clustering. In order to provide the reader with greater intuition for the relevance of each metric, we present an illustrated example in \autoref{fig:cluster-example}. We take \autoref{fig:example-truth} to be the truth clusters and \autoref{fig:example-test} to be some test clusters. These are akin to Illumina and \ont{} clusters, respectively, in \autoref{sec:cluster-similarity}). The individual recall and precision values for each sample in \autoref{fig:example-truth} are shown in \autoref{tab:cluster-example}. SACR and SACP are \emph{sample-averaged}, so their values for this example are 0.82 and 0.83 respectively. To highlight the objective of SACR, we take the truth and test clusters containing the sample $F$. Samples $F$, $G$, $H$ and $I$ are shared between both, but $J$ is missing from the test cluster. To calculate the individual recall for $F$, we take the intersection size of the truth and test clusters it exists in and divide it by that size again, plus the number of samples in the truth cluster that are not in the test cluster - $\frac{4}{5}=0.8$. Ee do the same for the precision of sample $D$, expect we add the number of samples in the test cluster not in the truth cluster to the denominator - giving $\frac{2}{3}=0.66$. The relevance of the XCR metric is best exemplified by the test cluster containing samples $L$ and $M$. As we calculate SACR and SACP for all samples in the truth clusters, these two samples would be ignored. However, they are samples that - according to the truth - should not be part of any cluster. SACR and SACP cannot capture these extra clusterings if they do not contain clustered truth samples. XCR covers this limitation and is the proportion of non-clustered samples (singletons) in the truth that are clustered in the test (see \autoref{eq:xcr}). As \autoref{fig:cluster-example} does not show singletons, let us pretend there are 20 singletons in the truth (including samples $L$ and $M$). This would give an XCR of $2/20=0.1$.
+\autoref{sec:cluster-similarity} outlines three metrics - SACR, SACP and XCR - for evaluating the similarity between two different strategies for transmission clustering. In order to provide the reader with greater intuition for the purpose of each metric, we present an illustrated example in \autoref{fig:cluster-example}. 
+
+We take \autoref{fig:example-truth} to be the truth clusters and \autoref{fig:example-test} to be test clusters. These are akin to Illumina and \ont{} clusters, respectively, in \autoref{sec:cluster-similarity}). The individual recall and precision values (defined in \autoref{eq:recall} and \autoref{eq:precision}) for each sample in \autoref{fig:example-truth} are shown in \autoref{tab:cluster-example}. SACR and SACP (defined in \autoref{eq:sacr} and \autoref{eq:sacp}) are \emph{sample-averaged}, so their values for this example are 0.82 and 0.83 respectively. 
+
+To highlight the objective of SACR, we use the truth and test clusters containing the sample $F$. Samples $F$, $G$, $H$ and $I$ are shared between both, but $J$ is missing from the test cluster. To calculate the individual recall for $F$, we take the intersection size of the truth and test clusters it exists in and divide it by that size again, plus the number of samples in the truth cluster that are not in the test cluster - $\frac{4}{5}=0.8$. We do the same for the precision of sample $D$, expect we add the number of samples in the test cluster not in the truth cluster to the denominator - giving $\frac{2}{3}=0.66$. 
+
+The relevance of the XCR metric is best exemplified by the test cluster containing samples $L$ and $M$. As we calculate SACR and SACP for all samples in the \emph{truth} clusters, these two samples would be ignored. However, they are samples that - according to the truth - should not be part of any cluster (singletons). SACR and SACP cannot capture these extra clusterings if they do not contain clustered truth samples. XCR covers this limitation and is the proportion of singletons in the truth that are clustered in the test (see \autoref{eq:xcr}). As \autoref{fig:cluster-example} does not show singletons, let us pretend there are 20 singletons in the truth (including samples $L$ and $M$). This would give an XCR of $2/20=0.1$.
 
 \begin{figure}
      \centering
@@ -188,7 +196,7 @@ H      & 0.8    & 1.0       \\
 I      & 0.8    & 1.0       \\
 J      & 0.0      & 0.0        
 \end{tabular}
-\caption{Cluster recall and precision results for each sample in \autoref{fig:cluster-example}}
+\caption{Cluster recall and precision results for each sample in \autoref{fig:cluster-example}.}
 \label{tab:cluster-example}
 \end{table}
 
@@ -197,7 +205,7 @@ J      & 0.0      & 0.0
 \section{Selecting \ont{} SNP thresholds to define transmission clusters}
 \label{app:dist-sweep}
 
-In \autoref{sec:snp-dist}, we found linear models that describe the relationship between the Illumina and \ont{} SNP distance between pairs of samples. Using the equations for each model, we can infer a \ont{} threshold corresponding to a given Illumina threshold. We investigate how well these model-based thresholds perform by using the cluster similarity metrics defined in \autoref{sec:cluster-similarity}. To assess the performance, we by looking at the SACR, SACP, and XCR for all threshold values surrounding the model-based threshold and seeing whether the model-based performs best.
+In \autoref{sec:snp-dist}, we fit linear models that describe the relationship between the Illumina and \ont{} SNP distance between pairs of samples. Using the equations for each model, we can infer a \ont{} threshold ($y$) corresponding to a given Illumina threshold ($x$). We investigate how well these model-based thresholds perform by using the cluster similarity metrics defined in \autoref{sec:cluster-similarity}. To assess the performance, we look at the SACR, SACP, and XCR for all threshold values surrounding the model-based threshold and see whether the model-based threshold performs best.
 
 \subsection{bcftools}
 
@@ -238,6 +246,8 @@ For the Illumina SNP thresholds 0, 2, 5, and 12, the corresponding \pandora{} mu
 \end{center}
 \end{figure}
 
+\vspace{\baselineskip}
+\noindent
 In summary, the model-based thresholds chosen for the \ont{} variant callers are not the best-performing. For all further transmission cluster work, the hand-picked thresholds are used instead.
 
 % ===========================================================
