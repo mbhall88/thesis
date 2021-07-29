@@ -676,3 +676,179 @@ doi = {10.1111/1755-0998.13432},
 pmid = {34036752}, 
 abstract = {{The soybean cyst nematode (Heterodera glycines) is a sedentary plant parasite that exceeds billion USD annually in yield losses. This problem is exacerbated by H. glycines populations overcoming the limited sources of natural resistance in soybean and by the lack of effective and safe alternative treatments. Although there are genetic determinants that render soybeans resistant to nematode genotypes, resistant soybeans are increasingly ineffective because their multiyear usage has selected for virulent H. glycines populations. Successful H. glycines infection relies on the comprehensive re‐engineering of soybean root cells into a syncytium, as well as the long‐term suppression of host defences to ensure syncytial viability. At the forefront of these complex molecular interactions are effectors, the proteins secreted by H. glycines into host root tissues. The mechanisms that control genomic effector acquisition, diversification, and selection are important insights needed for the development of essential novel control strategies. As a foundation to obtain this understanding, we created a nine‐scaffold, 158 Mb pseudomolecule assembly of the H. glycines genome using PacBio, Chicago, and Hi‐C sequencing. A Mikado consensus gene prediction produced an annotation of 22,465 genes using short‐ and long‐read expression data. To evaluate assembly and annotation quality, we cross‐examined synteny among H. glycines assemblies, and compared BUSCO across related species. To describe the predicted proteins involved in H. glycines’ secretory pathway, we contrasted expression between preparasitic and parasitic stages with functional gene information. Here, we present the results from our assembly and annotation of the H. glycines genome and contribute this resource to the scientific community.}}
 }
+
+@article{wick2020, 
+year = {2020}, 
+keywords = {assembly,benchmark,long-reads,bacterial-genomics}, 
+title = {{Benchmarking of long-read assemblers for prokaryote whole genome sequencing}}, 
+author = {Wick, Ryan R. and Holt, Kathryn E.}, 
+journal = {F1000Research}, 
+doi = {10.12688/f1000research.21782.4}, 
+pmid = {31984131}, 
+abstract = {{Background: Data sets from long-read sequencing platforms (Oxford Nanopore Technologies and Pacific Biosciences) allow for most prokaryote genomes to be completely assembled – one contig per chromosome or plasmid. However, the high per-read error rate of long-read sequencing necessitates different approaches to assembly than those used for short-read sequencing. Multiple assembly tools (assemblers) exist, which use a variety of algorithms for long-read assembly. Methods: We used 500 simulated read sets and 120 real read sets to assess the performance of eight long-read assemblers (Canu, Flye, Miniasm/Minipolish, NECAT, NextDenovo/NextPolish, Raven, Redbean and Shasta) across a wide variety of genomes and read parameters. Assemblies were assessed on their structural accuracy/completeness, sequence identity, contig circularisation and computational resources used. Results: Canu v2.1 produced reliable assemblies and was good with plasmids, but it performed poorly with circularisation and had the longest runtimes of all assemblers tested. Flye v2.8 was also reliable and made the smallest sequence errors, though it used the most RAM. Miniasm/Minipolish v0.3/v0.1.3 was the most likely to produce clean contig circularisation. NECAT v20200803 was reliable and good at circularisation but tended to make larger sequence errors. NextDenovo/NextPolish v2.3.1/v1.3.1 was reliable with chromosome assembly but bad with plasmid assembly. Raven v1.3.0 was reliable for chromosome assembly, though it did not perform well on small plasmids and had circularisation issues. Redbean v2.5 and Shasta v0.7.0 were computationally efficient but more likely to produce incomplete assemblies. Conclusions: Of the assemblers tested, Flye, Miniasm/Minipolish, NextDenovo/NextPolish and Raven performed best overall. However, no single tool performed well on all metrics, highlighting the need for continued development on long-read assembly algorithms.}}, 
+pages = {2138}, 
+volume = {8}
+}
+
+@article{demaio2019, 
+year = {2019}, 
+keywords = {nanopore,assembly,bacterial-genomics,hybrid-assembly,benchmark}, 
+title = {{Comparison of long-read sequencing technologies in the hybrid assembly of complex bacterial genomes}}, 
+author = {Maio, Nicola De and Shaw, Liam P and Hubbard, Alasdair and George, Sophie and Sanderson, Nicholas D and Swann, Jeremy and Wick, Ryan and AbuOun, Manal and Stubberfield, Emma and Hoosdally, Sarah J and Crook, Derrick W and Peto, Timothy E A and Sheppard, Anna E and Bailey, Mark J and Read, Daniel S and Anjum, Muna F and Walker, A Sarah and Stoesser, Nicole and Consortium, On Behalf Of The Rehab}, 
+journal = {Microbial Genomics}, 
+doi = {10.1099/mgen.0.000294}, 
+pmid = {31483244}, 
+pmcid = {PMC6807382}, 
+abstract = {{Illumina sequencing allows rapid, cheap and accurate whole genome bacterial analyses, but short reads (<300 bp) do not usually enable complete genome assembly. Long-read sequencing greatly assists with resolving complex bacterial genomes, particularly when combined with short-read Illumina data (hybrid assembly). However, it is not clear how different long-read sequencing methods affect hybrid assembly accuracy. Relative automation of the assembly process is also crucial to facilitating high-throughput complete bacterial genome reconstruction, avoiding multiple bespoke filtering and data manipulation steps. In this study, we compared hybrid assemblies for 20 bacterial isolates, including two reference strains, using Illumina sequencing and long reads from either Oxford Nanopore Technologies (ONT) or SMRT Pacific Biosciences (PacBio) sequencing platforms. We chose isolates from the family Enterobacteriaceae, as these frequently have highly plastic, repetitive genetic structures, and complete genome reconstruction for these species is relevant for a precise understanding of the epidemiology of antimicrobial resistance. We de novo assembled genomes using the hybrid assembler Unicycler and compared different read processing strategies, as well as comparing to long-read-only assembly with Flye followed by short-read polishing with Pilon. Hybrid assembly with either PacBio or ONT reads facilitated high-quality genome reconstruction, and was superior to the long-read assembly and polishing approach evaluated with respect to accuracy and completeness. Combining ONT and Illumina reads fully resolved most genomes without additional manual steps, and at a lower consumables cost per isolate in our setting. Automated hybrid assembly is a powerful tool for complete and accurate bacterial genome assembly.}}, 
+number = {9}, 
+volume = {5}
+}
+
+@article{wick2017, 
+year = {2017}, 
+keywords = {assembly,software,hybrid-assembly}, 
+title = {{Unicycler: Resolving bacterial genome assemblies from short and long sequencing reads}}, 
+author = {Wick, Ryan R. and Judd, Louise M. and Gorrie, Claire L. and Holt, Kathryn E.}, 
+journal = {PLOS Computational Biology}, 
+issn = {1553-734X}, 
+doi = {10.1371/journal.pcbi.1005595}, 
+pmid = {28594827}, 
+abstract = {{The Illumina DNA sequencing platform generates accurate but short reads, which can be used to produce accurate but fragmented genome assemblies. Pacific Biosciences and Oxford Nanopore Technologies DNA sequencing platforms generate long reads that can produce complete genome assemblies, but the sequencing is more expensive and error-prone. There is significant interest in combining data from these complementary sequencing technologies to generate more accurate “hybrid” assemblies. However, few tools exist that truly leverage the benefits of both types of data, namely the accuracy of short reads and the structural resolving power of long reads. Here we present Unicycler, a new tool for assembling bacterial genomes from a combination of short and long reads, which produces assemblies that are accurate, complete and cost-effective. Unicycler builds an initial assembly graph from short reads using the de novo assembler SPAdes and then simplifies the graph using information from short and long reads. Unicycler uses a novel semi-global aligner to align long reads to the assembly graph. Tests on both synthetic and real reads show Unicycler can assemble larger contigs with fewer misassemblies than other hybrid assemblers, even when long-read depth and accuracy are low. Unicycler is open source (GPLv3) and available at github.com/rrwick/Unicycler.}}, 
+pages = {e1005595}, 
+number = {6}, 
+volume = {13}
+}
+
+@article{nurk2020, 
+year = {2020}, 
+keywords = {assembly,software}, 
+title = {{HiCanu: accurate assembly of segmental duplications, satellites, and allelic variants from high-fidelity long reads}}, 
+author = {Nurk, Sergey and Walenz, Brian P and Rhie, Arang and Vollger, Mitchell R and Logsdon, Glennis A and Grothe, Robert and Miga, Karen H and Eichler, Evan E and Phillippy, Adam M and Koren, Sergey}, 
+journal = {Genome Research}, 
+issn = {1088-9051}, 
+doi = {10.1101/gr.263566.120}, 
+pmid = {32801147}, 
+abstract = {{Complete and accurate genome assemblies form the basis of most downstream genomic analyses and are of critical importance. Recent genome assembly projects have relied on a combination of noisy long-read sequencing and accurate short-read sequencing, with the former offering greater assembly continuity and the latter providing higher consensus accuracy. The recently introduced PacBio HiFi sequencing technology bridges this divide by delivering long reads (>10 kbp) with high per-base accuracy (>99.9\%). Here we present HiCanu, a modification of the Canu assembler designed to leverage the full potential of HiFi reads via homopolymer compression, overlap-based error correction, and aggressive false overlap filtering. We benchmark HiCanu with a focus on the recovery of haplotype diversity, major histocompatibility complex (MHC) variants, satellite DNAs, and segmental duplications. For diploid human genomes sequenced to 30× HiFi coverage, HiCanu achieved superior accuracy and allele recovery compared to the current state of the art. On the effectively haploid CHM13 human cell line, HiCanu achieved an NG50 contig size of 77 Mbp with a per-base consensus accuracy of 99.999\% (QV50), surpassing recent assemblies of high-coverage, ultra-long Oxford Nanopore reads in terms of both accuracy and continuity. This HiCanu assembly correctly resolves 337 out of 341 validation BACs sampled from known segmental duplications and provides the first preliminary assemblies of 9 complete human centromeric regions. Although gaps and errors still remain within the most challenging regions of the genome, these results represent a significant advance towards the complete assembly of human genomes.}}, 
+pages = {gr.263566.120}, 
+number = {9}, 
+volume = {30}
+}
+
+@article{koren2017, 
+year = {2017}, 
+keywords = {assembly,software}, 
+title = {{Canu: scalable and accurate long-read assembly via adaptive k-mer weighting and repeat separation}}, 
+author = {Koren, Sergey and Walenz, Brian P. and Berlin, Konstantin and Miller, Jason R. and Bergman, Nicholas H. and Phillippy, Adam M.}, 
+journal = {Genome Research}, 
+issn = {1088-9051}, 
+doi = {10.1101/gr.215087.116}, 
+pmid = {28298431}, 
+abstract = {{Long-read single-molecule sequencing has revolutionized de novo genome assembly and enabled the automated reconstruction of reference-quality genomes. However, given the relatively high error rates of such technologies, efficient and accurate assembly of large repeats and closely related haplotypes remains challenging. We address these issues with Canu, a successor of Celera Assembler that is specifically designed for noisy single-molecule sequences. Canu introduces support for nanopore sequencing, halves depth-of-coverage requirements, and improves assembly continuity while simultaneously reducing runtime by an order of magnitude on large genomes versus Celera Assembler 8.2. These advances result from new overlapping and assembly algorithms, including an adaptive overlapping strategy based on tf-idf weighted MinHash and a sparse assembly graph construction that avoids collapsing diverged repeats and haplotypes. We demonstrate that Canu can reliably assemble complete microbial genomes and near-complete eukaryotic chromosomes using either Pacific Biosciences (PacBio) or Oxford Nanopore technologies and achieves a contig NG50 of >21 Mbp on both human and Drosophila melanogaster PacBio data sets. For assembly structures that cannot be linearly represented, Canu provides graph-based assembly outputs in graphical fragment assembly (GFA) format for analysis or integration with complementary phasing and scaffolding techniques. The combination of such highly resolved assembly graphs with long-range scaffolding information promises the complete and automated assembly of complex genomes.}}, 
+pages = {722--736}, 
+number = {5}, 
+volume = {27}
+}
+
+@article{flye2019, 
+year = {2019}, 
+keywords = {assembly,long-reads,algorithms}, 
+title = {{Assembly of long, error-prone reads using repeat graphs}}, 
+author = {Kolmogorov, Mikhail and Yuan, Jeffrey and Lin, Yu and Pevzner, Pavel A.}, 
+journal = {Nature Biotechnology}, 
+issn = {1087-0156}, 
+doi = {10.1038/s41587-019-0072-8}, 
+pmid = {30936562}, 
+abstract = {{Accurate genome assembly is hampered by repetitive regions. Although long single molecule sequencing reads are better able to resolve genomic repeats than short-read data, most long-read assembly algorithms do not provide the repeat characterization necessary for producing optimal assemblies. Here, we present Flye, a long-read assembly algorithm that generates arbitrary paths in an unknown repeat graph, called disjointigs, and constructs an accurate repeat graph from these error-riddled disjointigs. We benchmark Flye against five state-of-the-art assemblers and show that it generates better or comparable assemblies, while being an order of magnitude faster. Flye nearly doubled the contiguity of the human genome assembly (as measured by the NGA50 assembly quality metric) compared with existing assemblers. Flye improves the speed and accuracy of genome assembly by using repeat graphs to resolve repeat regions.}}, 
+pages = {540--546}, 
+number = {5}, 
+volume = {37}
+}
+
+@article{haslr2020, 
+year = {2020}, 
+keywords = {assembly,hybrid-assembly,software}, 
+title = {{HASLR: Fast Hybrid Assembly of Long Reads}}, 
+author = {Haghshenas, Ehsan and Asghari, Hossein and Stoye, Jens and Chauve, Cedric and Hach, Faraz}, 
+journal = {iScience}, 
+issn = {2589-0042}, 
+doi = {10.1016/j.isci.2020.101389}, 
+pmid = {32781410}, 
+abstract = {{Third-generation sequencing technologies from companies such as Oxford Nanopore and Pacific Biosciences have paved the way for building more contiguous and potentially gap-free assemblies. The larger effective length of their reads has provided a means to overcome the challenges of short to mid-range repeats. Currently, accurate long read assemblers are computationally expensive, whereas faster methods are not as accurate. Moreover, despite recent advances in third-generation sequencing, researchers still tend to generate accurate short reads for many of the analysis tasks. Here, we present HASLR, a hybrid assembler that uses error-prone long reads together with high-quality short reads to efficiently generate accurate genome assemblies. Our experiments show that HASLR is not only the fastest assembler but also the one with the lowest number of misassemblies on most of the samples, while being on par with other assemblers in terms of contiguity and accuracy.}}, 
+pages = {101389}, 
+number = {8}, 
+volume = {23}
+}
+
+@article{antipov2016, 
+year = {2016}, 
+keywords = {assembly,hybrid-assembly,software}, 
+title = {{hybrid SPA des : an algorithm for hybrid assembly of short and long reads}}, 
+author = {Antipov, Dmitry and Korobeynikov, Anton and McLean, Jeffrey S. and Pevzner, Pavel A.}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btv688}, 
+pmid = {26589280}, 
+pmcid = {PMC4907386}, 
+abstract = {{Motivation: Recent advances in single molecule real-time (SMRT) and nanopore sequencing technologies have enabled high-quality assemblies from long and inaccurate reads. However, these approaches require high coverage by long reads and remain expensive. On the other hand, the inexpensive short reads technologies produce accurate but fragmented assemblies. Thus, a hybrid approach that assembles long reads (with low coverage) and short reads has a potential to generate high-quality assemblies at reduced cost. Results: We describe hybrid SPA des algorithm for assembling short and long reads and benchmark it on a variety of bacterial assembly projects. Our results demonstrate that hybrid SPA des generates accurate assemblies (even in projects with relatively low coverage by long reads) thus reducing the overall cost of genome sequencing. We further present the first complete assembly of a genome from single cells using SMRT reads. Availability and implementation:hybrid SPA des is implemented in C++ as a part of SPAdes genome assembler and is publicly available at http://bioinf.spbau.ru/en/spades Contact:d.antipov@spbu.ru Supplementary information:supplementary data are available at Bioinformatics online.}}, 
+pages = {1009--1015}, 
+number = {7}, 
+volume = {32}
+}
+
+@article{li2018, 
+year = {2018}, 
+keywords = {alignment,algorithms}, 
+title = {{Minimap2: pairwise alignment for nucleotide sequences}}, 
+author = {Li, Heng}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/bty191}, 
+pmid = {29750242}, 
+eprint = {1708.01492}, 
+abstract = {{Recent advances in sequencing technologies promise ultra-long reads of ∼100 kb in average, full-length mRNA or cDNA reads in high throughput and genomic contigs over 100 Mb in length. Existing alignment programs are unable or inefficient to process such data at scale, which presses for the development of new alignment algorithms.}}, 
+pages = {3094--3100}, 
+number = {18}, 
+volume = {34}
+}
+
+@article{li2011, 
+year = {2011}, 
+keywords = {algorithms,variant-calling}, 
+title = {{Improving SNP discovery by base alignment quality}}, 
+author = {Li, Heng}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btr076}, 
+pmid = {21320865}, 
+pmcid = {PMC3072548}, 
+abstract = {{Summary: I propose a new application of profile Hidden Markov Models in the area of SNP discovery from resequencing data, to greatly reduce false SNP calls caused by misalignments around insertions and deletions (indels). The central concept is per-Base Alignment Quality, which accurately measures the probability of a read base being wrongly aligned. The effectiveness of BAQ has been positively confirmed on large datasets by the 1000 Genomes Project analysis subgroup. Availability:http://samtools.sourceforge.net Contact:hengli@broadinstitute.org}}, 
+pages = {1157--1158}, 
+number = {8}, 
+volume = {27}
+}
+
+@article{li2013, 
+year = {2013}, 
+keywords = {algorithms,alignment,software,illumina}, 
+title = {{Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM}}, 
+author = {Li, Heng}, 
+journal = {arXiv}, 
+eprint = {1303.3997}, 
+abstract = {{Summary: BWA-MEM is a new alignment algorithm for aligning sequence reads or long query sequences against a large reference genome such as human. It automatically chooses between local and end-to-end alignments, supports paired-end reads and performs chimeric alignment. The algorithm is robust to sequencing errors and applicable to a wide range of sequence lengths from 70bp to a few megabases. For mapping 100bp sequences, BWA-MEM shows better performance than several state-of-art read aligners to date. Availability and implementation: BWA-MEM is implemented as a component of BWA, which is available at http://github.com/lh3/bwa. Contact: hengli@broadinstitute.org}}
+}
+
+@article{katoh2012, 
+year = {2012}, 
+keywords = {msa,algorithms}, 
+title = {{Adding unaligned sequences into an existing alignment using MAFFT and LAST}}, 
+author = {Katoh, Kazutaka and Frith, Martin C.}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/bts578}, 
+pmid = {23023983}, 
+pmcid = {PMC3516148}, 
+abstract = {{Two methods to add unaligned sequences into an existing multiple sequence alignment have been implemented as the ‘ Availability:http://mafft.cbrc.jp/alignment/software/ Contact:katoh@ifrec.osaka-u.ac.jp Supplementary information:Supplementary data are available at Bioinformatics online}}, 
+pages = {3144--3146}, 
+number = {23}, 
+volume = {28}
+}

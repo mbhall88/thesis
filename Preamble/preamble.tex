@@ -91,6 +91,8 @@
 %\usepackage{multicol}
 %\usepackage{longtable}
 \usepackage{tabularx}
+% center the column when using X in tabularx environment - https://tex.stackexchange.com/questions/89166/centering-in-tabularx-and-x-columns
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
 
 
 % *********************************** SI Units *********************************
@@ -117,7 +119,6 @@
 
 % Write markdown in overleaf - https://www.overleaf.com/learn/latex/Articles/How_to_write_in_Markdown_on_Overleaf
 \usepackage[footnotes,definitionLists,hashEnumerators,smartEllipses,hybrid]{markdown}
-
 
 % *****************************************************************************
 % *************************** Bibliography  and References ********************
@@ -171,6 +172,9 @@
 \newcommand{\spades}{\texttt{spades}}
 \newcommand{\canu}{\texttt{canu}}
 \newcommand{\unicycler}{\texttt{unicycler}}
+\newcommand{\bcftools}{\texttt{bcftools}}
+\newcommand{\compare}{\pandora{} \texttt{compare}}
+
 
 % *********** To change the name of Table of Contents / LOF and LOT ************
 
