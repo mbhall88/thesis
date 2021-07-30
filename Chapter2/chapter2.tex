@@ -121,7 +121,7 @@ Index    & 142            & 0:01             & 1.5              & 361           
 
 %=========================================================================
 
-\section{Variant-calling and calibration of \ont{} variant filters}
+\section{Variant calling and filtering assessment}
 \label{sec:var-calls}
 One approach to determining genetic distance is to count the number of SNPs that differentiate two samples. These distances enable the inference of likely transmission clusters based on some predefined number of expected SNPs. Filtering of variant calls is integral to creating trusted variant calls on which to base such distances. However, there are many such filters used for Illumina genomic data, and they can produce inconsistent results \cite{walter2020}. As our focus is on whether \ont{} can be used for public health applications, we utilise the PHE Illumina pipeline - COMPASS \cite{Jajou2019} - as a comparison.
 
@@ -163,7 +163,7 @@ In summary, we produce \ont{} variant calls with equivalent precision to Illumin
 \end{center}
 \end{figure}
 
-\subsection{\ont{} variant calling: \pandora{}}
+\subsection{\ont{} variant calling: Pandora}
 \label{sec:pandora-filters}
 
 When assessing the best filters for increasing the precision of variant calls from \pandora{}, we are also interested in determining whether \prg{} density has a noticeable impact on performance. Therefore, we use the sparse and dense \prg{}s from \autoref{sec:tbprg} and look at the precision and recall these produce for the same filters.
@@ -253,7 +253,7 @@ In summary, \autoref{fig:prec-recall-filters} shows that our selection of filter
 
 %=========================================================================
 
-\section{Pairwise SNP distance comparison for Illumina and \ont{} sequencing data}
+\section{Pairwise SNP distance comparison}
 \label{sec:snp-dist}
 
 When attempting to infer transmission clusters, one approach defines a SNP distance threshold and says that any genomes within this distance of each other are clustered (possible transmissions) \cite{walker2013}. It follows that the SNPs used must be trusted. Having shown we can achieve SNP precision on-par with Illumina using \ont{} data (see \autoref{sec:var-calls}), we investigate the pairwise SNP distance between samples produced by both Illumina and \ont{} sequencing technologies. The intention here is to determine whether the thresholds typically used for Illumina data can also be used for \ont{}, or whether adjustments are required.
@@ -285,7 +285,7 @@ The relationship between Illumina and \ont{} distances is indeed linear for all 
 
 %=========================================================================
 
-\section{SNP threshold-based \ont{} transmission clustering}
+\section{\ont{} transmission clustering}
 \label{sec:clustering}
 
 While the relationship between Illumina and \ont{} pairwise SNP distance is enlightening, ultimately, the fundamental question is: do \ont{} SNPs lead to transmission clusters consistent with those obtained with Illumina SNPs? To answer this question, we compare Illumina- and \ont{}-based clusters for four Illumina SNP thresholds. 
@@ -354,7 +354,7 @@ To summarise, for each sample in an Illumina-defined cluster, SACR is the propor
 
 Of the metrics outlined above, our primary focus is SACR, as samples missed from clusters are of particular concern for public health agencies.
 
-\subsection{Evaluating \ont{} transmission clusters}
+\subsection{Evaluation of transmission clusters}
 \label{sec:eval-clusters}
 
 \subsubsection{BCFtools}
@@ -388,7 +388,7 @@ Threshold & SACR & SACP  & XCR           \\ \hline
 \label{tab:bcftools-cluster-summary}
 \end{table}
 
-\subsubsection{\pandora{} single-sample}
+\subsubsection{Pandora single-sample}
 
 For \pandora{} single-sample (\vrb{map}), we also chose to use the hand-picked SNP distance thresholds from analysis in \autoref{app:dist-sweep}. These are 16, 18, 18, and 27 for the Illumina thresholds of interest 0, 2, 5, and 12, respectively. The clustering results for each of these thresholds are summarised in \autoref{tab:map-cluster-summary} and visualised in \autoref{fig:map-clusters}. 
 
@@ -416,7 +416,7 @@ Threshold & SACR  & SACP  & XCR            \\ \hline
 \label{tab:map-cluster-summary}
 \end{table}
 
-\subsubsection{\pandora{} multi-sample}
+\subsubsection{Pandora multi-sample}
 
 The SNP thresholds we use for \compare{} clustering are 0, 1, 3, and 7. The results of this clustering are summarised in \autoref{tab:compare-cluster-summary} and visualised in \autoref{fig:compare-clusters}. One important result is that unlike the single-sample approach of \pandora{}, the multi-sample mode leads to perfect SACR across all thresholds. Additionally, clustering at the threshold of 0 perfectly mirrors Illumina. At a threshold of 2, there was one singleton added to an otherwise perfect cluster and two additional clusters of size 2. Thresholds 5 and 12 saw some cluster mergers and singletons forming new clusters or being added to existing ones. The actual clusters produced by \compare{} can be seen in \autoref{fig:compare-original-clusters}.
 
@@ -454,7 +454,7 @@ In conclusion, we recommend clustering \ont{} data based on \bcftools{} SNP call
 
 %=========================================================================
 
-\section{Transmission clusters with mixed Illumina and \ont{} data}
+\section{Mixed Illumina and \ont{} transmission clusters}
 \label{sec:mixed-clustering}
 
 Having established that \ont{} data can confidently recreate Illumina-defined transmission clusters, we turn to the question of whether this holds when mixing Illumina and \ont{} data. 

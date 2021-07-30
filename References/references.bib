@@ -899,3 +899,110 @@ author = {{Bokeh Development Team}},
 year = {2014},
 url = {http://www.bokeh.pydata.org},
 }
+
+@article{bolger2014, 
+year = {2014}, 
+keywords = {software,qc,illumina}, 
+title = {{Trimmomatic: a flexible trimmer for Illumina sequence data}}, 
+author = {Bolger, Anthony M. and Lohse, Marc and Usadel, Bjoern}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btu170}, 
+pmid = {24695404}, 
+pmcid = {PMC4103590}, 
+abstract = {{Motivation: Although many next-generation sequencing (NGS) read preprocessing tools already existed, we could not find any tool or combination of tools that met our requirements in terms of flexibility, correct handling of paired-end data and high performance. We have developed Trimmomatic as a more flexible and efficient preprocessing tool, which could correctly handle paired-end data. Results: The value of NGS read preprocessing is demonstrated for both reference-based and reference-free tasks. Trimmomatic is shown to produce output that is at least competitive with, and in many cases superior to, that produced by other tools, in all scenarios tested. Availability and implementation: Trimmomatic is licensed under GPL V3. It is cross-platform (Java 1.5+ required) and available at http://www.usadellab.org/cms/index.php?page=trimmomatic Contact:usadel@bio1.rwth-aachen.de Supplementary information:Supplementary data are available at Bioinformatics online.}}, 
+pages = {2114--2120}, 
+number = {15}, 
+volume = {30}
+}
+
+@article{kim2016, 
+year = {2016}, 
+keywords = {software,strain-identification,classification}, 
+title = {{Centrifuge: rapid and sensitive classification of metagenomic sequences}}, 
+author = {Kim, Daehwan and Song, Li and Breitwieser, Florian P. and Salzberg, Steven L.}, 
+journal = {Genome Research}, 
+issn = {1088-9051}, 
+doi = {10.1101/gr.210641.116}, 
+pmid = {27852649}, 
+abstract = {{Centrifuge is a novel microbial classification engine that enables rapid, accurate, and sensitive labeling of reads and quantification of species on desktop computers. The system uses an indexing scheme based on the Burrows-Wheeler transform (BWT) and the Ferragina-Manzini (FM) index, optimized specifically for the metagenomic classification problem. Centrifuge requires a relatively small index (4.2 GB for 4078 bacterial and 200 archaeal genomes) and classifies sequences at very high speed, allowing it to process the millions of reads from a typical high-throughput DNA sequencing run within a few minutes. Together, these advances enable timely and accurate analysis of large metagenomics data sets on conventional desktop computers. Because of its space-optimized indexing schemes, Centrifuge also makes it possible to index the entire NCBI nonredundant nucleotide sequence database (a total of 109 billion bases) with an index size of 69 GB, in contrast to k-mer-based indexing schemes, which require far more extensive space.}}, 
+pages = {1721--1729}, 
+number = {12}, 
+volume = {26}
+}
+
+@article{vaser2017, 
+year = {2017}, 
+keywords = {software,read-correction,polishing,long-reads}, 
+title = {{Fast and accurate de novo genome assembly from long uncorrected reads}}, 
+author = {Vaser, Robert and Sović, Ivan and Nagarajan, Niranjan and Šikić, Mile}, 
+journal = {Genome Research}, 
+issn = {1088-9051}, 
+doi = {10.1101/gr.214270.116}, 
+pmid = {28100585}, 
+abstract = {{The assembly of long reads from Pacific Biosciences and Oxford Nanopore Technologies typically requires resource-intensive error-correction and consensus-generation steps to obtain high-quality assemblies. We show that the error-correction step can be omitted and that high-quality consensus sequences can be generated efficiently with a SIMD-accelerated, partial-order alignment–based, stand-alone consensus module called Racon. Based on tests with PacBio and Oxford Nanopore data sets, we show that Racon coupled with miniasm enables consensus genomes with similar or better quality than state-of-the-art methods while being an order of magnitude faster.}}, 
+pages = {737--746}, 
+number = {5}, 
+volume = {27}
+}
+
+@article{pilon2014, 
+year = {2014}, 
+keywords = {software,polishing,illumina}, 
+title = {{Pilon: An Integrated Tool for Comprehensive Microbial Variant Detection and Genome Assembly Improvement}}, 
+author = {Walker, Bruce J. and Abeel, Thomas and Shea, Terrance and Priest, Margaret and Abouelliel, Amr and Sakthikumar, Sharadha and Cuomo, Christina A. and Zeng, Qiandong and Wortman, Jennifer and Young, Sarah K. and Earl, Ashlee M.}, 
+journal = {PLoS ONE}, 
+doi = {10.1371/journal.pone.0112963}, 
+pmid = {25409509}, 
+pmcid = {PMC4237348}, 
+abstract = {{Advances in modern sequencing technologies allow us to generate sufficient data to analyze hundreds of bacterial genomes from a single machine in a single day. This potential for sequencing massive numbers of genomes calls for fully automated methods to produce high-quality assemblies and variant calls. We introduce Pilon, a fully automated, all-in-one tool for correcting draft assemblies and calling sequence variants of multiple sizes, including very large insertions and deletions. Pilon works with many types of sequence data, but is particularly strong when supplied with paired end data from two Illumina libraries with small e.g., 180 bp and large e.g., 3–5 Kb inserts. Pilon significantly improves draft genome assemblies by correcting bases, fixing mis-assemblies and filling gaps. For both haploid and diploid genomes, Pilon produces more contiguous genomes with fewer errors, enabling identification of more biologically relevant genes. Furthermore, Pilon identifies small variants with high accuracy as compared to state-of-the-art tools and is unique in its ability to accurately identify large sequence variants including duplications and resolve large insertions. Pilon is being used to improve the assemblies of thousands of new genomes and to identify variants from thousands of clinically relevant bacterial strains. Pilon is freely available as open source software.}}, 
+pages = {e112963}, 
+number = {11}, 
+volume = {9}
+}
+
+@article{seeman2014, 
+year = {2014}, 
+keywords = {software,annotation,bacterial-genomics}, 
+title = {{Prokka: rapid prokaryotic genome annotation}}, 
+author = {Seemann, Torsten}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btu153}, 
+pmid = {24642063}, 
+abstract = {{Summary: The multiplex capability and high yield of current day DNA-sequencing instruments has made bacterial whole genome sequencing a routine affair. The subsequent de novo assembly of reads into contigs has been well addressed. The final step of annotating all relevant genomic features on those contigs can be achieved slowly using existing web- and email-based systems, but these are not applicable for sensitive data or integrating into computational pipelines. Here we introduce Prokka, a command line software tool to fully annotate a draft bacterial genome in about 10 min on a typical desktop computer. It produces standards-compliant output files for further analysis or viewing in genome browsers. Availability and implementation: Prokka is implemented in Perl and is freely available under an open source GPLv2 license from http://vicbioinformatics.com/ . Contact:torsten.seemann@monash.edu}}, 
+pages = {2068--2069}, 
+number = {14}, 
+volume = {30}
+}
+
+@article{clark2013, 
+year = {2013}, 
+keywords = {algorithms,assembly,assessment,stats}, 
+title = {{ALE: a generic assembly likelihood evaluation framework for assessing the accuracy of genome and metagenome assemblies}}, 
+author = {Clark, Scott C. and Egan, Rob and Frazier, Peter I. and Wang, Zhong}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/bts723}, 
+pmid = {23303509}, 
+abstract = {{Motivation: Researchers need general purpose methods for objectively evaluating the accuracy of single and metagenome assemblies and for automatically detecting any errors they may contain. Current methods do not fully meet this need because they require a reference, only consider one of the many aspects of assembly quality or lack statistical justification, and none are designed to evaluate metagenome assemblies. Results: In this article, we present an Assembly Likelihood Evaluation (ALE) framework that overcomes these limitations, systematically evaluating the accuracy of an assembly in a reference-independent manner using rigorous statistical methods. This framework is comprehensive, and integrates read quality, mate pair orientation and insert length (for paired-end reads), sequencing coverage, read alignment and k-mer frequency. ALE pinpoints synthetic errors in both single and metagenomic assemblies, including single-base errors, insertions/deletions, genome rearrangements and chimeric assemblies presented in metagenomes. At the genome level with real-world data, ALE identifies three large misassemblies from the Spirochaeta smaragdinae finished genome, which were all independently validated by Pacific Biosciences sequencing. At the single-base level with Illumina data, ALE recovers 215 of 222 (97\%) single nucleotide variants in a training set from a GC-rich Rhodobacter sphaeroides genome. Using real Pacific Biosciences data, ALE identifies 12 of 12 synthetic errors in a Lambda Phage genome, surpassing even Pacific Biosciences’ own variant caller, EviCons. In summary, the ALE framework provides a comprehensive, reference-independent and statistically rigorous measure of single genome and metagenome assembly accuracy, which can be used to identify misassemblies or to optimize the assembly process. Availability: ALE is released as open source software under the UoI/NCSA license at http://www.alescore.org. It is implemented in C and Python. Contact:pf98@cornell.edu or ZhongWang@lbl.gov Supplementary information:Supplementary data are available at Bioinformatics online.}}, 
+pages = {435--443}, 
+number = {4}, 
+volume = {29}
+}
+
+@article{quast2013, 
+year = {2013}, 
+keywords = {assembly,assessment,software,qc}, 
+title = {{QUAST: quality assessment tool for genome assemblies}}, 
+author = {Gurevich, Alexey and Saveliev, Vladislav and Vyahhi, Nikolay and Tesler, Glenn}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btt086}, 
+pmid = {23422339}, 
+pmcid = {PMC3624806}, 
+abstract = {{Summary: Limitations of genome sequencing techniques have led to dozens of assembly algorithms, none of which is perfect. A number of methods for comparing assemblers have been developed, but none is yet a recognized benchmark. Further, most existing methods for comparing assemblies are only applicable to new assemblies of finished genomes; the problem of evaluating assemblies of previously unsequenced species has not been adequately considered. Here, we present QUAST—a quality assessment tool for evaluating and comparing genome assemblies. This tool improves on leading assembly comparison software with new ideas and quality metrics. QUAST can evaluate assemblies both with a reference genome, as well as without a reference. QUAST produces many reports, summary tables and plots to help scientists in their research and in their publications. In this study, we used QUAST to compare several genome assemblers on three datasets. QUAST tables and plots for all of them are available in the Supplementary Material, and interactive versions of these reports are on the QUAST website. Availability:http://bioinf.spbau.ru/quast Contact:gurevich@bioinf.spbau.ru Supplementary information:Supplementary data are available at Bioinformatics online.}}, 
+pages = {1072--1075}, 
+number = {8}, 
+volume = {29}
+}
