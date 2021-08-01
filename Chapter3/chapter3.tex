@@ -2,7 +2,7 @@
 %*******************************************************************************
 %****************************** Third Chapter **********************************
 %*******************************************************************************
-\chapter{Applications to \textit{M. tuberculosis} drug resistance prediction}
+\chapter{Predicting \mtb{} drug resistance}
 \label{chap:dst}
 % **************************** Define Graphics Path **************************
 \ifpdf
@@ -11,4 +11,64 @@
     \graphicspath{{Chapter3/Figs/Vector/}{Chapter3/Figs/}}
 \fi
 
+%=========================================================================
+%=========================================================================
 
+\setcounter{section}{-1}
+\section{Publication and collaboration acknowledgements}
+\label{sec:ch3-acknowledge}
+
+%=========================================================================
+\section{Introduction}
+
+%=========================================================================
+\section{Dataset}
+% refer to previous chapter for sequencing info and mention we use the samples that passed QC
+
+\subsection{DST}
+% I have asked the collaborators for the DST methods
+
+% add the upset plot summarising the available phenotype data
+% also add a table with the raw numbers for the upset plot
+
+%=========================================================================
+\section{Drug resistance prediction with genome graphs}
+% i.e., methods for drprg
+
+\subsection{Constructing a panel reference graph}
+% also add in some examples of crazy sites that lead to the change in construction method
+
+\subsection{Predictions}
+% how we go from reads and panel to predictions
+% also outline what we do with novel stuff
+
+%=========================================================================
+\section{Concordance with phenotype}
+% the unknown here is whether I put all 4 methods in i.e. drprg and mykrobe both techs
+% REMEMBER: look at whether predictions for SA and mada differ
+
+%=========================================================================
+\section{Concordance with Illumina}
+% compare drprg and mykrobe ONT to mykrobe Illumina (and drprg illumina?)
+
+%=========================================================================
+\section{Effect of coverage on predictions}
+
+%=========================================================================
+\section{Flagging novel variants not in panel}
+%  what impact does this have on previous results
+% http://www.crypticproject.org/wp-content/uploads/2018/09/Prediction-of-Susceptibility-to-First-Line-Tuberculosis-Drugs-by-DNA-Sequencing.pdf
+% i guess what might be important here is whether FNs on phenotype are "fixed" by finding novel variants. Look through compass and bcftools VCFs for SNPs not in the panel
+% we could also remove some common variants from the panel and see what difference novel would have then
+
+%=========================================================================
+\section{Discussion}
+
+%=========================================================================
+\section{Conclusion}
+
+%=========================================================================
+\section{Future work}
+
+%=========================================================================
+\section{Availability of data and materials}
