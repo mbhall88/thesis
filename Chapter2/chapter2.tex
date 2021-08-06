@@ -50,11 +50,48 @@ As these samples are not reference isolates, and we want to be able to compare b
 
 \subsection{Illumina sequencing}
 
-\towrite[inline]{need to get this information from all three collaborators}
+\subsubsection{Madagascar}
+
+\todo[inline]{have emailed collabs}
+
+\subsubsection{Birmingham}
+
+\todo[inline]{assigned to zam}
+
+\subsubsection{South Africa}
+
+\improvement[inline]{tidy up as this is just copy-pasted from email from Anzaan}
+
+Isolate selection \\
+Clinical Mycobacterium tuberculosis (Mtb) isolates routinely collected in the Western Cape Province of South Africa, processed by the National Health Laboratory Service (NHLS) and diagnosed as rifampicin resistant tuberculosis, are biobanked at the South African Medical Research Council Centre for Tuberculosis Research (SAMRC-CTR) housed at the Division of Molecular Biology and Human Genetics at Stellenbosch University, South Africa. A convenience data set of 82 clinical Mtb isolates for which Illumina whole genome sequencing data was available were selected for Nanopore Sequencing.  
+
+DNA extraction \\
+% citation for this subsubsection
+% Warren, R. et al. Safe Mycobacterium tuberculosis DNA extraction method that does not compromise integrity. J Clin Microbiol 44, 254-256, doi:10.1128/JCM.44.1.254-256.2006 (2006).
+Clinical Mtb isolates were cultured on supplemented 7H10 solid media under BSL3 conditions. Phenol-chloroform DNA extraction was performed on heat inactivated cultured isolates as previously described(CITE). 
+
+WGS (Illumina) \\
+% note from anzaan
+% Many of these WGS will be published soon. I am waiting for the final list and then I’ll include their accession numbers so that we can refer to them here. If all were published, we also don’t have to upload them to ENA (or which ever data repository)
+Paired-end genomic libraries were prepared using the Illumina Nextera XT library or NEBNext Ultra TM II FS DNA Library Preparation Kits (Illumina Inc, San Diego, CA, USA) according to the manufacturers’ instructions. Pooled samples were sequenced on an Illumina HiSeq2500 or NextSeq500 instrument.
 
 \subsection{\ont{} sequencing}
 
-\towrite[inline]{need to get this information from all three collaborators}
+\subsubsection{Madagascar}
+
+\todo[inline]{have emailed collabs}
+
+\subsubsection{Birmingham}
+
+\todo[inline]{assigned to zam}
+
+\subsubsection{South Africa}
+
+\improvement[inline]{tidy up as this is just copy-pasted from email from Anzaan}
+
+Remnant stored DNA used for Illumina WGS from each isolate was retrieved from storage and used for Nanopore library preparation. Per isolate, one microgram of undigested DNA was prepared for Nanopore Sequencing using the ligation sequencing kit (SQK-LSK109). The native barcoding expansion kit (EXP-NBD104) was used for multiplexing. The protocols for sequencing genomic DNA by ligation and native barcoding were carried out according to the manufacturers’ instructions. Multiplexed sequencing libraries consisted of 6-12 barcoded DNA samples, and all libraries were sequenced using SpotON R9.4.1 flow cells on a MinION device. 
+
+\subsubsection{Preprocessing}
 
 All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool \guppy{} (version 3.4.5). We used default parameters for basecalling, and the only non-default parameter used for de-multiplexing was to trim barcodes from the resulting sequences.  
 
