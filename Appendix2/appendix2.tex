@@ -45,3 +45,34 @@ Streptomycin      & 90    \\ \hline
 }}
 \end{center}
 \end{figure}
+
+% ============================
+\section{Constructing a panel reference graph}
+
+\subsection{Example panel and associated VCF produced by \drprg{}}
+
+\begin{sidewaysfigure}
+% \begin{framed}
+\begin{Verbatim}[frame=single,framerule=0.5mm,label=Panel,fontsize=\footnotesize]
+rrs     C492X   DNA     NONE
+inhA    S94A    PROT    Isoniazid
+\end{Verbatim}
+\begin{Verbatim}[frame=single,framerule=0.5mm,label=VCF,fontsize=\footnotesize]
+##INFO=<ID=RES,Number=1,Type=String,Description="Residue the variant describes (i.e. Nucleic/Amino)">
+##INFO=<ID=DRUGS,Number=.,Type=String,Description="Drugs this variant causes resistance to">
+##INFO=<ID=PAD,Number=1,Type=Integer,Description="Number of bases added to start and end of gene">
+##INFO=<ID=ST,Number=1,Type=String,Description="Strand the gene is on">
+#CHROM  POS  ID         REF  ALT     ...         INFO
+rrs     592  rrs_C492X  C    A,G,T           ... PAD=100;RES=DNA;DRUGS=NONE;ST=+
+inhA    380  inhA_S94A  TCG  GCT,GCC,GCA,GCG ... PAD=100;RES=PROT;DRUGS=Isoniazid;ST=+
+\end{Verbatim}
+% \end{framed}
+\caption{An example panel (top) expected by \drprg{}. The columns indicate the gene, mutation, residue the variant describes, and drug the entry impacts. The panel is turned into a VCF (bottom) with proteins converted to DNA. Associated information from the panel and annotation are encoded in the INFO field for each entry. Note: some information not necessary for this example is removed from the VCF entry shown here to reduce the size.}
+\label{fig:example-panel}
+\end{sidewaysfigure}
+
+\subsection{Panel-based \prg{} density and haplotype problems}
+\label{app:panel-prg-issues}
+
+% add in some examples of crazy sites that lead to the change in construction method
+% use the example of the S95T susceptible mutation that uncovered this problem

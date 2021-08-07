@@ -34,6 +34,9 @@ While I did all bioinformatic work in this chapter, I must acknowledge the excel
 %=========================================================================
 \section{Introduction}
 
+The software package Mykrobe provides antimicrobial resistance (AMR) predictions for \mtb{} - amongst other species. 
+% talk about why the popn ref graph approach from mykrobe is lacking
+
 %=========================================================================
 \section{Dataset}
 % refer to previous chapter for sequencing info and mention we use the samples that passed QC
@@ -79,9 +82,29 @@ Streptomycin & 90    \\ \hline
 %=========================================================================
 \section{Drug resistance prediction with genome graphs}
 % i.e., methods for drprg
+In this section, we set out to design a software program that uses genome graphs to predict drug resistance for \mtb{}; building on previous work in this thesis building \mtb{} \prg{}s (\autoref{sec:tbprg}) and calling variants (\autoref{sec:pandora-filters} and \autoref{chap:denovo}). The tool we developed, \drprg{} (Drug Resistance Prediction with Reference Graphs), is written in the Rust programming language and can be found at \url{https://github.com/mbhall88/drprg}.
+% some of this might be better off in the intro
+While tools already exist for the purpose of prediction AMR, the unique component of \drprg{} is the ability to call novel variants. As the \cryptic{} Consortium recently showed, refusing to predict drug phenotypes in cases where "unknown" mutations are present in the associated target gene can lead to increased detection of pan-susceptibility for first-line drugs \cite{cryptic2018}. However, no tool usable by others made available in that work, and reproducing the results requires running multiple separate tools and scripts. \drprg{} offers a single point for producing this information.
+
+\drprg{} has two distinct phases. In the first phase, an index and \prg{} are built from a panel of variants known to cause resistance or susceptibility. Second, Illumina or \ont{} reads are provided and phenotype predictions are made for the drugs in the provided panel.
+
+We now outline these two steps in detail.
 
 \subsection{Constructing a panel reference graph}
-% also add in some examples of crazy sites that lead to the change in construction method
+The first stage of predicting drug resistance from \drprg{} is coordinated by the \vrb{build} subcommand. As input, \vrb{build} requires a panel of variants, and a reference genome and annotation. 
+
+The panel of variants can be either resistance- or susceptibility-associated. Each entry in the panel file describes, the gene the variant occurs in and the mutation it causes. The mutation can represent a DNA or protein change and is given in the form reference, position, alternate. For example a DNA mutation, \vrb{A5T}, indicates the reference base, \vrb{A}, at position 5 in the gene, is changed to a \vrb{T}. An \vrb{X} is used to indicate any nucleic or amino acid other than the one listed as the reference. If a variant is resistance-associated, a list of drugs must also be given, otherwise, if "NONE" is given, the variant is assumed not be associated with resistance.
+
+After the panel has been loaded, for each gene listed, we generate a reference sequence using the provided reference genome and annotation. If the optional padding argument is given, we add the provided number of bases to the start and end of each gene reference sequence.
+
+The next step is to convert the panel into a VCF representation. For protein mutations, we convert the amino acids into their respective DNA forms (all possible codons). We confirm the reference codon matches the reference sequence at the given position in the gene reference sequence. Positions for proteins are carefully converted to nucleic acid-space, taking into account the strand of transcription specified in the annotation. DNA mutations are likewise checked against the reference. A VCF entry is then generated for each panel entry using the DNA representation. For protein mutations and DNA mutations with an alternate of \vrb{X}, all possible alternates are listed in the same entry. An example panel and associated VCF can be seen in \autoref{fig:example-panel}.
+
+Another optional parameter of \drprg{} \vrb{build} is the ability to provide a prebuilt \prg{}. If no prebuilt \prg{} is provided, \drprg{} will construct one from the panel. It does this in a similar fashion to the method described in \autoref{sec:tbprg}. That is, for each VCF entry and alternate allele, we replace the gene reference position(s) with the alternate, and combine all such mutated sequences into a single FASTA file. We perform a multiple sequence alignment (MSA) on each file, followed by converting the MSA into a local \prg{} using \makeprg{}. Finally, the resulting local \prg{}s, which represent each gene in the panel, are combined into a single \prg{} and indexed with \pandora{}.
+
+For the work in this chapter, we chose to use a prebuilt, population-based \prg{}, rather than the panel \prg{} constructed by \drprg{}. In the early stages of testing and developing \drprg{} we found the panel-based \prg{} density and lack of haplotype information was causing a lot of missed resistance (false negatives). \autoref{app:panel-prg-issues} provides a thorough investigation into these problems with the panel-based \prg{}.
+
+The population-based \prg{} we use is built from the same variants as the sparse \prg{} in \autoref{sec:tbprg} - with an important difference. In \autoref{sec:improve-prg} we discussed a potential improvement for the \prg{} construction process whereby whole haplotypes are applied to a reference sequence. When we constructed the original sparse \prg{} in \autoref{sec:tbprg}, we applied each variant \emph{in isolation} to the reference sequence. So, if a sample had 3 variants, we built the \prg{} from the reference sequence, plus 3 mutated versions of that reference (see \autoref{sec:improve-prg} for a detailed example). Instead, for the \prg{} we use in this chapter, we apply \emph{all} variants for a sample in the sparse VCF to the (gene) reference sequence - producing a single (gene) haplotype sequence for that sample. We do this for all genes, and use the same MSA, \makeprg{}, \pandora{} index approach mentioned above (and in \autoref{sec:tbprg}).
+
 
 \subsection{Predictions}
 % how we go from reads and panel to predictions
@@ -232,7 +255,7 @@ FN=false negative; R=number of resistant samples; FP=false positive; S=number of
 
 %=========================================================================
 \section{Discussion}
-
+% The WHO target product profiles for new molecular assays for M. tuberculosis require more than 90% sensitivity and 95% specificity.7 from http://www.crypticproject.org/wp-content/uploads/2018/09/Prediction-of-Susceptibility-to-First-Line-Tuberculosis-Drugs-by-DNA-Sequencing.pdf
 %=========================================================================
 \section{Conclusion}
 
