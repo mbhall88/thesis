@@ -18,18 +18,56 @@
 \section{Publication and collaboration acknowledgements}
 \label{sec:ch3-acknowledge}
 
+A manuscript comprising the work in this chapter and \autoref{chap:clustering} is currently in preparation. In addition to the acknowledgements in \autoref{sec:ch2-acknowledge} the work not completed by myself in this chapter was the drug susceptibility testing (DST) in the laboratory.
+
+\todo[inline]{need to confirm all of this with collabs once I have received the text outlining the methods}
+
+The DST for the samples from Madagascar was conducted by Marie Sylvianne Rabodoarivelo and Simon Grandjean Lapierre. 
+
+\towrite[inline]{acknowledge the people who did the south african DST}
+
+\towrite[inline]{acknowledge the people who did the birmingham DST}
+
+
+While I did all bioinformatic work in this chapter, I must acknowledge the excellent guidance I have received. My supervisor Zamin Iqbal who always knows the right questions to ask. Simon Grandjean Lapierre helped conceive of this study, along with Zam, and whose clinical perspective helped keep me grounded in the real world. I would also like to acknowledge the many insightful conversations with our other collaborators: Marie Sylvianne Rabodoarivelo, Anastasia Koch, Niaina Rakotosamimanana, Anzaan Dippenaar, and Helen Cox. 
+
 %=========================================================================
 \section{Introduction}
 
 %=========================================================================
 \section{Dataset}
 % refer to previous chapter for sequencing info and mention we use the samples that passed QC
+The \mtb{} samples used in this chapter are those described in \autoref{sec:ch2-dataset}. We use the 150 samples that passed quality control (\autoref{sec:ch2-qc}).
 
-\subsection{DST}
+\subsection{Drug susceptibility testing}
 % I have asked the collaborators for the DST methods
+\towrite[inline]{waiting for text from collaborators}
 
-% add the upset plot summarising the available phenotype data
-% also add a table with the raw numbers for the upset plot
+\noindent
+In total, 128 samples have phenotypic information for at least one drug, with 80 having phenotypes for eight drugs. \autoref{tab:available-dst} shows the number of samples with culture-based DST for each drug and \autoref{fig:available-dst} depicts the combinations of drugs available for samples. For instance, in \autoref{fig:available-dst}, the third column reveals that 29 samples have phenotype information for ofloxacin and amikacin, while row three shows that 51 samples have available DST for kanamycin. 
+
+Although line probe assays (LPAs) were also completed for many samples, we base our analysis of concordance with phenotype on the culture-based DST data. However, we do use the LPA information to inform reasons for possible errors with drug prediction. \autoref{tab:full-dst} and \autoref{fig:full-dst} in \autoref{sec:full-dst} shows the full available DST data from both culture-based and LPA methods.
+
+\begin{table}
+\centering
+\begin{tabular}{|l|c|}
+\hline
+Drug         & Count \\ \hline
+Amikacin     & 88    \\ \hline
+Capreomycin  & 51    \\ \hline
+Ethambutol   & 90    \\ \hline
+Isoniazid    & 98    \\ \hline
+Kanamycin    & 51    \\ \hline
+Moxifloxacin & 1     \\ \hline
+Ofloxacin    & 86    \\ \hline
+Pyrazinamide & 1     \\ \hline
+Rifampicin   & 91    \\ \hline
+Streptomycin & 90    \\ \hline
+\end{tabular}
+\caption{Culture-based drug susceptibility data available for samples. The counts are the number of samples with phenotype information available for that drug.}
+\label{tab:available-dst}
+\end{table}
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/available_dst.png}
@@ -51,6 +89,8 @@
 
 %=========================================================================
 \section{Concordance with phenotype}
+
+We exclude moxifloxacin and pyrazinamide from the phenotype concordance analysis as DST was only performed for one sample (see \autoref{tab:available-dst}).
 %  alot of FP ethambutol are M306 mutation which is strongly associated with resistance https://europepmc.org/article/PMC/4505224
 
 \begin{figure}
