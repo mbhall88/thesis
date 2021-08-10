@@ -76,3 +76,86 @@ inhA    380  inhA_S94A  TCG  GCT,GCC,GCA,GCG ... PAD=100;RES=PROT;DRUGS=Isoniazi
 
 % add in some examples of crazy sites that lead to the change in construction method
 % use the example of the S95T susceptible mutation that uncovered this problem
+In the initial development stage of \drprg{}, we tried using a \prg{} built from a panel of known resistance-causing mutations (\autoref{sec:drprg-index}). However, when we began assessing the performance of \drprg{}, we discovered two common issues with this panel-based \prg{}. First, there were sites in certain genes which were far too dense and lead to many alleles having shared minimizers, and thus read coverage (example below). Second, the lack of haplotype information - for close panel variants in particular - lead to the bulk of the missed resistance (false negative) calls. We will use two real examples to illustrate these issues.
+
+\subsubsection{Complex \prg{} sites}
+The first issue of the panel-based \prg{} mentioned above was sites in some genes being too dense (a large number of alternate alleles). This density occurs at gene locations where there are many panel variants next to each other, or variants where a change to \emph{any} amino acid (denoted by the letter \vrb{X}) leads to drug resistance. 
+
+The reason for adjacent variants causing increased density is due to a parameter in \makeprg{} called the minimum match length ($m$; also discussed in \autoref{sec:improve-prg}). $m$ controls the number of base pairs that must agree between all sequences at the same position for those positions to be collapsed. Otherwise, if there is a disagreement, the alleles are split into branching paths. 
+
+\autoref{fig:min-match-len-example} shows an example of how $m$ can impact the structure of a \prg{}. In this example, there are three sequences with three sites of disagreement between them (positions 5, 9 and 13; lower-case letters). When $m=3$, there are three "neat" single-base sites and all \vrb{A}s and \vrb{T}s are collapsed as there are at least 3 continuous bases of agreement between the three sequences. However, when $m$ is increased to 4, the runs of three \vrb{A}s in between the difference positions are no longer collapsed. In this example, it may appear that $m=3$ has \emph{more} density, as there are more sites in total, but $m=4$ has more alternate alleles; the more there are, the greater the likelihood of them sharing minimizer \kmer{}s. 
+
+Let us use an example of a minimizer \kmer{} of \vrb{TTTAAA} starting at position 1. When $m=4$, the top two paths (alleles) share this minimizer. As a result, if a sequencing read has that \kmer{}, both alleles have their read coverage incremented by one. 
+
+\begin{figure}
+\begin{Verbatim}[frame=single,framerule=0.5mm,label=Sequences,fontsize=\small,framesep=5mm]
+TTTT*AAAgAAAgTTTT
+TTTT*AAAcAAAcTTTT
+TTTTtAAAtAAAtTTTT
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single,framerule=0.5mm,label={$m=3$},fontsize=\small,framesep=5mm]
+     *     g     g
+    / \   / \   / \
+TTTT   AAA-c-AAA-c-TTTT
+    \ /   \ /   \ /
+     t     t     t
+\end{Verbatim}
+
+\begin{Verbatim}[frame=single,framerule=0.5mm,label={$m=4$},fontsize=\small,framesep=5mm]
+     *AAAgAAAg
+    /         \
+TTTT-*AAAcAAAc-TTTT
+    \         /
+     tAAAtAAAt
+\end{Verbatim}
+\caption{An example of how the \makeprg{} minimum match length ($m$) parameter effects \prg{} structure. The \prg{}s for three sequences (top) with three positions of difference (lower-case letters) are shown. $m$ controls when sequence is collapsed. when $m=3$ (middle) all runs of \vrb{A} and \vrb{T} are collapsed as there are at least 3 positions in a row where both sequences agree. However, when $m=4$ (bottom), the \vrb{A}s are not longer collapsed leaving a single, longer branched path for each sequence, rather than the three smaller, single-base paths when $m=3$. \vrb{*} is a placeholder to indicate an insertion/deletion}
+\label{fig:min-match-len-example}
+\end{figure}
+
+This issue of shared minimizer \kmer{}s in dense regions of the panel-based \prg{} lead to many \drprg{} prediction errors (\drprg{} uses \pandora{} to facilitate this - see \autoref{sec:drprg-predict}). One such example from real data is shown in \autoref{fig:example-pncA-dense}, which focuses on the \textit{pncA} variant S65F. In this example, the panel-based \prg{} (top) has 126 alternate alleles as there are many variants within less than $m$ positions of each other. As can be seen from the sequences shown, there is a lot of shared sequence between the alleles. As a result, when looking at the coverage information (\vrb{MEAN\_FWD\_COVG} and \vrb{MEAN\_REV\_COVG}), we can see that \emph{all} alleles have what looks to be reasonably read depth. However, biologically, we know that it is \emph{extremely} unlikely there are 126 different strains in this sample; the null genotype call and low genotype confidence also corroborate this. Because no genotype can be confidently called, the prediction for this sample is susceptible (\vrb{PREDICT} tag in the VCF entry).
+
+In contrast, when using the population-based \prg{}, we see a very different variant record. First, there are now only two alternate alleles indicating that in the population there is not as much variation at this site as the panel-based \prg{} would suggest. Second, as a result of this reduced density, the coverage information is much "cleaner" and the genotyping much more confident. We now (correctly) classify this sample as having the S65F mutation in \textit{pncA}, leading to a prediction of resistant.
+
+The scenario in \autoref{fig:example-pncA-dense} was repeatedly encountered across the samples in this study. It was particularly common in genes with a lot of resistance-causing mutations in close proximity, such as \textit{pncA}, \textit{katG}, and \textit{rpoB}. Switching to the use of a population-based \prg{} helped reduce the majority of density-related errors that were being made by \drprg{}.
+
+\begin{figure}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,frame=single,framerule=0.5mm,fontsize=\footnotesize,label=\textit{pncA} mutation S65F VCF entry for panel-based \prg{}]
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  sample
+pncA    284     5bf4ae25        CCGGACTATTCCTCGTCGTGGCCACCGCATTGC       AGAGACTATTCCTCGTCGTGGCCACCGCATTGC,AGCGACTATTCCTCGTCGTGGCCACCGCATTGC,AGGGACTATTCCTCGTCGTGGCCACCGCATTGC,AGTGACTATTCCTCGTCGTGGCCACCGCATTGC,CAAGACTATTCCTCGTCGTGGCCACCGCATTGC,CAGGACTATTCCTCGTCGTGGCCACCGCATTGC,CCAGACTATTCCTCGTCGTGGCCACCGCATTGC,CCCGACTATTCCTCGTCGTGGCCACCGCATTGC,CCGCACTATTCCTCGTCGTGGCCACCGCATTGC,CCGCATTATTCCTCGTCGTGGCCACCGCATTGC,CCGGAATATTCCTCGTCGTGGCCACCGCATTGC,CCGGACTAATCCTCGTCGTGGCCACCGCATTGC,CCGGACTAGTCCTCGTCGTGGCCACCGCATTGC,CCGGACTATTCCCCATCGTGGCCACCGCATTGC,CCGGACTATTCCCCCTCGTGGCCACCGCATTGC,CCGGACTATTCCCCGTCGTGGCCACCGCATTGC,<110 hidden>  .       frs      VARID=pncA_S65F,<rest hidden>;PREDICT=S,<rest hidden>       GT:MEAN_FWD_COVG:MEAN_REV_COVG:GT_CONF      .:31,14,14,12,14,12,13,20,20,17,17,22,20,16,20,20,<110 hidden>:29,14,16,13,15,13,13,20,21,17,17,21,20,16,20,20,<110 hidden>:14.4118
+\end{Verbatim}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,frame=single,framerule=0.5mm,fontsize=\footnotesize,label=\textit{pncA} mutation S65F VCF entry for population-based \prg{}]
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  sample
+pncA    292     f2ff5236        TTCC    TATCT,TTTC      .       PASS    VARID=pncA_S65F,<rest hidden>;PREDICT=R,<rest hidden>   GT:MEAN_FWD_COVG:MEAN_REV_COVG:GT_CONF     2:6,0,19:9,0,26:179.789
+\end{Verbatim}
+\caption{Contrasting examples of the same \textit{pncA} variant site (S65F) from a panel-based \prg{} (top) and a population-based \prg{} (bottom). \vrb{VARID} indicates the panel variants this site overlaps and \vrb{PREDICT} is the resistance prediction for the relevant \vrb{VARID}. \vrb{MEAN\_FWD\_COVG} and \vrb{MEAN\_REV\_COVG} specify the mean forward and reverse \kmer{} coverage on minimizer \kmer{}s that overlap this site. Note: due to the large number of alternate alleles (126) in the panel-based record and overlapping \vrb{VARID}s, some data has been elided for illustrative purposes.}
+\label{fig:example-pncA-dense}
+\end{figure}
+
+\subsubsection{Lack of haplotype information}
+
+The second panel-based \prg{} problem mentioned was the lack of haplotype information. This issue is of particular relevance to close panel variants and was the cause of many missed resistance calls when using the panel-based \prg{}. Additionally, it we raised it in \autoref{sec:improve-prg} as an avenue for improvement when building \prg{}s.
+
+When constructing a panel-based \prg{}, as outlined in \autoref{sec:drprg-index}, the use of haplotype information is not possible. The variants in the panel do not have accompanying data indicating what other variants they do or do not occur in tandem with. As a result, when two variants occur within $m$ base pairs of each other, the co-occurrence of the two is not possible given the constructed alternate alleles. For example, in \autoref{fig:min-match-len-example}, when $m=3$, it is possible to take a path through the \prg{} which would yield a sequence containing the three variants \vrb{t}, \vrb{g}, and \vrb{c}. However, when $m=4$, such a path is not possible as all possible combinations of variants are not allowed. This failure to construct all possible combinations of haplotypes is a feature of \makeprg{} and avoids combinatorial "explosions" that would occur - e.g., in the example of $m=4$, there are 18 possible recombinants of the variants that would need to be listed.
+
+A common site where this lack of haplotype information was causing a lot of missed resistance is shown in \autoref{fig:example-gyrA-dense}. This site occurs in the \textit{gyrA} gene and is known to cause resistance to fluoroquinolones. Of relevance to the haplotype scenario we are discussing are the mutations at (amino acid) positions 94 and 95. A mutation away from aspartic acid (D) at position 94 is known to cause resistance; while the mutation of serine (S) to threonine (T) at position 95 is a common polymorphism not related to resistance \cite{sreevatsan1997,Giannoni2005,singhal2016}. Indeed, the S95T variant is so common, it is used in a line probe assay for fluoroquinolones \cite{Giannoni2005}. S95T co-occurs with the D94 mutations, but due to the haplotype issue under discussion, when building a panel-based \prg{} there are no alternate alleles with resistance-causing mutations along with this natural polymorphism (the last ALT in \autoref{fig:example-gyrA-dense} top represents S95T). The sample in \autoref{fig:example-gyrA-dense} has both the D94N and S95T mutations. This combination does not occur in the panel-based \prg{} - leading to no coverage on any alleles. However, the allele combination \emph{is} found in the population-based \prg{} allowing correct genotyping and thus (correctly) calling resistance to fluoroquinolones.
+
+One conceivable way of avoiding this problem of no haplotype information would be to reduce the value of $m$. As we see in \autoref{fig:min-match-len-example}, if $m$ is low enough, the variants can be separated by matching sequence, thus allowing recombinant paths through the \prg{}; however, there are two drawbacks to this approach. First, if two variants occur directly next to each other, even $m=1$ will be unable to separate them by matching sequence. Second, there is an inverse relationship between $m$ and indexing runtime and size; as $m$ decreases, indexing the \prg{} takes longer as there are more paths to walk, and its size increase due to the same reason (i.e., more minimizer \kmer{}s).
+
+In some of these situations, we would expect \denovo{} variant discovery to be able to recover the correct allele combination. However, we found it struggled to do so due to the choice of maximum likelihood (ML) path in the beginning. As mentioned in \todo{ref pandora ML path text} after \pandora{} assigns \kmer{} coverage (hits) to the local \prg{}s, it uses dynamic programming to select the ML path through each. In the panel-based \prg{} example in \autoref{fig:example-gyrA-dense}, because there is no coverage on any allele, the ML path is effectively a random choice at this site. As such, if the random choice is quite different to the allele present in the sample, the \denovo{} variant discovery step is unable to find anchor \kmer{}s (\autoref{sec:path-enum}) and thus cannot perform local assembly on the region to find the correct path.
+
+Ultimately, the easiest way to solve the lack of haplotype information was to build the \prg{} from a cross-section of variation seen in a population. As we ensure there is enough diversity in the sampled population (\autoref{sec:tbprg}), the commonly occurring allele combinations are present in the final \prg{}.
+
+
+\begin{figure}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,frame=single,framerule=0.5mm,fontsize=\footnotesize,label=\textit{gyrA} mutation S95T VCF entry for panel-based \prg{}]
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  sample
+gyrA    380     164fc346        GACAG     AACAG,AATAG,CACAG,CATAG,GCAAG,GCCAG,GCGAG,GCTAG,GGAAG,GGCAG,GGGAG,GGTAG,TACAG,TATAG,TGCAG,TGTAG,GACAC .       ld;lgc  VARID=gyrA_D94N,gyrA_D94H,gyrA_D94A,gyrA_D94G,gyrA_D94Y,gyrA_D94C,gyrA_S95T;PREDICT=S,S,S,S,S,S,S  GT:MEAN_FWD_COVG:MEAN_REV_COVG:GT_CONF     .:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0:0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0:0
+\end{Verbatim}
+\begin{Verbatim}[breaklines=true,breakanywhere=true,frame=single,framerule=0.5mm,fontsize=\footnotesize,label=\textit{gyrA} mutation S95T VCF entry for population-based \prg{}]
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  sample
+gyrA    380     01a6abfd        GACAG   AACAC,CACAC,GACAC,GCCAC,GGCAC,TACAC,TACAG       .       PASS    VARID=gyrA_D94N,gyrA_D94H,gyrA_D94A,gyrA_D94G,gyrA_D94Y,gyrA_D94C,gyrA_S95T;PREDICT=R,S,S,S,S,S,S      GT:MEAN_FWD_COVG:MEAN_REV_COVG:GT_CONF     1:0,38,0,0,13,0,0,0:0,24,0,0,25,0,0,0:117.539
+\end{Verbatim}
+\caption{Contrasting examples of the same \textit{gyrA} variant site from a panel-based \prg{} (top) and a population-based \prg{} (bottom). \vrb{VARID} indicates the panel variants this site overlaps and \vrb{PREDICT} is the resistance prediction for the relevant \vrb{VARID}. \vrb{MEAN\_FWD\_COVG} and \vrb{MEAN\_REV\_COVG} specify the mean forward and reverse \kmer{} coverage on minimizer \kmer{}s that overlap this site.}
+\label{fig:example-gyrA-dense}
+\end{figure}

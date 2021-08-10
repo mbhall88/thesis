@@ -91,6 +91,7 @@ While tools already exist for the purpose of prediction AMR, the unique componen
 We now outline these two steps in detail.
 
 \subsection{Constructing a panel reference graph}
+\label{sec:drprg-index}
 The first stage of predicting drug resistance from \drprg{} is coordinated by the \vrb{build} subcommand. As input, \vrb{build} requires a panel of variants, and a reference genome and annotation. 
 
 The panel of variants can be either resistance- or susceptibility-associated. Each entry in the panel file describes, the gene the variant occurs in and the mutation it causes. The mutation can represent a DNA or protein change and is given in the form reference, position, alternate. For example a DNA mutation, \vrb{A5T}, indicates the reference base, \vrb{A}, at position 5 in the gene, is changed to a \vrb{T}. An \vrb{X} is used to indicate any nucleic or amino acid other than the one listed as the reference. If a variant is resistance-associated, a list of drugs must also be given, otherwise, if "NONE" is given, the variant is assumed not be associated with resistance.
@@ -107,6 +108,7 @@ The population-based \prg{} we use is built from the same variants as the sparse
 
 
 \subsection{Predictions}
+\label{sec:drprg-predict}
 % how we go from reads and panel to predictions
 % also outline what we do with novel stuff
 
