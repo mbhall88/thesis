@@ -176,6 +176,18 @@ Building the \drprg{} population-based \prg{} and index took 174.53s of CPU time
 %=========================================================================
 \section{Concordance with phenotype}
 
+% ***************
+% text from authorea
+We used mykrobe(version 0.10.0) to obtain predictions of each sample's drug susceptibility profile for the 11 drugs mykrobe supports (Hunt 2019). For the Illumina predictions, the only non-default setting used was to set the expected error rate to 0.001 (-e 0.001). We did not use the preset Nanopore settings (--ont), but instead set an expected error rate and ploidy of 0.08 and haploid respectively (-e 0.08 --ploidy haploid).
+When comparing phenotype predictions from mykrobe, we interpret minor resistance calls ("r") as resistance ("R").
+Whilst the drug resistance prediction of mykrobehas been thoroughly evaluated for Illumina sequencing data, it has only been validated on 5 Nanopore samples (Hunt 2019). As our dataset does not have DST information for all samples, or even for all of the 11 drugs mykrobe provides predictions for, we aim to investigate the concordance of Nanopore and Illumina predictions. 
+We obtained resistance predictions for all samples using mykrobe and compared the phenotype prediction to the culture-based DST where available. When the DST indicates susceptible ("S") for a drug and mykrobe calls resistant ("R") we classify it as a false positive (FP). We call the inverse situation a false negative (FN). We classify a matching prediction and DST phenotype as a true negative (TN) and true positive (TP) for susceptible and resistant samples respectively.
+Figure 8 shows the number of correct and incorrect/missed - assuming DST phenotypes to be the truth - calls made by mykrobe for both Illumina and Nanopore data. Table 2 provides the number of FNs and FPs, along with the false negative rate, false positive rate, positive predictive value, and negative predictive value for each technology/drug combination. The main takeaway from these results is that Nanopore-based predictions are very much inline with those from Illumina, and for some drugs Nanopore even performs slightly better.
+Most of the FPs show very strong evidence of known resistance-causing SNPs in both technologies, while many of the FNs have SNPs in resistance-associated genes that do not appear in the panel.  
+% ***************
+
+
+
 We exclude moxifloxacin and pyrazinamide from the phenotype concordance analysis as DST was only performed for one sample (see \autoref{tab:available-dst}).
 %  alot of FP ethambutol are M306 mutation which is strongly associated with resistance https://europepmc.org/article/PMC/4505224
 
@@ -239,6 +251,14 @@ FN=false negative; R=number of resistant samples; FP=false positive; S=number of
 %=========================================================================
 \section{Concordance with Illumina}
 
+% ***************
+% text from authorea
+We saw in Section 3.5 that Nanopore-derived resistance predictions are inline with those from Illumina when comparing to DST information. As not all samples in the dataset have DST data, and not all samples with DST information have all drugs covered, we explore whether the Nanopore predictions are concordant with those from Illumina - for all drugs. As our sequencing data is matched, this analysis will highlight whether the prediction method used by mykrobe is well-tuned for Nanopore data. Given the rigorous and broad validation of mykrobe's prediction power on Illumina data, if Nanopore results are concordant, this will go a long way to endorsing it's use for resistance prediction.
+We follow the same classification approach as in Section 3.5, but assume the Illumina prediction is the true phenotype and compare the Nanopore predictions accordingly. Table 3 shows that Nanopore predictions are congruent with Illumina.
+Across all drugs, there were 9 FNs (missed resistance) in total. Eight of those FNs are situations where the Illumina data has called minor resistance - a heterozygous call at a resistance-causing variant. As mykrobe uses a haploid model for Nanopore, this is unavoidable until such time as a diploid model can be employed. We did attempt to use a diploid model for Nanopore, but found a dramatic increase in the number of FNs. The other FN has a DST phenotype of susceptible for that drug (streptomycin), but some support for a resistance-causing variant in the VCFs from Sections 2.4 and 2.5 - so the truth is uncertain.
+Of the 15 FPs made; seven show strong support for the resistance-causing variant in VCFs for both technologies, with the mykrobe results from Illumina having also called the variant, but having been filtered due to low coverage;  three have a DST phenotype of resistant, indicating the Illumina result may be incorrect; five occur in the same GC-rich section of the katG gene, and are false positive indel calls by Nanopore - a known systematic problem (Watson 2019).
+% ***************
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/illumina_concordance.png}
@@ -300,6 +320,13 @@ FN=false negative; R=number of resistant samples; FP=false positive; S=number of
 
 %=========================================================================
 \section{Effect of coverage on predictions}
+
+% ***************
+% text from authorea
+It has previously been shown that deep coverage is required of Nanopore to accurately predict drug resistance (Votintseva 2017). As Nanopore sequencing advances quickly, and our dataset contains a broad depth-of-coverage range (~29-150x) we explore whether this requirement of high coverage still holds.
+We binned samples into groups based on their read depth and looked at whether there is a higher proportion of errors in the lower coverage bins. Figure 9 shows there is no relationship between coverage and errors. Further work at depths lower than 30x is warranted, but there is convincing evidence here that samples with "only" 30x coverage should still yield reliable resistance predictions. 
+% ***************
+
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/phenotype_coverage.png}
