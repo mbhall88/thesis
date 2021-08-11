@@ -159,3 +159,62 @@ gyrA    380     01a6abfd        GACAG   AACAC,CACAC,GACAC,GCCAC,GGCAC,TACAC,TACA
 \caption{Contrasting examples of the same \textit{gyrA} variant site from a panel-based \prg{} (top) and a population-based \prg{} (bottom). \vrb{VARID} indicates the panel variants this site overlaps and \vrb{PREDICT} is the resistance prediction for the relevant \vrb{VARID}. \vrb{MEAN\_FWD\_COVG} and \vrb{MEAN\_REV\_COVG} specify the mean forward and reverse \kmer{} coverage on minimizer \kmer{}s that overlap this site.}
 \label{fig:example-gyrA-dense}
 \end{figure}
+
+% =====================
+\section{Example \drprg{} prediction report}
+
+\autoref{fig:example-drprg-report} is an example of the JSON file output from \drprg{} \vrb{predict} (see \autoref{sec:drprg-predict}). This JSON file shows the resistance prediction for each drug and the supporting evidence. It has had some drugs removed for brevity.
+
+\begin{figure}
+\begin{minted}[frame=single,framerule=0.5mm,fontsize=\footnotesize]{json}
+{
+  "sample": "R21770",
+  "susceptibility": {
+    "Amikacin": {
+      "evidence": [],
+      "predict": "S"
+    },
+    "Ethambutol": {
+      "evidence": [
+        {
+          "gene": "embB",
+          "residue": "DNA",
+          "variant": "G2995A",
+          "vcfid": "4a883e71"
+        }
+      ],
+      "predict": "U"
+    },
+    "Isoniazid": {
+      "evidence": [],
+      "predict": "S"
+    },
+    "Ofloxacin": {
+      "evidence": [],
+      "predict": "S"
+    },
+    "Pyrazinamide": {
+      "evidence": [],
+      "predict": "S"
+    },
+    "Rifampicin": {
+      "evidence": [
+        {
+          "gene": "rpoB",
+          "residue": "PROT",
+          "variant": "L430X",
+          "vcfid": "52981ff5"
+        }
+      ],
+      "predict": "R"
+    },
+    "Streptomycin": {
+      "evidence": [],
+      "predict": "S"
+    }
+  }
+}
+\end{minted}
+\caption{An example drug resistance prediction JSON report file produced by \drprg{}. The report maps a drug to its prediction and any relevant evidence supporting that prediction. S=susceptible; U=unknown (i.e., novel variant); R=resistant.}
+\label{fig:example-drprg-report}
+\end{figure}
