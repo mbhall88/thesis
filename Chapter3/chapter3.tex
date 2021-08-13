@@ -51,7 +51,7 @@ The \mtb{} samples used in this chapter are those described in \autoref{sec:ch2-
 \towrite[inline]{waiting for text from collaborators}
 
 \subsubsection{Madagascar}
-Culture on Löwenstein-Jensen (LJ) still the gold standard method for MTB identification and for the detection of resistance. The indirect proportion method on LJ medium was performed to test the susceptibility of positive cultures against anti-TB drugs. 4 μg.ml-1, 0.2 μg.ml-1, 40 μg.ml-1, at 2 μg.ml-1, 30 μg.ml-1, 30 μg.ml-1, and 40 μg.ml-1 were the critical concentration used for Streptomycin, Isoniazid, Rifampicin, Ethambutol, Kanamycin, Amikacin and Capreomycin respectively. The growth on a drug-free medium was compared with the growth on a medium containing anti-TB agent. An isolate was identified resistant if at least 1\% of growth is present at the critical concentration of drug in the culture medium. 
+Culture on Löwenstein-Jensen (LJ) still the gold standard method for MTB identification and for the detection of resistance. The indirect proportion method on LJ medium was performed to test the susceptibility of positive cultures against anti-TB drugs. 4 ug.ml-1, 0.2 ug.ml-1, 40 ug.ml-1, at 2 ug.ml-1, 30 ug.ml-1, 30 ug.ml-1, and 40 ug.ml-1 were the critical concentration used for Streptomycin, Isoniazid, Rifampicin, Ethambutol, Kanamycin, Amikacin and Capreomycin respectively. The growth on a drug-free medium was compared with the growth on a medium containing anti-TB agent. An isolate was identified resistant if at least 1\% of growth is present at the critical concentration of drug in the culture medium. 
 
 \noindent
 In total, 128 samples have phenotypic information for at least one drug, with 80 having phenotypes for eight drugs. \autoref{tab:available-dst} shows the number of samples with culture-based DST for each drug and \autoref{fig:available-dst} depicts the combinations of drugs available for samples. For instance, in \autoref{fig:available-dst}, the third column reveals that 29 samples have phenotype information for ofloxacin and amikacin, while row three shows that 51 samples have available DST for kanamycin. 
@@ -198,7 +198,7 @@ For the drug/sample combinations with available culture-based phenotypes, we cla
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/pheno_concordance_plot.png}
-\caption{{Number of resistant (left) and susceptible (right) phenotypes correctly identified by mykrobe from Illumina (blue) and Nanopore (purple) data from the same samples. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data that mykrobe also makes predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility testing (DST) phenotypes correctly identified by mykrobe (purple) and \drprg{} (blue) with Illumina (non-striped) and \ont{} (striped) data. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data that the tools make predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
 {\label{fig:pheno-concordance}}
 }}
 \end{center}
@@ -516,7 +516,7 @@ Drug &
   94.8\% (87.4-98.0\%) \\ \hline
 \end{tabular}%
 }
-\caption{Comparison of drug resistance predictions with culture-based phenotype. For this comparison, we assume the drug susceptibility testing phenotype is correct and evaluate mykrobe Illumina and Nanopore resistance predictions accordingly. Pyrazinamide and Moxifloxacin are excluded as phenotype information is only available for 1 sample. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
+\caption{Comparison of WGS-based drug resistance prediction concordance with culture-based drug susceptibility testing (DST) phenotypes. For this comparison, we assume the DST phenotype is correct and evaluate the WGS predictions accordingly. \drprg{} and mykrobe are the two tools that provide WGS predictions. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
 \label{tab:pheno-concordance}
 \end{table}
 
@@ -529,18 +529,26 @@ While there is a seemingly high number of FNs and FPs for some drugs, many of th
 %=========================================================================
 \section{Concordance with Illumina}
 \label{sec:geno-concordance}
-% ***************
-% text from authorea
-We saw in Section 3.5 that Nanopore-derived resistance predictions are inline with those from Illumina when comparing to DST information. As not all samples in the dataset have DST data, and not all samples with DST information have all drugs covered, we explore whether the Nanopore predictions are concordant with those from Illumina - for all drugs. As our sequencing data is matched, this analysis will highlight whether the prediction method used by mykrobe is well-tuned for Nanopore data. Given the rigorous and broad validation of mykrobe's prediction power on Illumina data, if Nanopore results are concordant, this will go a long way to endorsing it's use for resistance prediction.
-We follow the same classification approach as in Section 3.5, but assume the Illumina prediction is the true phenotype and compare the Nanopore predictions accordingly. Table 3 shows that Nanopore predictions are congruent with Illumina.
-Across all drugs, there were 9 FNs (missed resistance) in total. Eight of those FNs are situations where the Illumina data has called minor resistance - a heterozygous call at a resistance-causing variant. As mykrobe uses a haploid model for Nanopore, this is unavoidable until such time as a diploid model can be employed. We did attempt to use a diploid model for Nanopore, but found a dramatic increase in the number of FNs. The other FN has a DST phenotype of susceptible for that drug (streptomycin), but some support for a resistance-causing variant in the VCFs from Sections 2.4 and 2.5 - so the truth is uncertain.
-Of the 15 FPs made; seven show strong support for the resistance-causing variant in VCFs for both technologies, with the mykrobe results from Illumina having also called the variant, but having been filtered due to low coverage;  three have a DST phenotype of resistant, indicating the Illumina result may be incorrect; five occur in the same GC-rich section of the katG gene, and are false positive indel calls by Nanopore - a known systematic problem (Watson 2019).
-% ***************
+
+We saw in \autoref{sec:pheno-concordance} that \ont{}-derived resistance predictions are inline with those from Illumina when comparing to culture-based phenotypes. As not all samples in the dataset have DST data, and not all samples with DST information have all drugs covered, we explore whether \ont{} predictions are concordant with those from mykrobe with Illumina data - for all drugs. As our sequencing data is matched (see \autoref{sec:ch2-dataset}), this analysis will highlight what impact sequencing modality has on predictions from Nanopore data. Given the rigorous and broad validation of mykrobe's prediction power on Illumina data \cite{hunt2019}, if \ont{} results are concordant, this will go a long way to endorsing it's use for resistance prediction. In addition, if the Illumina and \ont{} predictions from \drprg{} are consistent with mykrobe, this is a good first validation of the method.
+
+We follow the same classification approach as in \autoref{sec:pheno-concordance}, but assume the Illumina predictions from mykrobe are the true phenotype and compare the mykrobe \ont{} and \drprg{} (both modalities) predictions accordingly. \autoref{fig:geno-concordance} and \autoref{tab:geno-concordance} show the results of this analysis.
+
+Across all drugs, there were 8 FN (missed resistance) calls by mykrobe \ont{}. Seven of those FNs are situations where the Illumina data has called minor resistance - a heterozygous call at a resistance-causing variant. As we use a haploid model for \ont{} (see \autoref{app:mykrobe-settings}), this is unavoidable until such time as a diploid model can be employed. We did attempt to use a diploid model for \ont{}, but found a dramatic increase in the number of FNs and FPs due to indel calls. The other FN actually has a DST phenotype of susceptible (which is what the \ont{} prediction is) for that drug (streptomycin), but some support for a resistance-causing variant in the VCFs from \autoref{sec:var-calls} - so the truth is uncertain.
+
+For the \drprg{} \ont{} predictions, there were 32 FNs across all drugs. Ten of these were cases where mykrobe called minor resistance. Similar to mykrobe for \ont{}, \drprg{} employs a haploid model for both Illumina and \ont{}, hence heterzygous calls are not possible. Another 14 FNs were called by \drprg{} \ont{}, but the variant was filtered due to low FRS. All but one of these FRS cases was a promoter mutation C-15X in \textit{fabG1}. A further two FNs were also filtered out due to strand bias. Lastly, five FNs were associated with indel calls in \textit{pncA}; indels are a known systematic problem with \ont{} data \cite{watson2019}.
+
+\drprg{} with Illumina missed 17 resistance calls compared to mykrobe with Illumina. Ten of these were cases of mykrobe calling minor resistance, as mentioned above. Of the remaining 7 FNs, four were related to indel calls in \textit{pncA}, and three just have no evidence in the \drprg{} VCF.
+
+Of the 17 FPs made by mykrobe \ont{}; nine show strong support for the resistance-causing variant in VCFs (\autoref{sec:var-calls}) for both technologies, with the mykrobe results from Illumina having also called the variant, but filtered out due to low coverage; eight are false positive isoniazid indel calls made by \ont{} in a GC-rich region \textit{katG}. Additionally, in 8/17 FPs, the culture-based phenotype supports the \ont{} prediction.
+
+The \drprg{} predictions had 23 and 22 FPs for \ont{} and Illumina data respectively. The one difference being the \ont{} predictions have one more isoniazid FP from a \textit{katG} indel call. 11/23 FPs are associated with indel calls in \textit{pncA} causing a false resistance call for pyrazinamide. Indel calls were also the cause of two FPs for isoniazid (\textit{katG}) and one for rifampicin (\textit{rpoB}). Similar to the mykrobe \ont{} calls, 10 of the \drprg{} FPs showed strong support for the resistance-causing variant in VCFs (\autoref{sec:var-calls}) for both technologies, with the mykrobe results from Illumina having also called the variant, but filtered out due to low coverage. Additionally, in 11 FPs, the culture-based phenotype supports the \drprg{} prediction.
+
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/illumina_concordance.png}
-\caption{{Number of resistant (left) and susceptible (right) genotypes correctly identified by mykrobe from Illumina (blue) and Nanopore (purple) data from the same samples. The genotypes are predictions from mykrobe with Illumina data. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data that mykrobe also makes predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) WGS-based drug resistance phenotypes correctly identified by mykrobe \ont{} (purple) and \drprg{} (blue) with Illumina (striped) and \ont{} (non-striped) data. For this analysis, the Illumina-based mykrobe predictions are considered truth and the other predictions are assessed accordingly. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs that mykrobe makes predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
 {\label{fig:geno-concordance}}
 }}
 \end{center}
@@ -549,7 +557,7 @@ Of the 15 FPs made; seven show strong support for the resistance-causing variant
 \begin{table}
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lllllllll}
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
 \hline
 Drug &
   Tool &
@@ -568,7 +576,7 @@ Drug &
   0.0\% (0.0-24.2\%) &
   1.4\% (0.4-5.1\%) &
   85.7\% (60.1-96.0\%) &
-  100.0\% (97.3-100.0\%) \\
+  100.0\% (97.3-100.0\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -577,7 +585,7 @@ Drug &
   0.0\% (0.0-24.2\%) &
   1.4\% (0.4-5.1\%) &
   85.7\% (60.1-96.0\%) &
-  100.0\% (97.3-100.0\%) \\
+  100.0\% (97.3-100.0\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -586,7 +594,7 @@ Drug &
   0.0\% (0.0-24.2\%) &
   1.4\% (0.4-5.1\%) &
   85.7\% (60.1-96.0\%) &
-  100.0\% (97.3-100.0\%) \\
+  100.0\% (97.3-100.0\%) \\ \hline
 \multirow{3}{*}{Capreomycin} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -595,7 +603,7 @@ Drug &
   0.0\% (0.0-24.2\%) &
   1.4\% (0.4-5.1\%) &
   85.7\% (60.1-96.0\%) &
-  100.0\% (97.3-100.0\%) \\
+  100.0\% (97.3-100.0\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -604,7 +612,7 @@ Drug &
   0.0\% (0.0-24.2\%) &
   1.4\% (0.4-5.1\%) &
   85.7\% (60.1-96.0\%) &
-  100.0\% (97.3-100.0\%) \\
+  100.0\% (97.3-100.0\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -613,7 +621,7 @@ Drug &
   0.0\% (0.0-24.2\%) &
   1.4\% (0.4-5.1\%) &
   85.7\% (60.1-96.0\%) &
-  100.0\% (97.3-100.0\%) \\
+  100.0\% (97.3-100.0\%) \\ \hline
 \multirow{3}{*}{Ciprofloxacin} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -622,7 +630,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -631,7 +639,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -640,7 +648,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \hline
 \multirow{3}{*}{Ethambutol} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -649,7 +657,7 @@ Drug &
   5.4\% (1.8-14.6\%) &
   0.0\% (0.0-3.9\%) &
   100.0\% (93.2-100.0\%) &
-  96.9\% (91.3-98.9\%) \\
+  96.9\% (91.3-98.9\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -658,7 +666,7 @@ Drug &
   5.4\% (1.8-14.6\%) &
   0.0\% (0.0-3.9\%) &
   100.0\% (93.2-100.0\%) &
-  96.9\% (91.3-98.9\%) \\
+  96.9\% (91.3-98.9\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -667,7 +675,7 @@ Drug &
   3.6\% (1.0-12.1\%) &
   0.0\% (0.0-3.9\%) &
   100.0\% (93.4-100.0\%) &
-  97.9\% (92.7-99.4\%) \\
+  97.9\% (92.7-99.4\%) \\ \hline
 \multirow{3}{*}{Isoniazid} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -676,7 +684,7 @@ Drug &
   1.2\% (0.2-6.7\%) &
   1.4\% (0.3-7.7\%) &
   98.8\% (93.3-99.8\%) &
-  98.6\% (92.3-99.7\%) \\
+  98.6\% (92.3-99.7\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -685,7 +693,7 @@ Drug &
   16.2\% (9.7-25.8\%) &
   4.3\% (1.5-11.9\%) &
   95.7\% (88.1-98.5\%) &
-  83.8\% (74.2-90.3\%) \\
+  83.8\% (74.2-90.3\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -694,7 +702,7 @@ Drug &
   0.0\% (0.0-4.6\%) &
   12.9\% (6.9-22.7\%) &
   89.9\% (81.9-94.6\%) &
-  100.0\% (94.1-100.0\%) \\
+  100.0\% (94.1-100.0\%) \\ \hline
 \multirow{3}{*}{Kanamycin} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -703,7 +711,7 @@ Drug &
   0.0\% (0.0-22.8\%) &
   1.5\% (0.4-5.2\%) &
   86.7\% (62.1-96.3\%) &
-  100.0\% (97.2-100.0\%) \\
+  100.0\% (97.2-100.0\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -712,7 +720,7 @@ Drug &
   0.0\% (0.0-22.8\%) &
   1.5\% (0.4-5.2\%) &
   86.7\% (62.1-96.3\%) &
-  100.0\% (97.2-100.0\%) \\
+  100.0\% (97.2-100.0\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -721,7 +729,7 @@ Drug &
   0.0\% (0.0-22.8\%) &
   1.5\% (0.4-5.2\%) &
   86.7\% (62.1-96.3\%) &
-  100.0\% (97.2-100.0\%) \\
+  100.0\% (97.2-100.0\%) \\ \hline
 \multirow{3}{*}{Moxifloxacin} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -730,7 +738,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -739,7 +747,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -748,7 +756,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \hline
 \multirow{3}{*}{Ofloxacin} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -757,7 +765,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -766,7 +774,7 @@ Drug &
   5.9\% (1.0-27.0\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (80.6-100.0\%) &
-  99.3\% (95.9-99.9\%) \\
+  99.3\% (95.9-99.9\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -775,7 +783,7 @@ Drug &
   0.0\% (0.0-18.4\%) &
   0.0\% (0.0-2.8\%) &
   100.0\% (81.6-100.0\%) &
-  100.0\% (97.2-100.0\%) \\
+  100.0\% (97.2-100.0\%) \\ \hline
 \multirow{3}{*}{Pyrazinamide} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -784,7 +792,7 @@ Drug &
   16.1\% (7.1-32.6\%) &
   9.2\% (5.2-15.8\%) &
   70.3\% (54.2-82.5\%) &
-  95.6\% (90.1-98.1\%) \\
+  95.6\% (90.1-98.1\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -793,7 +801,7 @@ Drug &
   19.4\% (9.2-36.3\%) &
   8.4\% (4.6-14.8\%) &
   71.4\% (54.9-83.7\%) &
-  94.8\% (89.1-97.6\%) \\
+  94.8\% (89.1-97.6\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -802,7 +810,7 @@ Drug &
   3.2\% (0.6-16.2\%) &
   0.0\% (0.0-3.1\%) &
   100.0\% (88.6-100.0\%) &
-  99.2\% (95.4-99.9\%) \\
+  99.2\% (95.4-99.9\%) \\ \hline
 \multirow{3}{*}{Rifampicin} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -811,7 +819,7 @@ Drug &
   5.1\% (2.0-12.3\%) &
   1.4\% (0.2-7.6\%) &
   98.7\% (92.9-99.8\%) &
-  94.6\% (86.9-97.9\%) \\
+  94.6\% (86.9-97.9\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -820,7 +828,7 @@ Drug &
   3.8\% (1.3-10.6\%) &
   1.4\% (0.2-7.6\%) &
   98.7\% (93.0-99.8\%) &
-  95.9\% (88.6-98.6\%) \\
+  95.9\% (88.6-98.6\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -829,7 +837,7 @@ Drug &
   1.3\% (0.2-6.8\%) &
   0.0\% (0.0-5.1\%) &
   100.0\% (95.3-100.0\%) &
-  98.6\% (92.5-99.8\%) \\
+  98.6\% (92.5-99.8\%) \\ \hline
 \multirow{3}{*}{Streptomycin} &
   \multirow{2}{*}{Drprg} &
   Illumina &
@@ -838,7 +846,7 @@ Drug &
   2.2\% (0.4-11.6\%) &
   2.9\% (1.0-8.1\%) &
   93.6\% (82.8-97.8\%) &
-  99.0\% (94.7-99.8\%) \\
+  99.0\% (94.7-99.8\%) \\ \cline{3-9} 
  &
    &
   \multirow{2}{*}{Nanopore} &
@@ -847,7 +855,7 @@ Drug &
   8.9\% (3.5-20.7\%) &
   2.9\% (1.0-8.1\%) &
   93.2\% (81.8-97.7\%) &
-  96.2\% (90.7-98.5\%) \\
+  96.2\% (90.7-98.5\%) \\ \cline{2-2} \cline{4-9} 
  &
   Mykrobe &
    &
@@ -856,23 +864,24 @@ Drug &
   4.4\% (1.2-14.8\%) &
   1.9\% (0.5-6.7\%) &
   95.6\% (85.2-98.8\%) &
-  98.1\% (93.3-99.5\%) \\ \cline{2-2} \cline{4-9} 
+  98.1\% (93.3-99.5\%) \\ \hline
 \end{tabular}%
 }
-\caption{Comparison of Nanopore drug resistance predictions with Illumina predictions.
-For this comparison, we assume the mykrobe resistance prediction from Illumina data is correct and evaluate the Nanopore prediction accordingly.
-FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
+\caption{Comparison of \drprg{} and mykrobe \ont{} drug resistance predictions with mykrobe Illumina predictions. For this comparison, we assume the mykrobe resistance prediction from Illumina data is correct and evaluate the other predictions accordingly. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
 \label{tab:geno-concordance}
 \end{table}
+
+\subsection{Summary}
+
+In summary, mykrobe \ont{} resistance predictions are very much in line with those from Illumina data. All but one of the missed resistance calls was due to heterozygous calls, which \ont{} cannot replicate yet. Additionally, many of the false resistance calls were either \ont{} making incorrect indel calls, or Illumina actually missing variants with strong support from the analysis in \autoref{sec:var-calls}.
+
+For most drugs, \drprg{} predictions are concordant with mykrobe's Illumina calls. More than half of the Illumina missed resistance calls were due to \drprg{} (i.e., \pandora{}) using a haploid model and not being able to detect heterozygous positions. Much of the \ont{} missed resistance was due to the same reason - mykrobe making minor resistance calls or \drprg{} having a low fraction of read support for the mutation in question. The resounding reason for false resistance calls from \drprg{}, for both technologies, was incorrect indel calls in \textit{pncA}. However, nearly half of the \drprg{} FPs are possibly missed resistance on mykrobe's part, with the calls having been filtered out by mykrobe due to low support. 
 
 %=========================================================================
 \section{Effect of coverage on predictions}
 
-% ***************
-% text from authorea
-It has previously been shown that deep coverage is required of Nanopore to accurately predict drug resistance (Votintseva 2017). As Nanopore sequencing advances quickly, and our dataset contains a broad depth-of-coverage range (~29-150x) we explore whether this requirement of high coverage still holds.
+It has previously been shown that deep coverage is required of \ont{} to accurately predict drug resistance \cite{Votintseva2017}. As Nanopore sequencing advances quickly, and our dataset contains a broad depth-of-coverage range (~29-150x) we explore whether this requirement of high coverage still holds.
 We binned samples into groups based on their read depth and looked at whether there is a higher proportion of errors in the lower coverage bins. Figure 9 shows there is no relationship between coverage and errors. Further work at depths lower than 30x is warranted, but there is convincing evidence here that samples with "only" 30x coverage should still yield reliable resistance predictions. 
-% ***************
 
 \begin{figure}
 \begin{center}
