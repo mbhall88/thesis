@@ -171,6 +171,7 @@ Before attempting to define SNP thresholds for \ont{} data, we explore the impac
 We evaluate the resulting, filtered SNP calls against the COMPASS Illumina SNP calls for the seven samples with high-quality PacBio assemblies (see \autoref{sec:asm_results}) to ensure no bias for Illumina or \ont{}. For others interested in investigating variant filters for \ont{} data, we also hope this calibration acts as a good starting point for deeper analysis.
 
 \subsection{Validating variant calls}
+\label{sec:validate-var-calls}
 
 We evaluate the precision and recall of SNP calls using the method outlined in \todo{link to varifier stuff in chapter 1} - \vrb{varifier} - with a flank length of 100bp. The samples we evaluated are those seven with PacBio assemblies that passed QC. As a truth genome for each, we use the unpolished \flye{} PacBio assembly, along with a mask for low-quality regions. These low-quality regions were identified by aligning the sample's Illumina reads to the assembly with \vrb{bwa mem} and flagging any position with less than 10 reads mapping to it or less than 90\% agreement (see \autoref{app:asm_disagree}). 
 

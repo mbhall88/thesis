@@ -100,7 +100,7 @@ We now outline these two steps in detail.
 
 \subsection{Constructing a panel reference graph}
 \label{sec:drprg-index}
-The first stage of predicting drug resistance from \drprg{} is coordinated by the \vrb{build} subcommand. As input, \vrb{build} requires a panel of variants, and a reference genome and annotation. We use the reference and annotation (GFF) for the \mtb{} strain H37Rv (accession NC\_000962.3) and the default panel used by mykrobe (v0.10.0) \cite{hunt2019}. 
+The first stage of predicting drug resistance from \drprg{} is coordinated by the \vrb{build} subcommand. As input, \vrb{build} requires a panel of variants, and a reference genome and annotation. We use the reference and annotation (GFF) for the \mtb{} strain H37Rv (accession NC\_000962.3) and the default panel used by mykrobe (v0.10.0) \cite{hunt2019}. As mykrobe also builds in common variants which are known to \emph{not} cause resistance, we also add such variants from a recent WHO panel(CITE). 
 
 The panel of variants can be either resistance- or susceptibility-associated. Each entry in the panel file describes, the gene the variant occurs in and the mutation it causes. The mutation can represent a DNA or protein change and is given in the form reference, position, alternate. For example a DNA mutation, \vrb{A5T}, indicates the reference base, \vrb{A}, at position 5 in the gene, is changed to a \vrb{T}. An \vrb{X} is used to indicate any nucleic or amino acid other than the one listed as the reference. If a variant is resistance-associated, a list of drugs must also be given, otherwise, if "NONE" is given, the variant is assumed not be associated with resistance.
 
@@ -880,13 +880,16 @@ For most drugs, \drprg{} predictions are concordant with mykrobe's Illumina call
 %=========================================================================
 \section{Effect of coverage on predictions}
 
-It has previously been shown that deep coverage is required of \ont{} to accurately predict drug resistance \cite{Votintseva2017}. As Nanopore sequencing advances quickly, and our dataset contains a broad depth-of-coverage range (~29-150x) we explore whether this requirement of high coverage still holds.
-We binned samples into groups based on their read depth and looked at whether there is a higher proportion of errors in the lower coverage bins. Figure 9 shows there is no relationship between coverage and errors. Further work at depths lower than 30x is warranted, but there is convincing evidence here that samples with "only" 30x coverage should still yield reliable resistance predictions. 
+It has previously been shown that deep coverage is required of \ont{} to accurately predict drug resistance \cite{Votintseva2017}. As \ont{} sequencing advances quickly, and our dataset contains a broad \ont{} depth-of-coverage range (29-150x), we explore whether this requirement of high coverage still holds.
+
+We binned samples into groups based on their read depth. The groups were segregated into lots of 10x depth. That is, if a sample has a read depth of 56, it is assigned to the 50x bin, which covers samples with read depth less than 60, but $\ge50$. For each bin we calculate the proportions of each drug resistance classification (FN, TP etc.) present. For this analysis, we use the culture-based phenotypes classifications from \autoref{sec:pheno-concordance}. If low read depth leads to poor resistance prediction, we would expect the proportions of FPs and FNs in the lower depth bins to be greater than in the higher depth bins. 
+
+As \autoref{fig:pheno-covg} illustrates, we see no relationship between read depth and erroneous predictions. Further work at depths lower than 30x is warranted, but there is convincing evidence here that samples with "only" 30x coverage should still yield reliable resistance predictions. 
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/phenotype_coverage.png}
-\caption{{Effect of Nanopore read depth on drprg (top) and mykrobe (bottom) phenotype prediction. Each point indicates the proportion (y-axis) of classifications of that type at the read depth (x-axis). Read depth is "binned". That is, read depth 40 is all samples with a read depth greater than 40 and less than or equal to 50. FP - false positive; TN - true negative; etc.
+\caption{{Effect of \ont{} read depth on drprg (top) and mykrobe (bottom) drug susceptibility phenotype prediction. Each point indicates the proportion (left y-axis) of classifications of that type at the read depth (x-axis). Read depth is binned such that 40 is all samples with a read depth $\ge40$ and less than 50. The blue bars indicate the number of samples (right y-axis) contained in each bin. FP=false positive (red); TN=true negative (grey); FN=false negative (purple); TP=true positive (blue).
 {\label{fig:pheno-covg}}
 }}
 \end{center}
@@ -894,12 +897,99 @@ We binned samples into groups based on their read depth and looked at whether th
 %=========================================================================
 \section{Flagging novel variants not in panel}
 \label{sec:drprg-discover}
-%  what impact does this have on previous results
-% http://www.crypticproject.org/wp-content/uploads/2018/09/Prediction-of-Susceptibility-to-First-Line-Tuberculosis-Drugs-by-DNA-Sequencing.pdf
-% i guess what might be important here is whether FNs on phenotype are "fixed" by finding novel variants. Look through compass and bcftools VCFs for SNPs not in the panel
-% we could also remove some common variants from the panel and see what difference novel would have then
-% https://pubmed.ncbi.nlm.nih.gov/27436385/ shows lots of unknown mutations in gid, which we have a lot of novel variants for
-% added S alleles to prevent excess novel calling
+
+One of the main advantages \drprg{} has over mykrobe is the ability to discover novel variants. The reason \drprg{} is able call mutations outside of the panel is it uses \pandora{} as the underlying method for producing predictions from sequencing reads.
+
+The \cryptic{} Consortium have shown that refusing to make predictions in the case where a non-panel variant is discovered in a resistance-associated gene can improve pan-susceptibility prediction \cite{cryptic2018}. However, that work focused only on first-line drugs and did not provide any detail on the variants discovered. 
+
+In this section, we aim to assess the novel variant detection capacity of \drprg{} on both Illumina and \ont{} data. While this study is under-powered to make statements about the ability to make pan-susceptibility predictions, we have a dataset with well-characterised SNPs from \autoref{chap:denovo}. These high-quality variant calls gives us a way of determining how many expected SNPs \drprg{} finds in resistance-associated genes and how many are missed. 
+
+We remove any position in the COMPASS SNPs VCF from \autoref{sec:illumina-var-call} that falls into one of three categories: i) does not occur inside the genes in \drprg{}'s panel (\autoref{sec:drprg-index}); ii) not an alternate allele call; or iii) exists in \drprg{}'s panel. After this filtering, we are left with a VCF containing SNPs in resistance-associated genes that do not occur in the panel - referred to as the truth VCF.
+
+We classify the novel SNPs called by \drprg{} against the truth VCF using \vrb{hap.py} - a VCF comparison program developed by Illumina and the Global Alliance for Genomics and Health Benchmarking Team \cite{happy2019}. \autoref{fig:novel-classifications} and \autoref{tab:novel-classifications} show the number of TP, FP, and FN novel SNP calls made by \drprg{} for each drug across all 150 samples. 
+
+\textit{rpoB} contains, by far, the most novel SNPs. Of particular note, is the large percentage of FNs in \textit{gyrA}, which leads to an overall recall of approximately 0.35 for both Illumina and \ont{}. Upon further investigation, all of these missed calls were in fact filtered out by \drprg{} due to low FRS. Indeed we see the same scenario when looking at the \textit{ahpC} FNs - which are much higher in \ont{} data. 
+
+Despite the poor recall in \textit{gyrA} and \textit{ahpC}, the precision of novel \drprg{} calls is encouraging. In total, there were two FPs detected in \textit{rpoB} (for both technologies), and one \ont{} FP in \textit{rrs}. This result suggests we can be very confident in the novel calls made by \drprg{}.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Chapter3/Figs/novel_classifications.png}
+\caption{{Classifications of novel SNP calls made from Illumina (left) and \ont{} (right) data by \drprg{} in resistance-associated genes (y-axis). Counts (x-axis) are across all samples. TP (blue) - true positive; FN (red) - false negative; FP (purple) - false positive.
+{\label{fig:novel-classifications}}
+}}
+\end{center}
+\end{figure}
+
+\begin{table}[]
+\centering
+\begin{tabular}{|l|l|c|c|c|c|c|}
+\hline
+Gene                            & Technology & FN & FP & TP  & Recall & Precision \\ \hline
+\multirow{2}{*}{\textit{ahpC}}  & Illumina   & 2  & 0  & 34  & 0.944  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 19 & 0  & 17  & 0.472  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{eis}}   & Illumina   & 1  & 0  & 2   & 0.667  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 0  & 0  & 3   & 1.000  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{embA}}  & Illumina   & 2  & 0  & 49  & 0.961  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 2  & 0  & 49  & 0.961  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{embB}}  & Illumina   & 8  & 0  & 31  & 0.795  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 10 & 0  & 29  & 0.744  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{fabG1}} & Illumina   & 5  & 0  & 2   & 0.286  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 4  & 0  & 3   & 0.429  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{gid}}   & Illumina   & 6  & 0  & 26  & 0.812  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 7  & 0  & 25  & 0.781  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{gyrA}}  & Illumina   & 44 & 0  & 23  & 0.343  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 43 & 0  & 24  & 0.358  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{inhA}}  & Illumina   & 2  & 0  & 0   & 0.000  & -         \\ \cline{2-7} 
+                                & Nanopore   & 0  & 0  & 2   & 1.000  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{katG}}  & Illumina   & 0  & 0  & 5   & 1.000  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 0  & 0  & 5   & 1.000  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{pncA}}  & Illumina   & 2  & 0  & 1   & 0.333  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 2  & 0  & 1   & 0.333  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{rpoB}}  & Illumina   & 8  & 2  & 127 & 0.941  & 0.984     \\ \cline{2-7} 
+                                & Nanopore   & 6  & 2  & 129 & 0.956  & 0.985     \\ \hline
+\multirow{2}{*}{\textit{rpsL}}  & Illumina   & 0  & 0  & 5   & 1.000  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 1  & 0  & 4   & 0.800  & 1.000     \\ \hline
+\multirow{2}{*}{\textit{rrs}}   & Illumina   & 8  & 0  & 13  & 0.619  & 1.000     \\ \cline{2-7} 
+                                & Nanopore   & 10 & 1  & 11  & 0.524  & 0.917     \\ \hline
+\end{tabular}
+\caption{Classification of novel SNP calls made by \drprg{} in resistance-associated genes. Counts are across all samples. TP - true positive; FN - false negative; FP - false positive.}
+\label{tab:novel-classifications}
+\end{table}
+
+\autoref{fig:novel-sample-classifications} illustrates the number of novel calls of different classification on a per-sample basis. It shows that on average, a samples will have 2 novel TP calls and 0 FPs and FNs. 
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Chapter3/Figs/novel_classifications_per_sample.png}
+\caption{{Number of novel variants found in resistance-associated genes for each sample. The x-axis indicates the number of classifications of the relevant kind, and the y-axis is the number of sample with that classification count.The classifications are TP (blue) - true positive; FN (red) - false negative; FP (purple) - false positive.
+{\label{fig:novel-sample-classifications}}
+}}
+\end{center}
+\end{figure}
+
+Having seen that the non-panel (novel) SNPs called by \drprg{} are precise, we look at how incorporating this information impacts the predictions. \autoref{fig:pheno-unknown} is the same same as \autoref{fig:pheno-concordance}, except with unknown (novel/non-panel variants) calls included. If a novel variant (SNP or indel) is found, an unknown prediction is given for the drug(s) that gene is associated with. The exception to this is when a known resistance-causing mutation is also found for the respective drug(s), in which case a resistant prediction is made.
+
+Of note in \autoref{fig:pheno-unknown} is the reduced number of missed resistance calls made when we flag unknown variants - when compared to \autoref{fig:pheno-concordance}. That is, a call of unknown is our way of indicating to the user that we did not find a \emph{known} resistance-causing mutation, but we did find a mutation which is not know to be either resistance- or susceptibility-associated.
+
+While the number of missed resistance calls (FN) are reduced when calling unknown variants, the number of definitive susceptibility (TN) calls is also reduced. In particular, ethambutol, rifampicin, and streptomycin see a large number of unknown calls. The large number of unknown calls for rifampicin is not unexpected as \textit{rpoB} (associated with rifampicin resistance) had by far the most novel variants in the above analysis (see \autoref{fig:novel-classifications}). Nearly everyone of these unknown rifampicin calls relates to synonymous mutations D103D (C309T) and A1075 (T3225C) that known to not be associated with drug resistance \cite{Jagielski2018}. Likewise, synonymous mutations were also the cause of the bulk of unknown calls for other drugs. However, there were also some indel calls found.
+
+A simple solution for the excessive unknown calls in susceptible samples would be to include synonymous mutations in the panel as susceptibility-associated.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.90\columnwidth]{Chapter3/Figs/pheno_unknown.png}
+\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility testing (DST) phenotypes correctly identified by mykrobe (purple) and \drprg{} (blue) with Illumina (non-striped) and \ont{} (striped) data. The red bars indicate missed (FN) or incorrect (FP) predictions. The yellow bars represent \drprg{} "unknown" calls, which is when there is a non-panel variant found in a gene associated with the respective drug. If there is no resistance-associated variant found for that drug, then an unknown call is made. The x-axis shows the drugs with available phenotype data that the tools make predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+{\label{fig:pheno-unknown}}
+}}
+\end{center}
+\end{figure}
+
+\subsection{Summary}
+
+Producing unknown drug resistance predictions based on novel variant calls is a point of difference for \drprg{}. In this section we have shown that novel variants detected by \drprg{} are precise, but that missed calls require some more work.
+
+We have also shown that by refusing to make predictions for drugs with variants of unknown consequence, we can reduce the number of missed resistance calls. However, this currently comes at the cost of less susceptibility calls, although an easy fix - incorporating synonymous mutations - has been identified.
 
 %=========================================================================
 \section{Discussion}
