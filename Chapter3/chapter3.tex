@@ -924,7 +924,7 @@ Despite the poor recall in \textit{gyrA} and \textit{ahpC}, the precision of nov
 \end{center}
 \end{figure}
 
-\begin{table}[]
+\begin{table}
 \centering
 \begin{tabular}{|l|l|c|c|c|c|c|}
 \hline
@@ -1042,17 +1042,31 @@ We also describe and evaluate a new method for AMR prediction using genome graph
 %=========================================================================
 \section{Future work}
 
-\subsection{Panel improvement}
+\subsection{Mutation catalogue improvement}
 
-The panel (catalogue) describing the consequence of each mutation is a vital component of any AMR prediction program, and can be the primary point-of-difference between tools \cite{hunt2019}. For the work in this chapter, we used the default mykrobe panel for \drprg{}. There are two changes to the \drprg{} p
+The panel (catalogue) describing the consequence of each mutation is a vital component of any AMR prediction program, and can be the primary point-of-difference between tools \cite{hunt2019}. For the work in this chapter, we used the default mykrobe panel for \drprg{}. There are two changes to the \drprg{} panel that we would like to incorporate in future work: synonymous mutations and incorporating variants from a new WHO catalogue.
 
-\subsubsection{Synonomous mutations}
+\subsubsection{Synonymous mutations}
+
+As we saw in \autoref{sec:drprg-discover}, many of the off-catalogue mutations flagged as unknown predictions were in fact synonymous mutations - i.e., lead to no amino acid change. To our knowledge, there have been no synonymous mutations linked to drug resistance for \mtb{}. As such, adding the ability for \drprg{} to inherently allow such mutations, without flagging them as unknown, would lead to dramatically less unknown predictions - especially in \textit{rpoB} (rifampicin).
 
 \subsubsection{WHO panel}
 % who panel
-The WHO has recently released a curated catalogue of \mtb{} mutations and their associated impact on drug susceptibility \cite{whopanel2021}. Incorporating such a panel into the one used in this chapter would likely 
+The WHO has recently released a curated catalogue of \mtb{} mutations and their associated impact on drug susceptibility \cite{whopanel2021}. Incorporating such a panel into the one used in this chapter would most likely improve the ability to detect resistance. Indeed, the incorporation of known susceptibility-associated mutations into the \drprg{} helped reduce the novel classifications.
 
-\subsection{Validation on a larger and more diverse dataset}
+As an example, in \autoref{sec:pheno-concordance}, we saw a streptomycin FN classification, where \drprg{} had called an unknown mutation. This unknown mutation would describes the amino acid change K88M in \textit{rpsL}, a variant not in our catalogue. However, this mutation is listed in the WHO catalogue as associated with resistance, and has been previously described and linked to streptomycin resistance \cite{Smittipat2016}.
+
+The obvious first improvement would be to incorporate all WHO variants that are associated with resistance that are not already in our panel. Further work could look to incorporate the mutations listed as "uncertain significance" in a meaningful way.
+
+\subsection{Low coverage samples}
+
+In \autoref{sec:dst-covg} we showed that read depth has no noticeable impact on AMR predictions. However, the lowest depth sample in this chapter has 29x read depth. This was a conscious decision made in \autoref{sec:ch2-qc}, where we excluded any sample with less than approximately 30x read depth from further analysis. There are 33 samples in our full dataset that have \ont{} read depth between 5 and 30x. For those with culture-based phenotype information, we could repeat the analysis in \autoref{sec:dst-covg}. We would then have an even more fine-grained idea of where the \ont{} read depth limits are for reliable AMR predictions.
+
+\subsection{Validation on a larger datasets}
+
+Smith \etal{} recently published a dataset of 431 \mtb{} isolates with matched \ont{} and Illumina sequencing \cite{smith2020}. As they are from the New York State Department of Health, these sample also have gold-standard DST information for 8 drugs we provide predictions for. Importantly, they have phenotype information for pyrazinamide, one drug were did not have sufficient data for in this chapter. Combining this dataset with ours would give us a very good \ont{} validation set and provide improved confidence in the false positive and negative rates. 
+
+In addition to improving the validation numbers for \ont{}, we could also provide vastly improved validation for \drprg{} Illumina predictions by running on previous large cohort studies such as \cite{cryptic2018,hunt2019,phelan2019}. Given we know \ont{} and Illumina prediction from \drprg{} are quite consistent, validating Illumina on such large and diverse datasets would be extremely informative overall.
 
 \subsection{Indel calls}
 \label{sec:indel-dst-fw}
