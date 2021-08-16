@@ -1028,7 +1028,7 @@ Although there are many \mtb{} AMR prediction tools available, \drprg{} is the f
 
 We use the Illumina variant calls from COMPASS in \autoref{sec:illumina-var-call} to curate a list of off-panel SNPs we expect to find for each sample. As would be expected from the \pandora{} validation in \autoref{sec:map-var-calls}, \drprg{} produces very precise novel SNP calls, but has some room for improvement for SNP discovery (\autoref{fig:novel-classifications}). Many of the novel SNPs were in fact synonymous mutation, highlighting a gap in the panel construction step of \drprg{} (\autoref{sec:drprg-index}) - where we do not incorporate such mutations unless explicitly provided. In addition, the higher number of FN novel SNPs in \textit{ahpC} and \textit{gyrA} were caused by \drprg{} filtering them out for low fraction of read support. Given these SNPs did not show signs of heterozygosity in the COMPASS VCFs, this warrants further investigation into why were are seeing considerable read depth on multiple alleles at these sites.
 
-When unknown predictions for a drug are interpreted as a refusal to make a prediction - as in \cite{cryptic2018} and \cite{hunt2019} - we see a noticeable decrease in the number of missed resistance calls for ethambutol, isoniazid, rifampicin, and streptomycin. That is, rather than erroneously calling those samples susceptible, we raise the presence of an unknown mutation, indicating further testing is warranted. On the other hand, the same approach needlessly flags susceptible sample as unknown. In particular, the same drugs would have a sizeable proportion of susceptible isolates called unknown. Although, as mentioned above, many of these unknown predictions are in fact synonumous mutations, so these unnecessary unknowns are likely easy to fix.
+When unknown predictions for a drug are interpreted as a refusal to make a prediction - as in \cite{cryptic2018} and \cite{hunt2019} - we see a noticeable decrease in the number of missed resistance calls for ethambutol, isoniazid, rifampicin, and streptomycin. That is, rather than erroneously calling those samples susceptible, we raise the presence of an unknown mutation, indicating further testing is warranted. On the other hand, the same approach needlessly flags susceptible sample as unknown. In particular, the same drugs would have a sizeable proportion of susceptible isolates called unknown. Although, as mentioned above, many of these unknown predictions are in fact synonymous mutations, so these unnecessary unknowns are likely easy to fix.
 
 A limitation to our novel variant analysis was the absence of novel indel call validation. Indels are an especially important determinant of resistance for pyrazinamide and isoniazid, so future work should focus on generating a high quality truth set for comparison of \drprg{} indels to.
 
@@ -1070,13 +1070,25 @@ In addition to improving the validation numbers for \ont{}, we could also provid
 
 \subsection{Indel calls}
 \label{sec:indel-dst-fw}
+Indels are especially important variants for \mtb{} drug resistance. In particular, any frameshift-causing in \textit{katG} or \textit{pncA} leads to isoniazid and pyrazinamide resistance respectively \cite{miotto2017}. Perhaps the limitation we lament the most from \autoref{chap:clustering} and this chapter is the lack of in-depth indel analysis. As these mutations types have arisen as causes of error for a number of tools and drugs in this chapter, it is important that indel-calling is assessed in future work.
 
+To properly assess and improve indel calls, we need to a trustworthy set of expected variants. In \autoref{sec:drprg-discover} we only investigated novel SNP calls made by \drprg{}, as we already had a reliable truthset from \autoref{chap:clustering}. Our proposed method for gathering such a truth panel of indels would be to run Clockwork (\url{https://github.com/iqbal-lab-org/clockwork}; manuscript in preparation) on all samples. Clockwork calls variants with \vrb{samtools} and Cortex and integrates them for a high-quality, filtered set of SNPs and indels.
 
+\ont{}'s ability to produce reliable indel calls is still poor; recent benchmarks show F1-scores around 50\% \cite{clairvoyant2019}. The overwhelming cause of the indel errors from \ont{} is around sites with homopolymer deletions. In \autoref{chap:tubby} we will attempt to alleviate these errors by training a \mtb{}-specific \ont{} basecalling model.
 
 \subsection{Lineage classification}
 
+One noticeable feature lacking from \drprg{}, when compared to other tools such as mykrobe and TB-Profiler \cite{phelan2019}, is the ability to identify the lineage of a sample. This functionality should be easily added to \drprg{} by building a small \prg{} containing only small regions around lineage-defining variants \cite{Shitikov2017,Rutaihwa2019,stucki2016}. Such a \prg{} would only need the wild-type allele and an alternate allele that defines a given lineage. Identifying the lineage would then be as easy as matching the genotypes across these sites to the lineage from a lookup table.
+
 \subsection{Predictions for other species}
 
+While the initial development of \drprg{} has focused solely on \mtb{}, there is no reason it should be confined to that species. All that is needed to adapt it for another species is a panel of variants, a reference genome and annotation. Or, as was done in \autoref{sec:drprg-index}, a prebuilt \prg{} from species representatives. Mykrobe also provides inbuilt panels for \textit{S. aureus} and \textit{Shigella sonnei}, so beginning with these species and validating on the same data would be the logical first step. 
+
+The main challenges when adapting to other species is how to allow gene presence/absence detection, which is a mechanism of resistance detected by mykrobe for \textit{S. aureus} \cite{bradley2015}. As \pandora{} outputs a consensus sequence for each \emph{present} locus, all that is likely to be required is assessing the level of gene presence/absence false positives and negatives and deteermining if default parameters need to be accorindgly altered for \drprg{}'s purposes.
 
 %=========================================================================
 \section{Availability of data and materials}
+
+\drprg{} is open-source and freely available under an MIT license at \url{https://github.com/mbhall88/drprg}. The pipelines and scripts used in this chapter are available at \url{https://github.com/mbhall88/head_to_head_pipeline/tree/master/analysis/resistance_prediction}. All analyses were run using the workflow management program \vrb{snakemake} \cite{snakemake2021}. All figures were generated using the Python libraries \vrb{matplotlib} \cite{matplotlib} and \vrb{seaborn} \cite{seaborn} - \autoref{fig:available-dst} was generated using \url{https://github.com/jnothman/UpSetPlot}.
+
+\towrite[inline]{availability of the data if it has been deposited prior to submission}
