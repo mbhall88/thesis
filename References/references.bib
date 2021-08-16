@@ -574,6 +574,14 @@ volume = {16}
   isbn        = {978-92-4-001313-1}
 }
 
+@report{whopanel2021,
+  title       = {{Catalogue  of  mutations  in  \textit{Mycobacterium  tuberculosis}  complex  and  their  association  with  drug  resistance}},
+  institution = {World Health Organization},
+  address     = {Geneva},
+  year        = {2021},
+  isbn        = {978-92-4-002817-3}
+}
+
 @article{quick2016, 
 year = {2016}, 
 keywords = {nanopore,outbreak,virus,ebola,real-time}, 
@@ -1214,4 +1222,101 @@ abstract = {{Resistance of Mycobacterium tuberculosis to rifampin (RMP), mediate
 pages = {e01093--18}, 
 number = {10}, 
 volume = {62}
+}
+
+@article{bradley2015, 
+year = {2015}, 
+keywords = {mtb,amr}, 
+title = {{Rapid antibiotic-resistance predictions from genome sequence data for Staphylococcus aureus and Mycobacterium tuberculosis}}, 
+author = {Bradley, Phelim and Gordon, N. Claire and Walker, Timothy M. and Dunn, Laura and Heys, Simon and Huang, Bill and Earle, Sarah and Pankhurst, Louise J. and Anson, Luke and Cesare, Mariateresa de and Piazza, Paolo and Votintseva, Antonina A. and Golubchik, Tanya and Wilson, Daniel J. and Wyllie, David H. and Diel, Roland and Niemann, Stefan and Feuerriegel, Silke and Kohl, Thomas A. and Ismail, Nazir and Omar, Shaheed V. and Smith, E. Grace and Buck, David and McVean, Gil and Walker, A. Sarah and Peto, Tim E. A. and Crook, Derrick W. and Iqbal, Zamin}, 
+journal = {Nature Communications}, 
+doi = {10.1038/ncomms10063}, 
+pmid = {26686880}, 
+pmcid = {PMC4703848}, 
+abstract = {{The rise of antibiotic-resistant bacteria has led to an urgent need for rapid detection of drug resistance in clinical samples, and improvements in global surveillance. Here we show how de Bruijn graph representation of bacterial diversity can be used to identify species and resistance profiles of clinical isolates. We implement this method for Staphylococcus aureus and Mycobacterium tuberculosis in a software package (‘Mykrobe predictor’) that takes raw sequence data as input, and generates a clinician-friendly report within 3 minutes on a laptop. For S. aureus, the error rates of our method are comparable to gold-standard phenotypic methods, with sensitivity/specificity of 99.1\%/99.6\% across 12 antibiotics (using an independent validation set, n=470). For M. tuberculosis, our method predicts resistance with sensitivity/specificity of 82.6\%/98.5\% (independent validation set, n=1,609); sensitivity is lower here, probably because of limited understanding of the underlying genetic mechanisms. We give evidence that minor alleles improve detection of extremely drug-resistant strains, and demonstrate feasibility of the use of emerging single-molecule nanopore sequencing techniques for these purposes. The clinical application of new sequencing techniques is expected to accelerate pathogen identification. Here, Bradley et al. present a clinician-friendly software package that uses sequencing data for quick and accurate prediction of antibiotic resistance profiles for S. aureus and M. tuberculosis.}}, 
+pages = {10063}, 
+number = {1}, 
+volume = {6}
+}
+
+@article{coll2015, 
+year = {2015}, 
+keywords = {mtb,amr,software}, 
+title = {{Rapid determination of anti-tuberculosis drug resistance from whole-genome sequences}}, 
+author = {Coll, Francesc and McNerney, Ruth and Preston, Mark D and Guerra-Assunção, José Afonso and Warry, Andrew and Hill-Cawthorne, Grant and Mallard, Kim and Nair, Mridul and Miranda, Anabela and Alves, Adriana and Perdigão, João and Viveiros, Miguel and Portugal, Isabel and Hasan, Zahra and Hasan, Rumina and Glynn, Judith R and Martin, Nigel and Pain, Arnab and Clark, Taane G}, 
+journal = {Genome Medicine}, 
+doi = {10.1186/s13073-015-0164-0}, 
+pmid = {26019726}, 
+pmcid = {PMC4446134}, 
+abstract = {{Mycobacterium tuberculosis drug resistance (DR) challenges effective tuberculosis disease control. Current molecular tests examine limited numbers of mutations, and although whole genome sequencing approaches could fully characterise DR, data complexity has restricted their clinical application. A library (1,325 mutations) predictive of DR for 15 anti-tuberculosis drugs was compiled and validated for 11 of them using genomic-phenotypic data from 792 strains. A rapid online ‘TB-Profiler’ tool was developed to report DR and strain-type profiles directly from raw sequences. Using our DR mutation library, in silico diagnostic accuracy was superior to some commercial diagnostics and alternative databases. The library will facilitate sequence-based drug-susceptibility testing.}}, 
+pages = {51}, 
+number = {1}, 
+volume = {7}
+}
+
+@article{walker2015, 
+year = {2015}, 
+keywords = {amr,mtb}, 
+title = {{Whole-genome sequencing for prediction of Mycobacterium tuberculosis drug susceptibility and resistance: a retrospective cohort study}}, 
+author = {Walker, Timothy M and Kohl, Thomas A and Omar, Shaheed V and Hedge, Jessica and Elias, Carlos Del Ojo and Bradley, Phelim and Iqbal, Zamin and Feuerriegel, Silke and Niehaus, Katherine E and Wilson, Daniel J and Clifton, David A and Kapatai, Georgia and Ip, Camilla L C and Bowden, Rory and Drobniewski, Francis A and Allix-Béguec, Caroline and Gaudin, Cyril and Parkhill, Julian and Diel, Roland and Supply, Philip and Crook, Derrick W and Smith, E Grace and Walker, A Sarah and Ismail, Nazir and Niemann, Stefan and Peto, Tim E A and Group, Modernizing Medical Microbiology (MMM) Informatics}, 
+journal = {The Lancet Infectious Diseases}, 
+issn = {1473-3099}, 
+doi = {10.1016/s1473-3099(15)00062-6}, 
+pmid = {26116186}, 
+pmcid = {PMC4579482}, 
+abstract = {{Background Diagnosing drug-resistance remains an obstacle to the elimination of tuberculosis. Phenotypic drug-susceptibility testing is slow and expensive, and commercial genotypic assays screen only common resistance-determining mutations. We used whole-genome sequencing to characterise common and rare mutations predicting drug resistance, or consistency with susceptibility, for all first-line and second-line drugs for tuberculosis. Methods Between Sept 1, 2010, and Dec 1, 2013, we sequenced a training set of 2099 Mycobacterium tuberculosis genomes. For 23 candidate genes identified from the drug-resistance scientific literature, we algorithmically characterised genetic mutations as not conferring resistance (benign), resistance determinants, or uncharacterised. We then assessed the ability of these characterisations to predict phenotypic drug-susceptibility testing for an independent validation set of 1552 genomes. We sought mutations under similar selection pressure to those characterised as resistance determinants outside candidate genes to account for residual phenotypic resistance. Findings We characterised 120 training-set mutations as resistance determining, and 772 as benign. With these mutations, we could predict 89·2\% of the validation-set phenotypes with a mean 92·3\% sensitivity (95\% CI 90·7–93·7) and 98·4\% specificity (98·1–98·7). 10·8\% of validation-set phenotypes could not be predicted because uncharacterised mutations were present. With an in-silico comparison, characterised resistance determinants had higher sensitivity than the mutations from three line-probe assays (85·1\% vs 81·6\%). No additional resistance determinants were identified among mutations under selection pressure in non-candidate genes. Interpretation A broad catalogue of genetic mutations enable data from whole-genome sequencing to be used clinically to predict drug resistance, drug susceptibility, or to identify drug phenotypes that cannot yet be genetically predicted. This approach could be integrated into routine diagnostic workflows, phasing out phenotypic drug-susceptibility testing while reporting drug resistance early. Funding Wellcome Trust, National Institute of Health Research, Medical Research Council, and the European Union.}}, 
+pages = {1193--1202}, 
+number = {10}, 
+volume = {15}
+}
+
+@article{kohl2018, 
+year = {2018}, 
+keywords = {software,mtb,amr}, 
+title = {{MTBseq: a comprehensive pipeline for whole genome sequence analysis of Mycobacterium tuberculosis complex isolates}}, 
+author = {Kohl, Thomas Andreas and Utpatel, Christian and Schleusener, Viola and Filippo, Maria Rosaria De and Beckert, Patrick and Cirillo, Daniela Maria and Niemann, Stefan}, 
+journal = {PeerJ}, 
+issn = {2167-8359}, 
+doi = {10.7717/peerj.5895}, 
+pmid = {30479891}, 
+abstract = {{Analyzing whole-genome sequencing data of Mycobacterium tuberculosis complex (MTBC) isolates in a standardized workflow enables both comprehensive antibiotic resistance profiling and outbreak surveillance with highest resolution up to the identification of recent transmission chains. Here, we present MTBseq, a bioinformatics pipeline for next-generation genome sequence data analysis of MTBC isolates. Employing a reference mapping based workflow, MTBseq reports detected variant positions annotated with known association to antibiotic resistance and performs a lineage classification based on phylogenetic single nucleotide polymorphisms (SNPs). When comparing multiple datasets, MTBseq provides a joint list of variants and a FASTA alignment of SNP positions for use in phylogenomic analysis, and identifies groups of related isolates. The pipeline is customizable, expandable and can be used on a desktop computer or laptop without any internet connection, ensuring mobile usage and data security. MTBseq and accompanying documentation is available from https://github.com/ngs-fzb/MTBseq\_source.}}, 
+pages = {e5895}, 
+volume = {6}
+}
+
+@article{phelan2019, 
+year = {2019}, 
+keywords = {amr,mtb,software}, 
+title = {{Integrating informatics tools and portable sequencing technology for rapid detection of resistance to anti-tuberculous drugs}}, 
+author = {Phelan, Jody E. and O’Sullivan, Denise M. and Machado, Diana and Ramos, Jorge and Oppong, Yaa E. A. and Campino, Susana and O’Grady, Justin and McNerney, Ruth and Hibberd, Martin L. and Viveiros, Miguel and Huggett, Jim F. and Clark, Taane G.}, 
+journal = {Genome Medicine}, 
+doi = {10.1186/s13073-019-0650-x}, 
+pmid = {31234910}, 
+abstract = {{Mycobacterium tuberculosis resistance to anti-tuberculosis drugs is a major threat to global public health. Whole genome sequencing (WGS) is rapidly gaining traction as a diagnostic tool for clinical tuberculosis settings. To support this informatically, previous work led to the development of the widely used TBProfiler webtool, which predicts resistance to 14 drugs from WGS data. However, for accurate and rapid high throughput of samples in clinical or epidemiological settings, there is a need for a stand-alone tool and the ability to analyse data across multiple WGS platforms, including Oxford Nanopore MinION. We present a new command line version of the TBProfiler webserver, which includes hetero-resistance calling and will facilitate the batch processing of samples. The TBProfiler database has been expanded to incorporate 178 new markers across 16 anti-tuberculosis drugs. The predictive performance of the mutation library has been assessed using > 17,000 clinical isolates with WGS and laboratory-based drug susceptibility testing (DST) data. An integrated MinION analysis pipeline was assessed by performing WGS on 34 replicates across 3 multi-drug resistant isolates with known resistance mutations. TBProfiler accuracy varied by individual drug. Assuming DST as the gold standard, sensitivities for detecting multi-drug-resistant TB (MDR-TB) and extensively drug-resistant TB (XDR-TB) were 94\% (95\%CI 93–95\%) and 83\% (95\%CI 79–87\%) with specificities of 98\% (95\%CI 98–99\%) and 96\% (95\%CI 95–97\%) respectively. Using MinION data, only one resistance mutation was missed by TBProfiler, involving an insertion in the tlyA gene coding for capreomycin resistance. When compared to alternative platforms (e.g. Mykrobe predictor TB, the CRyPTIC library), TBProfiler demonstrated superior predictive performance across first- and second-line drugs. The new version of TBProfiler can rapidly and accurately predict anti-TB drug resistance profiles across large numbers of samples with WGS data. The computing architecture allows for the ability to modify the core bioinformatic pipelines and outputs, including the analysis of WGS data sourced from portable technologies. TBProfiler has the potential to be integrated into the point of care and WGS diagnostic environments, including in resource-poor settings.}}, 
+pages = {41}, 
+number = {1}, 
+volume = {11}
+}
+
+@techreport{who2018technical,
+  title={Technical report on critical concentrations for drug susceptibility testing of medicines used in the treatment of drug-resistant tuberculosis},
+  author={World Health Organization and others},
+  year={2018},
+  institution={World Health Organization}
+}
+
+@article{iqbal2012, 
+year = {2012}, 
+keywords = {variant-calling,dbg,illumina,algorithms}, 
+title = {{De novo assembly and genotyping of variants using colored de Bruijn graphs}}, 
+author = {Iqbal, Zamin and Caccamo, Mario and Turner, Isaac and Flicek, Paul and McVean, Gil}, 
+journal = {Nature Genetics}, 
+issn = {1061-4036}, 
+doi = {10.1038/ng.1028}, 
+pmid = {22231483}, 
+pmcid = {PMC3272472}, 
+abstract = {{Gil McVean and colleagues report algorithms for de novo assembly and genotyping of variants using colored de Bruijn graphs and provide these in a software implementation called Cortex. Their methods can detect and genotype both simple and complex genetic variants in either an individual or a population. Detecting genetic variants that are highly divergent from a reference sequence remains a major challenge in genome sequencing. We introduce de novo assembly algorithms using colored de Bruijn graphs for detecting and genotyping simple and complex genetic variants in an individual or population. We provide an efficient software implementation, Cortex, the first de novo assembler capable of assembling multiple eukaryotic genomes simultaneously. Four applications of Cortex are presented. First, we detect and validate both simple and complex structural variations in a high-coverage human genome. Second, we identify more than 3 Mb of sequence absent from the human reference genome, in pooled low-coverage population sequence data from the 1000 Genomes Project. Third, we show how population information from ten chimpanzees enables accurate variant calls without a reference sequence. Last, we estimate classical human leukocyte antigen (HLA) genotypes at HLA-B, the most variable gene in the human genome.}}, 
+pages = {226--232}, 
+number = {2}, 
+volume = {44}
 }

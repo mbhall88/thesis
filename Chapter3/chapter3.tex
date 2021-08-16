@@ -33,6 +33,7 @@ While I did all bioinformatic work in this chapter, I must acknowledge the excel
 
 %=========================================================================
 \section{Introduction}
+Drug resistance predictions from WGS data are now a standard routine for an increasing number of public health agencies. In particular, a suscpetible prediction for first-line drugs is now considered accurate enough for clinical use \cite{cryptic2018}.
 
 The software package Mykrobe provides antimicrobial resistance (AMR) predictions for \mtb{} - amongst other species. 
 % talk about why the popn ref graph approach from mykrobe is lacking
@@ -141,6 +142,7 @@ After adding the prediction annotations to each entry in the genotyped VCF, we p
 All \drprg{} results in this chapter were generated using the commit \href{https://github.com/mbhall88/drprg/tree/cb4f9b82b5d03de45b8016ae5d54bbce7a8f3a0f}{\vrb{cb4f9b8}}.
 
 \subsection{Computational performance}
+\label{sec:drprg-comp-perf}
 
 We compare the peak memory usage and runtime for \drprg{} \vrb{predict} with the other tool used for resistance prediction in this chapter, mykrobe. \autoref{fig:predict-comp-perf} shows the computational performance of both tools, split by sequencing technology. On average, \drprg{} is faster than mykrobe for both Illumina and Nanopore and uses less memory. As summarised in \autoref{tab:predict-comp-pref}, \drprg{} has a median CPU time of 11.84s (Illumina) and 178.41s (\ont{}) compared to mykrobe's 196.90s (Illumina) and 248.81s (\ont{}). In terms of memory usage, \drprg{} had a median peak of 224MB (Illumina) and 345.50MB (\ont{}) compared with mykrobe's 1193.00MB (Illumina) and 1195.00MB (\ont{}). However, for both tools, these time and memory figures are more than sufficient to comfortably run either tool on a standard laptop. 
 
@@ -536,7 +538,7 @@ We follow the same classification approach as in \autoref{sec:pheno-concordance}
 
 Across all drugs, there were 8 FN (missed resistance) calls by mykrobe \ont{}. Seven of those FNs are situations where the Illumina data has called minor resistance - a heterozygous call at a resistance-causing variant. As we use a haploid model for \ont{} (see \autoref{app:mykrobe-settings}), this is unavoidable until such time as a diploid model can be employed. We did attempt to use a diploid model for \ont{}, but found a dramatic increase in the number of FNs and FPs due to indel calls. The other FN actually has a DST phenotype of susceptible (which is what the \ont{} prediction is) for that drug (streptomycin), but some support for a resistance-causing variant in the VCFs from \autoref{sec:var-calls} - so the truth is uncertain.
 
-For the \drprg{} \ont{} predictions, there were 32 FNs across all drugs. Ten of these were cases where mykrobe called minor resistance. Similar to mykrobe for \ont{}, \drprg{} employs a haploid model for both Illumina and \ont{}, hence heterzygous calls are not possible. Another 14 FNs were called by \drprg{} \ont{}, but the variant was filtered due to low FRS. All but one of these FRS cases was a promoter mutation C-15X in \textit{fabG1}. A further two FNs were also filtered out due to strand bias. Lastly, five FNs were associated with indel calls in \textit{pncA}; indels are a known systematic problem with \ont{} data \cite{watson2019}.
+For the \drprg{} \ont{} predictions, there were 32 FNs across all drugs. Ten of these were cases where mykrobe called minor resistance. Similar to mykrobe for \ont{}, \drprg{} employs a haploid model for both Illumina and \ont{}, hence heterzygous calls are not possible. Another 14 FNs were called by \drprg{} \ont{}, but the variant was filtered due to low FRS. All but one of these FRS cases was a promoter mutation C-15X in \textit{fabG1}, a mutation that has been known to cause phenotype discrepancies before \cite{cryptic2018}. A further two FNs were also filtered out due to strand bias. Lastly, five FNs were associated with indel calls in \textit{pncA}; indels are a known systematic problem with \ont{} data \cite{watson2019}.
 
 \drprg{} with Illumina missed 17 resistance calls compared to mykrobe with Illumina. Ten of these were cases of mykrobe calling minor resistance, as mentioned above. Of the remaining 7 FNs, four were related to indel calls in \textit{pncA}, and three just have no evidence in the \drprg{} VCF.
 
@@ -879,6 +881,7 @@ For most drugs, \drprg{} predictions are concordant with mykrobe's Illumina call
 
 %=========================================================================
 \section{Effect of coverage on predictions}
+\label{sec:dst-covg}
 
 It has previously been shown that deep coverage is required of \ont{} to accurately predict drug resistance \cite{Votintseva2017}. As \ont{} sequencing advances quickly, and our dataset contains a broad \ont{} depth-of-coverage range (29-150x), we explore whether this requirement of high coverage still holds.
 
@@ -993,12 +996,73 @@ We have also shown that by refusing to make predictions for drugs with variants 
 
 %=========================================================================
 \section{Discussion}
+Illumina WGS has become a routine tool for \mtb{} drug susceptibility testing. Its use is underpinned by a vast number of studies validating the sensitivity and specificity of such predictions, all with similar results \cite{cryptic2018,hunt2019,bradley2015,coll2015,walker2015,kohl2018,phelan2019}. In this chapter, we have provided strong evidence that \ont{} WGS-based DST can provide predictions consistent with Illumina. We did this by first showing that when comparing Illumina and \ont{} predicted phenotypes to culture-based phenotypes, there is very little difference between the predictions from the two technologies. However, we do note a slightly higher \ont{} false positive rate (18.8\%) than Illumina (6.2\%) when using mykrobe.
+
+In addition to validating the use of \ont{} for DST, we also developed and evaluated a software tool \drprg{} for the same task. Many programs exist for the prediction of drug resistance from WGS data, however, all have the same underlying limitation: an inability to detect off-panel (novel) variants. With \drprg{} we have made a promising first step in removing this limitation from \mtb{} drug resistance prediction.
+
+\drprg{} is not the first tool to use the concept of genome graphs for AMR prediction. mykrobe, the other tool used in this chapter, uses population genome graphs for genotyping of samples. The underlying method mykrobe uses is Cortex \cite{iqbal2012} - a program that uses coloured de Bruijn graphs (dBGs) for genotyping samples via \denovo{} assembly. Cortex is somewhat of a precursor to \pandora{} - the genome graph method underpinning \drprg{}. However, \pandora{} offers a number of advantages over Cortex. The first being the representation of the genome graph itself. As mentioned, Cortex uses \kmer{}s in coloured dBGs, while \pandora{} uses minimizing \kmer{}s in a \emph{directed} graph. In the context of \ont{} data, this distinction is important. As we saw in \autoref{chap:denovo}, build dBGs from \ont{} creates very complex graphs. In addition, as the \ont{} error rate is higher than Illumina, a smaller \kmer{} size is required, another factor that increases the complexity of the dBG. Another important difference in the graph representations of Cortex (mykrobe) and \pandora{} (\drprg{}) is the way in which \kmer{} "hits" are encorporated. In a dBG, anywhere that a \kmer{} matches, the depth is incremented by one. However, in \pandora{} such hits are dependent on the context of the read. If a \kmer{} matches two locations in the graph, but one location has many hits close by from the same read while the other does not, the spurious hit is discarded. This filtering of \kmer{} hits allows us to use a lower \kmer{} size ($k=15$) in \pandora{}, and thus \drprg{}, than is used by Cortex/mykrobe ($k=21$). Another flow-on effect of using a smaller \kmer{} size is we do not require as much read depth in \drprg{} as there is a much higher chance of matches to smaller \kmer{}s, especially when the error rate is high. For example, assuming a \ont{} error rate of 0.08, we would expect the probability of a $15-mer$ and $21-mer$ having no errors to be 0.30 and 0.19 respectively. A more in-depth discussion of the differences between these graph methods can be found in (LINK\todo{link to intro section discussing cortex/pandora differences}).
+
+When comparing the computational performance of mykrobe and \drprg{}, we found \drprg{} to be faster and more memory efficient for both technologies (\autoref{sec:drprg-comp-perf}).
+
+\noindent
+Given the extensive validation of Illumina WGS for DST, with many more samples than we have in this chapter, our intention is not to make overarching claims about the clinical use of WGS. Rather, we seek to gauge \ont{}'s suitability for WGS-based susceptibility testing. We first assessed Illumina and \ont{} predictions against "gold-standard" culture-based phenotypic testing in \autoref{sec:pheno-concordance}. This analysis allows a somewhat unbiased assessment of the two technolgies, with the goal of detecting any technology-driven differences. As all our samples were sequenced from the same DNA extraction, we know the resistance profile for the underlying data is the same for both technologies. 
+
+\ont{} has been assessed for use in providing AMR predictions previously \cite{bradley2015,hunt2019,phelan2019}, but with single-digit sample sizes. An exception to this is the work by the New York State Department of Health, which used a sample size of 431 \cite{smith2020}. Our results from \autoref{sec:pheno-concordance} are in agreement with all of these previous studies; \ont{} AMR predictions are highly concordant with Illumina when compared to culture-based phenotypes. This agreement was found for both mykrobe and \drprg{}. As mentioned, the one exception to this was mykrobe's \ont{} isoniazid predictions, which had a higher false positive rate compared to the other technology/tool combinations. All of these extra FPs were due to \textit{katG} indel calls in the \ont{} data, which as mentioned, is a systematic problem plaguing \ont{} currently \cite{watson2019}. One point of difference between the \ont{} study by Smith \etal{} and ours is that our dataset is from three countries with very different \mtb{} populations, whilst Smith \etal{} use a more homogeneous population from New York state. 
+
+While there is a high level of similarity between predictions from both tools and sequencing modalities, there are some drugs for which disagreement with the culture-based phenotype is high. The ethambutol false negative rate (FNR; 28.6\%) was much higher than previous reports, which generally fall in the 5-10\% range \cite{cryptic2018,hunt2019,smith2020}. However, Smith \etal{} did see a FNR of 20\%. In addition, the positive predictive value (PPV; also known as precision) was 41.7\%, again, much lower than previous studies. However, all FP predictions were made due a non-synonymous mutation at codon 306 in \textit{embB}. This mutation has previously been reported in multiple sources as being strongly-link to ethambutol resistance \cite{Maningi2017,Srivastava2009,Brossier2015} and there was consistent support for the presence of these mutations on all technologies and tools. To further reinforce the possibility of an incorrect culture-based phenotype in these cases, where line probe assay phenotypes were available for ethambutol, the majority of these were inconsistent. Indeed, sequencing of the resistance-associated genes is now recommended over culture-based phenotyping for ethmabutol \cite{who2018technical}. 
+
+We also see similarly poor performance for both PPV and FNR in streptomycin when compared to other studies. Our isoniazid FNR of 14-20\% is also higher than previous work, but not by as much as streptomycin and ethambutol. In almost all of these errors we again see strong evidence for mutations that have previously been linked to drug resistance, but are not in our panel, or many discrepant LPA phenotypes. These discrepancies raise the ongoing need for a curated panel of known mutations and their impacts on susceptibility. Additionally, they highlight the imperfectness of culture-based phenotyping, which has been discussed elsewhere \cite{walker2015, who2018technical,cryptic2018}.
+
+The main limitation for this section of the chapter is the number of resistant samples. Although there was 50 isoniazid- and 47 rifampicin-resistant isolates, the other drugs had no more than 15 samples representing. The low number of resistant samples is reflected in the breadth of confidence intervals for all drugs. However, combining this dataset with Smith \etal{} \cite{smith2020} would provide an increase in the matched Illumina/Nanopore data with susceptibility profiles for all drugs.
+
+\noindent
+As mykrobe as been extensively validated on large datasets with Illumina \cite{bradley2015,hunt2019}, using it as a truth to compare \ont{} to provides further validation for \ont{}'s use for AMR prediction. The added advantage to such an approach on our dataset is we can get a sense of the performance of \drprg{} and mykrobe \ont{} for all drugs which mykrobe produces predictions for. As culture-based phenotypes were not available for all drugs and samples, this gives us additional insight. We performed this analysis in \autoref{sec:geno-concordance}, and found mykrobe's \ont{} predictions to be highly concordant with those from Illumina. There was only 8 missed resistance calls, seven of which were minor resistance calls on Illumina. We attempted to allow minor resistance calls for \ont{}, but this lead to every sample being predicted as resistant to isoniazid and pyrazinamide due to false heterozygous indel calls in \textit{katG} and \textit{pncA}. Of the false positive calls make by mykrobe on \ont{} data, half were due to indel calls in \textit{katG}, while the other half are quite likely errors on the behalf of Illumina, due to filtering.
+
+When comparing the \drprg{} predictions to mykrobe Illumina profiles, we see somewhat similar results. As with mykrobe \ont{} errors, almost all \drprg{} errors were due to indel calls in \textit{katG} and \textit{pncA}, while the rest were most likely Illumina errors as mentioned above. 
+
+Taking the analyses in \autoref{sec:pheno-concordance} and \autoref{sec:geno-concordance} together, it is clear that one of the main limitations of \drprg{} is faulty indel calls. Indeed, on a number of occasions in this thesis we have stated this is a known systematic issue of \ont{} \cite{watson2019}. However, we believe this is a problem worth careful consideration as it has a big impact on isoniazid and pyrazinamide resistance - both first-line \mtb{} drugs. We discuss future directions for improving on this limitation of \drprg{} in \autoref{sec:indel-dst-fw}.
+
+Having established \ont{}-based AMR predictions for \mtb{} are comparable to Illumina, we next looked at whether the \ont{} performance is dependent on the read depth available. In 2017, Votintseva \etal{} concluded that the accuracy of \ont{} for providing real-time AMR predictions for \mtb{} was dependent on "deep coverage" \cite{Votintseva2017}. While 4 years may not seem like a long time in science, in the world of \ont{} sequencing, it is an age. Technological advances in the \ont{} sequencing happen so quickly that regular benchmarks are warranted. Given our dataset has samples with read depth ranging from 29-150x, we assessed in \autoref{sec:dst-covg} whether there was a higher proportion of misclassifications at lower depths. As \autoref{fig:pheno-covg} very clearly shows, there is no evidence in our dataset that read depth has any influence on AMR predictions. To our knowledge this the first time such an analysis correlating read depth and classifications has been presented. The consequences for this finding are quite important. Being able to obtain reliable predictions from low coverage data saves time and money in not having to re-sequence low-yield \ont{} runs; something which is common when multiplexing samples on the one flowcell.
+
+Although there are many \mtb{} AMR prediction tools available, \drprg{} is the first to flag novel variants. When an off-panel variant is found in a gene associated with drug resistance, the prediction for the drug(s) it impacts is designated "unknown". While this is not the first study to investigate the impact of unknown variants on predictions \cite{cryptic2018,hunt2019}, it is the first provide the functionality built in.
+
+We use the Illumina variant calls from COMPASS in \autoref{sec:illumina-var-call} to curate a list of off-panel SNPs we expect to find for each sample. As would be expected from the \pandora{} validation in \autoref{sec:map-var-calls}, \drprg{} produces very precise novel SNP calls, but has some room for improvement for SNP discovery (\autoref{fig:novel-classifications}). Many of the novel SNPs were in fact synonymous mutation, highlighting a gap in the panel construction step of \drprg{} (\autoref{sec:drprg-index}) - where we do not incorporate such mutations unless explicitly provided. In addition, the higher number of FN novel SNPs in \textit{ahpC} and \textit{gyrA} were caused by \drprg{} filtering them out for low fraction of read support. Given these SNPs did not show signs of heterozygosity in the COMPASS VCFs, this warrants further investigation into why were are seeing considerable read depth on multiple alleles at these sites.
+
+When unknown predictions for a drug are interpreted as a refusal to make a prediction - as in \cite{cryptic2018} and \cite{hunt2019} - we see a noticeable decrease in the number of missed resistance calls for ethambutol, isoniazid, rifampicin, and streptomycin. That is, rather than erroneously calling those samples susceptible, we raise the presence of an unknown mutation, indicating further testing is warranted. On the other hand, the same approach needlessly flags susceptible sample as unknown. In particular, the same drugs would have a sizeable proportion of susceptible isolates called unknown. Although, as mentioned above, many of these unknown predictions are in fact synonumous mutations, so these unnecessary unknowns are likely easy to fix.
+
+A limitation to our novel variant analysis was the absence of novel indel call validation. Indels are an especially important determinant of resistance for pyrazinamide and isoniazid, so future work should focus on generating a high quality truth set for comparison of \drprg{} indels to.
+
 % The WHO target product profiles for new molecular assays for M. tuberculosis require more than 90% sensitivity and 95% specificity.7 from http://www.crypticproject.org/wp-content/uploads/2018/09/Prediction-of-Susceptibility-to-First-Line-Tuberculosis-Drugs-by-DNA-Sequencing.pdf
 %=========================================================================
 \section{Conclusion}
+In conclusion, the work in this chapter provides validation that WGS-based drug resistance predictions from \ont{} data are consistent with those from Illumina. Given the extensive validation of Illumina for \mtb{} AMR prediction in clinical settings, the congruence we present suggests that \ont{} can also be used in the same setting. However, further validation on an even larger and more diverse dataset is warranted. 
+
+We also describe and evaluate a new method for AMR prediction using genome graphs - \drprg{}. We showed that predictions from \drprg{} are consistent with those from mykrobe - and better for some drugs - whilst being faster and more memory frugal. Importantly, \drprg{} is the first \mtb{} AMR prediction tool with the option return an unknown prediction in cases where novel variants are found in resistance-associated genes. The novel variants discovered by \drprg{} are very precise and lead to a reduced number of missed resistance calls.
 
 %=========================================================================
 \section{Future work}
+
+\subsection{Panel improvement}
+
+The panel (catalogue) describing the consequence of each mutation is a vital component of any AMR prediction program, and can be the primary point-of-difference between tools \cite{hunt2019}. For the work in this chapter, we used the default mykrobe panel for \drprg{}. There are two changes to the \drprg{} p
+
+\subsubsection{Synonomous mutations}
+
+\subsubsection{WHO panel}
+% who panel
+The WHO has recently released a curated catalogue of \mtb{} mutations and their associated impact on drug susceptibility \cite{whopanel2021}. Incorporating such a panel into the one used in this chapter would likely 
+
+\subsection{Validation on a larger and more diverse dataset}
+
+\subsection{Indel calls}
+\label{sec:indel-dst-fw}
+
+
+
+\subsection{Lineage classification}
+
+\subsection{Predictions for other species}
+
 
 %=========================================================================
 \section{Availability of data and materials}
