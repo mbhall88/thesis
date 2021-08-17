@@ -33,13 +33,17 @@ While I did all bioinformatic work in this chapter, I must acknowledge the excel
 
 %=========================================================================
 \section{Introduction}
-Drug resistance predictions from WGS data are now a standard routine for an increasing number of public health agencies. In particular, a suscpetible prediction for first-line drugs is now considered accurate enough for clinical use \cite{cryptic2018}.
+Antimicrobial resistance (AMR) predictions from Illumina WGS data are now a standard routine for \mtb{} infections in an increasing number of public health agencies. In particular, a WGS-based susceptible prediction for first-line drugs is now considered accurate enough for clinical use \cite{cryptic2018}. However, \ont{} WGS, being a relatively new sequencing modality, has yet to see such large-scale validation.
 
-The software package Mykrobe provides antimicrobial resistance (AMR) predictions for \mtb{} - amongst other species. 
-% talk about why the popn ref graph approach from mykrobe is lacking
-Culture-based drug susceptibility testing is still considered the gold-standard for determining the phenotype of a sample.
+As discussed in \autoref{chap:clustering}, Illumina WGS is not readily available or feasible in many high-burden tuberculosis (TB) settings. However, \ont{} sequencing is proving to be a useful alternative is such settings \cite{Inzaule2021,faria2016,quick2016,who-ngs2018}. Only two \mtb{} AMR prediction tools - TB-Profiler \cite{phelan2019} and mykrobe \cite{hunt2019} - have reported results for, and support, \ont{} data; albeit with small sample sizes ($n=3$ and 5 respectively). A recent study from the New York State Department of Health was the largest validation of \ont{} AMR predictions to-date, assessing 431 samples. However, they use in-house custom scripts and mutation catalogues, which is unsuitable for broad global use. 
 
-Whilst the drug resistance prediction of mykrobehas been thoroughly evaluated for Illumina sequencing data, it has only been validated on 5 Nanopore samples (Hunt 2019). As our dataset does not have DST information for all samples, or even for all of the 11 drugs mykrobe provides predictions for, we aim to investigate the concordance of Nanopore and Illumina predictions. 
+To allow WGS-based AMR predictions for \mtb{} for all, standardised, open-source tools are important. The software package Mykrobe is one such and provides AMR predictions for \mtb{} - amongst other species. mykrobe has been validated for Illumina WGS on a large global cohort and uses a mutation catalogue (panel) that aggregates many known resistance- and susceptibility-associated variants \cite{hunt2019}. However, as mentioned above, mykrobe has only been validated on 5 \ont{} samples.
+
+The first aim of this chapter is to test \ont{}-based AMR predictions from mykrobe with a much larger sample size. For a subset of the data used in \autoref{chap:clustering}, culture-based drug susceptibility testing (DST) phenotypes are available. This phenotyping method is still considered the gold-standard for determining the phenotype of a sample and provides an unbiased truth to detect any sequencing modality-driven differences in WGS-based phenotypes. As our dataset does not have DST information for all samples, or even for all 11 drugs mykrobe provides predictions for, we aim to investigate the concordance of \ont{} with Illumina predictions also. In both cases, we demonstrate that \ont{} provides consistent AMR predictions with Illumina.
+
+A limitation of mykrobe, and indeed all other \mtb{} AMR prediction tools, is they do not detect off-catalogue (novel) mutations. That is, mutations in resistance-associated genes that do not appear in the catalogue being used by the tool. The \cryptic{} Consortium recently showed that classifying such novel mutations as "unknown" can improve the pan-susceptibility prediction for first-line drugs \cite{cryptic2018}. 
+
+To this end, we develop, and evaluate, a genome graph-based \mtb{} AMR prediction software tool, \drprg{}, which can produce these unknown predictions when off-catalogue mutations are detected. We use the methods and understanding developed in \autoref{chap:denovo} and \autoref{chap:clustering} to build a \mtb{} \prg{} for AMR-associated genes and genotype mutations with \pandora{}. In particular, we use the \denovo{} variant discovery functionality of \pandora{} developed in \autoref{chap:denovo} to identify off-catalogue mutations and evaluate how these impact AMR predictions. We show that the novel variants discovered by \drprg{} are very precise and that unknown predictions can reduce the number of missed resistance calls.
 
 %=========================================================================
 \section{Dataset}
@@ -1032,7 +1036,6 @@ When unknown predictions for a drug are interpreted as a refusal to make a predi
 
 A limitation to our novel variant analysis was the absence of novel indel call validation. Indels are an especially important determinant of resistance for pyrazinamide and isoniazid, so future work should focus on generating a high quality truth set for comparison of \drprg{} indels to.
 
-% The WHO target product profiles for new molecular assays for M. tuberculosis require more than 90% sensitivity and 95% specificity.7 from http://www.crypticproject.org/wp-content/uploads/2018/09/Prediction-of-Susceptibility-to-First-Line-Tuberculosis-Drugs-by-DNA-Sequencing.pdf
 %=========================================================================
 \section{Conclusion}
 In conclusion, the work in this chapter provides validation that WGS-based drug resistance predictions from \ont{} data are consistent with those from Illumina. Given the extensive validation of Illumina for \mtb{} AMR prediction in clinical settings, the congruence we present suggests that \ont{} can also be used in the same setting. However, further validation on an even larger and more diverse dataset is warranted. 
