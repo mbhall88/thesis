@@ -90,7 +90,7 @@ Streptomycin & 90    \\ \hline
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/available_dst.png}
-\caption{{Culture-based drug susceptibility data available for samples. Each row is a drug, and the columns represent a set of samples that have phenotype information for those drugs with a filled cell. The top panel shows the number of samples in the set for that combination of drugs. The bar plot in the left panel shows the number of samples with phenotype information for that drug.
+\caption{{Culture-based drug susceptibility data available for samples. Each row is a drug, and the columns represent a set of samples with phenotype information for those drugs with a filled cell. The top panel shows the number of samples in the set for that combination of drugs. The bar plot in the left panel shows the number of samples with phenotype information for that drug.
 {\label{fig:available-dst}}
 }}
 \end{center}
@@ -210,7 +210,7 @@ For the drug/sample combinations with available culture-based phenotypes, we cla
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/pheno_concordance_plot.png}
-\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility testing (DST) phenotypes correctly identified by mykrobe (purple) and \drprg{} (blue) with Illumina (non-striped) and \ont{} (striped) data. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data that the tools make predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility testing (DST) phenotypes correctly identified by mykrobe (purple) and \drprg{} (blue) with Illumina (non-striped) and \ont{} (striped) data. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin.
 {\label{fig:pheno-concordance}}
 }}
 \end{center}
@@ -562,7 +562,7 @@ The \drprg{} predictions had 23 and 22 FPs for \ont{} and Illumina data respecti
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/illumina_concordance.png}
-\caption{{Number of resistant (left) and susceptible (right) WGS-based drug resistance phenotypes correctly identified by mykrobe \ont{} (purple) and \drprg{} (blue) with Illumina (striped) and \ont{} (non-striped) data. For this analysis, the Illumina-based mykrobe predictions are considered truth and the other predictions are assessed accordingly. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs that mykrobe makes predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) WGS-based drug resistance phenotypes correctly identified by mykrobe \ont{} (purple) and \drprg{} (blue) with Illumina (striped) and \ont{} (non-striped) data. For this analysis, the Illumina-based mykrobe predictions are considered truth and the other predictions are assessed accordingly. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs for which mykrobe makes predictions. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
 {\label{fig:geno-concordance}}
 }}
 \end{center}
@@ -904,7 +904,7 @@ As \autoref{fig:pheno-covg} illustrates, we see no relationship between \ont{} r
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/phenotype_coverage.png}
-\caption{{Effect of \ont{} read depth on drprg (top) and mykrobe (bottom) drug susceptibility phenotype prediction. Each point indicates the proportion (left y-axis) of classifications of that type at the read depth (x-axis). Read depth is binned such that 40 is all samples with a read depth $\ge40$ and less than 50. The blue bars indicate the number of samples (right y-axis) contained in each bin. FP=false positive (red); TN=true negative (grey); FN=false negative (purple); TP=true positive (blue).
+\caption{{Effect of \ont{} read depth on \drprg{} (top) and mykrobe (bottom) drug susceptibility phenotype prediction. Each point indicates the proportion (left y-axis) of classifications of that type at the read depth (x-axis). Read depth is binned such that 40 is all samples with a read depth $\ge40$ and less than 50. The blue bars indicate the number of samples (right y-axis) contained in each bin. FP=false positive (red); TN=true negative (grey); FN=false negative (purple); TP=true positive (blue).
 {\label{fig:pheno-covg}}
 }}
 \end{center}
@@ -977,7 +977,7 @@ Gene                            & Technology & FN & FP & TP  & Recall & Precisio
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/novel_classifications_per_sample.png}
-\caption{{Number of novel variants found in resistance-associated genes for each sample. The x-axis indicates the number of classifications of the relevant kind, and the y-axis is the number of sample with that classification count.The classifications are TP (blue) - true positive; FN (red) - false negative; FP (purple) - false positive.
+\caption{{Number of novel variants found in resistance-associated genes for each sample. The x-axis indicates the number of classifications of the relevant kind for a sample, and the y-axis is the number of samples with that classification count. The classifications are: TP (blue) - true positive; FN (red) - false negative; FP (purple) - false positive.
 {\label{fig:novel-sample-classifications}}
 }}
 \end{center}
@@ -994,7 +994,7 @@ A simple solution for the excessive unknown calls in susceptible samples would i
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter3/Figs/pheno_unknown.png}
-\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility testing (DST) phenotypes correctly identified by mykrobe (purple) and \drprg{} (blue) with Illumina (non-striped) and \ont{} (striped) data. The red bars indicate missed (FN) or incorrect (FP) predictions. The yellow bars represent \drprg{} "unknown" calls, which is when there is a non-panel variant found in a gene associated with the respective drug. If there is no resistance-associated variant found for that drug, then an unknown call is made. The x-axis shows the drugs with available phenotype data that the tools make predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility testing (DST) phenotypes correctly identified by mykrobe (purple) and \drprg{} (blue) with Illumina (non-striped) and \ont{} (striped) data. The red bars indicate missed (FN) or incorrect (FP) predictions. The yellow bars represent \drprg{} "unknown" calls, which is when there is an off-panel variant found in a gene associated with the respective drug. If there is no resistance-associated variant found for that drug, then an unknown call is made. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin.
 {\label{fig:pheno-unknown}}
 }}
 \end{center}

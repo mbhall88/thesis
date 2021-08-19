@@ -71,7 +71,7 @@ inhA    S94A    PROT    Isoniazid
 rrs     592  rrs_C492X  C    A,G,T           ... PAD=100;RES=DNA;DRUGS=NONE;ST=+
 inhA    380  inhA_S94A  TCG  GCT,GCC,GCA,GCG ... PAD=100;RES=PROT;DRUGS=Isoniazid;ST=+
 \end{Verbatim}
-\caption{An example panel (top) expected by \drprg{}. The columns indicate the gene, mutation, residue the variant describes, and drug the entry impacts. The panel is turned into a VCF (bottom) with proteins converted to DNA. Associated information from the panel and annotation are encoded in the INFO field for each entry. Note: some information not necessary for this example is removed from the VCF entry shown here to reduce the size.}
+\caption{An example panel (top) required by \drprg{}. The columns indicate the gene, mutation, residue the variant describes, and drug(s) the entry impacts. The panel is turned into a VCF (bottom) with proteins converted to DNA. Associated information from the panel and annotation are encoded in the \vrb{INFO} field for each entry. Note: some unnecessary information for this example is removed from the VCF entry shown here to reduce the size.}
 \label{fig:example-panel}
 \end{sidewaysfigure}
 
@@ -111,7 +111,7 @@ TTTT-*AAAcAAAc-TTTT
     \         /
      tAAAtAAAt
 \end{Verbatim}
-\caption{An example of how the \makeprg{} minimum match length ($m$) parameter effects \prg{} structure. The \prg{}s for three sequences (top) with three positions of difference (lower-case letters) are shown. $m$ controls when sequence is collapsed. when $m=3$ (middle) all runs of \vrb{A} and \vrb{T} are collapsed as there are at least 3 positions in a row where both sequences agree. However, when $m=4$ (bottom), the \vrb{A}s are not longer collapsed leaving a single, longer branched path for each sequence, rather than the three smaller, single-base paths when $m=3$. \vrb{*} is a placeholder to indicate an insertion/deletion}
+\caption{An example of how the \makeprg{} minimum match length ($m$) parameter effects \prg{} structure. The \prg{}s for three sequences (top) with three positions of difference (lower-case letters) are shown. $m$ controls when sequence is collapsed. When $m=3$ (middle), all runs of \vrb{A} and \vrb{T} are collapsed because at least three continuous bases agree between the three sequences. However, when $m=4$ (bottom), the \vrb{A}s are no longer collapsed, leaving a single, longer branched path for each sequence, rather than the three smaller, single-base paths when $m=3$. \vrb{*} is a placeholder to indicate an insertion/deletion.}
 \label{fig:min-match-len-example}
 \end{figure}
 
@@ -130,7 +130,7 @@ pncA    284     5bf4ae25        CCGGACTATTCCTCGTCGTGGCCACCGCATTGC       AGAGACTA
 #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  sample
 pncA    292     f2ff5236        TTCC    TATCT,TTTC      .       PASS    VARID=pncA_S65F,<rest hidden>;PREDICT=R,<rest hidden>   GT:MEAN_FWD_COVG:MEAN_REV_COVG:GT_CONF     2:6,0,19:9,0,26:179.789
 \end{Verbatim}
-\caption{Contrasting examples of the same \textit{pncA} variant site (S65F) from a panel-based \prg{} (top) and a population-based \prg{} (bottom). \vrb{VARID} indicates the panel variants this site overlaps and \vrb{PREDICT} is the resistance prediction for the relevant \vrb{VARID}. \vrb{MEAN\_FWD\_COVG} and \vrb{MEAN\_REV\_COVG} specify the mean forward and reverse \kmer{} coverage on minimizer \kmer{}s that overlap this site. Note: due to the large number of alternate alleles (126) in the panel-based record and overlapping \vrb{VARID}s, some data has been elided for illustrative purposes.}
+\caption{Contrasting examples of the same \textit{pncA} variant site (S65F) from a panel-based \prg{} (top) and a population-based \prg{} (bottom). \vrb{VARID} indicates the panel variants this site overlaps, and \vrb{PREDICT} is the resistance prediction for the relevant \vrb{VARID}. \vrb{MEAN\_FWD\_COVG} and \vrb{MEAN\_REV\_COVG} specify the mean forward and reverse \kmer{} coverage on minimizer \kmer{}s that overlap this site. Note: due to a large number of alternate alleles (126) in the panel-based record and overlapping \vrb{VARID}s, some data has been elided for illustrative purposes.}
 \label{fig:example-pncA-dense}
 \end{figure}
 
@@ -216,7 +216,7 @@ gyrA    380     01a6abfd        GACAG   AACAC,CACAC,GACAC,GCCAC,GGCAC,TACAC,TACA
   }
 }
 \end{minted}
-\caption{An example drug resistance prediction JSON report file produced by \drprg{}. The report maps a drug to its prediction and any relevant evidence supporting that prediction. S=susceptible; U=unknown (i.e., novel variant); R=resistant.}
+\caption{An example drug susceptibility JSON report file produced by \drprg{}. The report maps a drug to its prediction and any relevant evidence supporting that prediction. S=susceptible; U=unknown (i.e., novel variant); R=resistant.}
 \label{fig:example-drprg-report}
 \end{figure}
 
@@ -237,7 +237,7 @@ When comparing the WGS concordance with culture-based phenotypes, these results 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Appendix2/Figs/mykrobe_settings_pheno.png}
-\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility phenotypes correctly identified by mykrobe with default (blue) or adjusted (purple) settings. \ont{} data is indicated by diagonal stripes, with Illumina have no stripes. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data that mykrobe also makes predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility phenotypes correctly identified by mykrobe with default (blue) or adjusted (purple) settings. \ont{} data is indicated by diagonal stripes, with Illumina having no stripes. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin.
 {\label{fig:mykrobe-settings-pheno}}
 }}
 \end{center}
@@ -554,7 +554,7 @@ Drug &
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Appendix2/Figs/mykrobe_settings_illumina_concordance.png}
-\caption{{Number of resistant (left) and susceptible (right) Illumina WGS-based drug susceptibility phenotypes correctly identified using \ont{} data. \ont{} predictions for mykrobe with default (blue) and adjusted (purple) settings are compared to those from Illumina with the same settings. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data that mykrobe also makes predictions for. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) Illumina WGS-based drug susceptibility phenotypes correctly identified using \ont{} data. \ont{} predictions for mykrobe with default (blue) and adjusted (purple) settings are compared to those from Illumina with the same settings. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
 {\label{fig:mykrobe-settings-geno}}
 }}
 \end{center}
