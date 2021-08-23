@@ -221,23 +221,23 @@ gyrA    380     01a6abfd        GACAG   AACAC,CACAC,GACAC,GCCAC,GGCAC,TACAC,TACA
 \end{figure}
 
 % =====================
-\section{Adjustment of default mykrobe \ont{} settings}
+\section{Adjustment of default \mykrobe{} \ont{} settings}
 \label{app:mykrobe-settings}
 
-During the process of gathering the resistance prediction results in \autoref{sec:pheno-concordance} and \autoref{sec:geno-concordance}, we investigated whether the mykrobe default parameters for \ont{} are optimal. Since they were calibrated on only five samples \cite{hunt2019}. In addition, we look at the impact of changing the default Illumina expected error rate (0.05) to the reported 0.001 \cite{manley2016}.
+During the process of gathering the resistance prediction results in \autoref{sec:pheno-concordance} and \autoref{sec:geno-concordance}, we investigated whether the \mykrobe{} default parameters for \ont{} are optimal. Since they were calibrated on only five samples \cite{hunt2019}. In addition, we look at the impact of changing the default Illumina expected error rate (0.05) to the reported 0.001 \cite{manley2016}.
 
-The \ont{} preset in mykrobe sets the expected error rate to 0.15, the ploidy model to haploid, and ignores calls below the 90\% confidence threshold (as judged by simulating confidence scores from those present in the data) \cite{hunt2019}. Instead, we disable this preset and change the expected error rate to 0.08, leave the ploidy as haploid (avoiding minor resistance calls), and turn off the confidence threshold simulations.
+The \ont{} preset in \mykrobe{} sets the expected error rate to 0.15, the ploidy model to haploid, and ignores calls below the 90\% confidence threshold (as judged by simulating confidence scores from those present in the data) \cite{hunt2019}. Instead, we disable this preset and change the expected error rate to 0.08, leave the ploidy as haploid (avoiding minor resistance calls), and turn off the confidence threshold simulations.
 
 The results of these parameter changes are shown in \autoref{fig:mykrobe-settings-pheno} and summarised in \autoref{tab:mykrobe-settings-pheno} for concordance with phenotype (see \autoref{sec:pheno-concordance}). In addition, as culture-based phenotypes are not available for all drugs and samples, we compare the concordance of \ont{} predictions with Illumina in \autoref{fig:mykrobe-settings-geno} and \autoref{tab:mykrobe-settings-geno}.
 
-When comparing the WGS concordance with culture-based phenotypes, these results reveal that the default \ont{} settings for mykrobe lead to a much higher number of missed resistance (FN) classifications for all drugs when compared to the adjusted settings. However, the default settings do lead to fewer false-positive predictions for all drugs. Additionally, the adjusted Illumina error rate led to one FN being recovered (classified TP) for ethambutol and unchanged classifications for everything else.
+When comparing the WGS concordance with culture-based phenotypes, these results reveal that the default \ont{} settings for \mykrobe{} lead to a much higher number of missed resistance (FN) classifications for all drugs when compared to the adjusted settings. However, the default settings do lead to fewer false-positive predictions for all drugs. Additionally, the adjusted Illumina error rate led to one FN being recovered (classified TP) for ethambutol and unchanged classifications for everything else.
 
-\ont{} concordance with Illumina predictions shows default settings lead to more FN calls than with adjusted settings, especially for the first-line drugs ethambutol, isoniazid, and rifampicin. The adjusted settings for mykrobe led to quite similar predictions between \ont{} and Illumina. Additionally, they lead to much less \ont{} missed resistance calls but more false positives. However, missed resistance is generally deemed a "worse" error, and as such, for the work in \autoref{chap:dst} we chose to use these adjusted parameters for mykrobe.
+\ont{} concordance with Illumina predictions shows default settings lead to more FN calls than with adjusted settings, especially for the first-line drugs ethambutol, isoniazid, and rifampicin. The adjusted settings for \mykrobe{} led to quite similar predictions between \ont{} and Illumina. Additionally, they lead to much less \ont{} missed resistance calls but more false positives. However, missed resistance is generally deemed a "worse" error, and as such, for the work in \autoref{chap:dst} we chose to use these adjusted parameters for \mykrobe{}.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Appendix2/Figs/mykrobe_settings_pheno.png}
-\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility phenotypes correctly identified by mykrobe with default (blue) or adjusted (purple) settings. \ont{} data is indicated by diagonal stripes, with Illumina having no stripes. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin.
+\caption{{Number of resistant (left) and susceptible (right) culture-based drug susceptibility phenotypes correctly identified by \mykrobe{} with default (blue) or adjusted (purple) settings. \ont{} data is indicated by diagonal stripes, with Illumina having no stripes. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin.
 {\label{fig:mykrobe-settings-pheno}}
 }}
 \end{center}
@@ -259,7 +259,7 @@ Drug &
   NPV(95\% CI) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   1(11) &
   1(77) &
   9.1\% (1.6-37.7\%) &
@@ -268,7 +268,7 @@ Drug &
   98.7\% (93.0-99.8\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(11) &
   \cellcolor[HTML]{EFEFEF}2(77) &
   \cellcolor[HTML]{EFEFEF}0.0\% (0.0-25.9\%) &
@@ -277,7 +277,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (95.1-100.0\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   2(11) &
   2(77) &
   18.2\% (5.1-47.7\%) &
@@ -286,7 +286,7 @@ Drug &
   97.4\% (91.0-99.3\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Amikacin} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}2(11) &
   \cellcolor[HTML]{EFEFEF}2(77) &
   \cellcolor[HTML]{EFEFEF}18.2\% (5.1-47.7\%) &
@@ -295,7 +295,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}97.4\% (91.0-99.3\%) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   0(0) &
   0(51) &
   - &
@@ -304,7 +304,7 @@ Drug &
   100.0\% (93.0-100.0\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(0) &
   \cellcolor[HTML]{EFEFEF}1(51) &
   \cellcolor[HTML]{EFEFEF}- &
@@ -313,7 +313,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   0(0) &
   1(51) &
   - &
@@ -322,7 +322,7 @@ Drug &
   100.0\% (92.9-100.0\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Capreomycin} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(0) &
   \cellcolor[HTML]{EFEFEF}1(51) &
   \cellcolor[HTML]{EFEFEF}- &
@@ -331,7 +331,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   12(14) &
   5(76) &
   85.7\% (60.1-96.0\%) &
@@ -340,7 +340,7 @@ Drug &
   85.5\% (76.4-91.5\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}4(14) &
   \cellcolor[HTML]{EFEFEF}14(76) &
   \cellcolor[HTML]{EFEFEF}28.6\% (11.7-54.6\%) &
@@ -349,7 +349,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}93.9\% (85.4-97.6\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   4(14) &
   16(76) &
   28.6\% (11.7-54.6\%) &
@@ -358,7 +358,7 @@ Drug &
   93.8\% (85.0-97.5\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Ethambutol} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}3(14) &
   \cellcolor[HTML]{EFEFEF}16(76) &
   \cellcolor[HTML]{EFEFEF}21.4\% (7.6-47.6\%) &
@@ -367,7 +367,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}95.2\% (86.9-98.4\%) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   16(50) &
   1(48) &
   32.0\% (20.8-45.8\%) &
@@ -376,7 +376,7 @@ Drug &
   74.6\% (62.7-83.7\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}7(50) &
   \cellcolor[HTML]{EFEFEF}7(48) &
   \cellcolor[HTML]{EFEFEF}14.0\% (7.0-26.2\%) &
@@ -385,7 +385,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}85.4\% (72.8-92.8\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   8(50) &
   3(48) &
   16.0\% (8.3-28.5\%) &
@@ -394,7 +394,7 @@ Drug &
   84.9\% (72.9-92.1\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Isoniazid} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}8(50) &
   \cellcolor[HTML]{EFEFEF}3(48) &
   \cellcolor[HTML]{EFEFEF}16.0\% (8.3-28.5\%) &
@@ -403,7 +403,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}84.9\% (72.9-92.1\%) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   0(0) &
   0(51) &
   - &
@@ -412,7 +412,7 @@ Drug &
   100.0\% (93.0-100.0\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(0) &
   \cellcolor[HTML]{EFEFEF}1(51) &
   \cellcolor[HTML]{EFEFEF}- &
@@ -421,7 +421,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   0(0) &
   1(51) &
   - &
@@ -430,7 +430,7 @@ Drug &
   100.0\% (92.9-100.0\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Kanamycin} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(0) &
   \cellcolor[HTML]{EFEFEF}1(51) &
   \cellcolor[HTML]{EFEFEF}- &
@@ -439,7 +439,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   1(10) &
   2(76) &
   10.0\% (1.8-40.4\%) &
@@ -448,7 +448,7 @@ Drug &
   98.7\% (92.8-99.8\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(10) &
   \cellcolor[HTML]{EFEFEF}4(76) &
   \cellcolor[HTML]{EFEFEF}0.0\% (-0.0-27.8\%) &
@@ -457,7 +457,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (94.9-100.0\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   0(10) &
   4(76) &
   0.0\% (-0.0-27.8\%) &
@@ -466,7 +466,7 @@ Drug &
   100.0\% (94.9-100.0\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Ofloxacin} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(10) &
   \cellcolor[HTML]{EFEFEF}4(76) &
   \cellcolor[HTML]{EFEFEF}0.0\% (-0.0-27.8\%) &
@@ -475,7 +475,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (94.9-100.0\%) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   21(47) &
   0(44) &
   44.7\% (31.4-58.8\%) &
@@ -484,7 +484,7 @@ Drug &
   67.7\% (55.6-77.8\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}6(47) &
   \cellcolor[HTML]{EFEFEF}1(44) &
   \cellcolor[HTML]{EFEFEF}12.8\% (6.0-25.2\%) &
@@ -493,7 +493,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}87.8\% (75.8-94.3\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   5(47) &
   1(44) &
   10.6\% (4.6-22.6\%) &
@@ -502,7 +502,7 @@ Drug &
   89.6\% (77.8-95.5\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Rifampicin} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}5(47) &
   \cellcolor[HTML]{EFEFEF}1(44) &
   \cellcolor[HTML]{EFEFEF}10.6\% (4.6-22.6\%) &
@@ -511,7 +511,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}89.6\% (77.8-95.5\%) \\ \hline
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   6(8) &
   5(82) &
   75.0\% (40.9-92.9\%) &
@@ -520,7 +520,7 @@ Drug &
   92.8\% (85.1-96.6\%) \\ \cline{3-9} 
  &
   \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}3(8) &
   \cellcolor[HTML]{EFEFEF}9(82) &
   \cellcolor[HTML]{EFEFEF}37.5\% (13.7-69.4\%) &
@@ -529,7 +529,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}96.1\% (89.0-98.6\%) \\ \cline{2-9} 
  &
    &
-  Mykrobe &
+  \mykrobe{} &
   5(8) &
   10(82) &
   62.5\% (30.6-86.3\%) &
@@ -538,7 +538,7 @@ Drug &
   93.5\% (85.7-97.2\%) \\ \cline{3-9} 
 \multirow{-4}{*}{Streptomycin} &
   \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}5(8) &
   \cellcolor[HTML]{EFEFEF}10(82) &
   \cellcolor[HTML]{EFEFEF}62.5\% (30.6-86.3\%) &
@@ -547,14 +547,14 @@ Drug &
   \cellcolor[HTML]{EFEFEF}93.5\% (85.7-97.2\%) \\ \hline
 \end{tabular}%
 }
-\caption{Comparison of WGS drug resistance predictions with culture-based phenotype. For this comparison, we assume the drug susceptibility testing phenotype is correct and evaluate mykrobe with default and adjusted settings for Illumina and Nanopore resistance predictions accordingly. Pyrazinamide and Moxifloxacin are excluded as phenotype information is only available for 1 sample. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
+\caption{Comparison of WGS drug resistance predictions with culture-based phenotype. For this comparison, we assume the culture-based phenotype is correct and evaluate \mykrobe{} with default and adjusted settings for Illumina and \ont{} resistance predictions accordingly. Pyrazinamide and Moxifloxacin are excluded as phenotype information is only available for one sample. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
 \label{tab:mykrobe-settings-pheno}
 \end{table}
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Appendix2/Figs/mykrobe_settings_illumina_concordance.png}
-\caption{{Number of resistant (left) and susceptible (right) Illumina WGS-based drug susceptibility phenotypes correctly identified using \ont{} data. \ont{} predictions for mykrobe with default (blue) and adjusted (purple) settings are compared to those from Illumina with the same settings. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
+\caption{{Number of resistant (left) and susceptible (right) Illumina WGS-based drug susceptibility phenotypes correctly identified using \ont{} data. \ont{} predictions for \mykrobe{} with default (blue) and adjusted (purple) settings are compared to those from Illumina with the same settings. The red bars indicate missed (FN) or incorrect (FP) predictions. The x-axis shows the drugs with available phenotype data. E - ethambutol; H - isoniazid; Z - pyrazinamide; R - rifampicin; S - streptomycin; Km - kanamycin; Am - amikacin; Ofx - ofloxacin; Cm - capreomycin; Mfx - moxifloxacin.
 {\label{fig:mykrobe-settings-geno}}
 }}
 \end{center}
@@ -575,7 +575,7 @@ Drug &
   PPV(95\% CI) &
   NPV(95\% CI) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   2(12) &
   2(138) &
   16.7\% (4.7-44.8\%) &
@@ -583,7 +583,7 @@ Drug &
   83.3\% (55.2-95.3\%) &
   98.6\% (94.9-99.6\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Amikacin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(12) &
   \cellcolor[HTML]{EFEFEF}2(138) &
   \cellcolor[HTML]{EFEFEF}0.0\% (0.0-24.2\%) &
@@ -591,7 +591,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}85.7\% (60.1-96.0\%) &
   \cellcolor[HTML]{EFEFEF}100.0\% (97.3-100.0\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   2(12) &
   2(138) &
   16.7\% (4.7-44.8\%) &
@@ -599,7 +599,7 @@ Drug &
   83.3\% (55.2-95.3\%) &
   98.6\% (94.9-99.6\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Capreomycin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(12) &
   \cellcolor[HTML]{EFEFEF}2(138) &
   \cellcolor[HTML]{EFEFEF}0.0\% (0.0-24.2\%) &
@@ -607,7 +607,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}85.7\% (60.1-96.0\%) &
   \cellcolor[HTML]{EFEFEF}100.0\% (97.3-100.0\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   4(17) &
   0(133) &
   23.5\% (9.6-47.3\%) &
@@ -615,7 +615,7 @@ Drug &
   100.0\% (77.2-100.0\%) &
   97.1\% (92.7-98.9\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Ciprofloxacin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}1(17) &
   \cellcolor[HTML]{EFEFEF}0(133) &
   \cellcolor[HTML]{EFEFEF}5.9\% (1.0-27.0\%) &
@@ -623,7 +623,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (80.6-100.0\%) &
   \cellcolor[HTML]{EFEFEF}99.3\% (95.9-99.9\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   40(56) &
   0(94) &
   71.4\% (58.5-81.6\%) &
@@ -631,7 +631,7 @@ Drug &
   100.0\% (80.6-100.0\%) &
   70.1\% (61.9-77.2\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Ethambutol} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}3(57) &
   \cellcolor[HTML]{EFEFEF}0(93) &
   \cellcolor[HTML]{EFEFEF}5.3\% (1.8-14.4\%) &
@@ -639,7 +639,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (93.4-100.0\%) &
   \cellcolor[HTML]{EFEFEF}96.9\% (91.2-98.9\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   15(80) &
   1(70) &
   18.8\% (11.7-28.7\%) &
@@ -647,7 +647,7 @@ Drug &
   98.5\% (91.9-99.7\%) &
   82.1\% (72.6-88.9\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Isoniazid} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(80) &
   \cellcolor[HTML]{EFEFEF}7(70) &
   \cellcolor[HTML]{EFEFEF}0.0\% (0.0-4.6\%) &
@@ -655,7 +655,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}92.0\% (84.3-96.0\%) &
   \cellcolor[HTML]{EFEFEF}100.0\% (94.3-100.0\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   2(13) &
   2(137) &
   15.4\% (4.3-42.2\%) &
@@ -663,7 +663,7 @@ Drug &
   84.6\% (57.8-95.7\%) &
   98.5\% (94.8-99.6\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Kanamycin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(13) &
   \cellcolor[HTML]{EFEFEF}2(137) &
   \cellcolor[HTML]{EFEFEF}0.0\% (0.0-22.8\%) &
@@ -671,7 +671,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}86.7\% (62.1-96.3\%) &
   \cellcolor[HTML]{EFEFEF}100.0\% (97.2-100.0\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   4(17) &
   0(133) &
   23.5\% (9.6-47.3\%) &
@@ -679,7 +679,7 @@ Drug &
   100.0\% (77.2-100.0\%) &
   97.1\% (92.7-98.9\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Moxifloxacin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}1(17) &
   \cellcolor[HTML]{EFEFEF}0(133) &
   \cellcolor[HTML]{EFEFEF}5.9\% (1.0-27.0\%) &
@@ -687,7 +687,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (80.6-100.0\%) &
   \cellcolor[HTML]{EFEFEF}99.3\% (95.9-99.9\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   4(17) &
   0(133) &
   23.5\% (9.6-47.3\%) &
@@ -695,7 +695,7 @@ Drug &
   100.0\% (77.2-100.0\%) &
   97.1\% (92.7-98.9\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Ofloxacin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}0(17) &
   \cellcolor[HTML]{EFEFEF}0(133) &
   \cellcolor[HTML]{EFEFEF}0.0\% (0.0-18.4\%) &
@@ -703,7 +703,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (81.6-100.0\%) &
   \cellcolor[HTML]{EFEFEF}100.0\% (97.2-100.0\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   13(31) &
   0(119) &
   41.9\% (26.4-59.2\%) &
@@ -711,7 +711,7 @@ Drug &
   100.0\% (82.4-100.0\%) &
   90.2\% (83.9-94.2\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Pyrazinamide} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}1(31) &
   \cellcolor[HTML]{EFEFEF}0(119) &
   \cellcolor[HTML]{EFEFEF}3.2\% (0.6-16.2\%) &
@@ -719,7 +719,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (88.6-100.0\%) &
   \cellcolor[HTML]{EFEFEF}99.2\% (95.4-99.9\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   30(79) &
   0(71) &
   38.0\% (28.1-49.0\%) &
@@ -727,7 +727,7 @@ Drug &
   100.0\% (92.7-100.0\%) &
   70.3\% (60.8-78.3\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Rifampicin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}1(79) &
   \cellcolor[HTML]{EFEFEF}0(71) &
   \cellcolor[HTML]{EFEFEF}1.3\% (0.2-6.8\%) &
@@ -735,7 +735,7 @@ Drug &
   \cellcolor[HTML]{EFEFEF}100.0\% (95.3-100.0\%) &
   \cellcolor[HTML]{EFEFEF}98.6\% (92.5-99.8\%) \\ \hline
  &
-  Mykrobe &
+  \mykrobe{} &
   20(45) &
   2(105) &
   44.4\% (30.9-58.8\%) &
@@ -743,7 +743,7 @@ Drug &
   92.6\% (76.6-97.9\%) &
   83.7\% (76.2-89.2\%) \\ \cline{2-8} 
 \multirow{-2}{*}{Streptomycin} &
-  \cellcolor[HTML]{EFEFEF}Mykrobe-default &
+  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
   \cellcolor[HTML]{EFEFEF}2(46) &
   \cellcolor[HTML]{EFEFEF}2(104) &
   \cellcolor[HTML]{EFEFEF}4.3\% (1.2-14.5\%) &
@@ -752,6 +752,6 @@ Drug &
   \cellcolor[HTML]{EFEFEF}98.1\% (93.3-99.5\%) \\ \hline
 \end{tabular}%
 }
-\caption{Comparison of \ont{} drug resistance predictions concordance with Illumina predictions. For this comparison, we assume the mykrobe resistance prediction from Illumina data is correct and evaluate the \ont{} prediction accordingly. mykrobe-default and mykrobe indicates mykrobe with default or adjusted settings accordingly. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
+\caption{Comparison of \ont{} drug resistance predictions concordance with Illumina predictions. For this comparison, we assume the \mykrobe{} resistance prediction from Illumina data is correct and evaluate the \ont{} prediction accordingly. \mykrobe{}-default and \mykrobe{} indicates \mykrobe{} with default or adjusted settings, respectively. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
 \label{tab:mykrobe-settings-geno}
 \end{table}
