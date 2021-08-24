@@ -18,6 +18,7 @@ It has previously been shown(CITE) that a taxon-specific basecalling model can i
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dataset}
+\label{sec:tubby-data}
 
  Perhaps the most important aspect of training a basecalling model is providing a "truth" for the data. In the context of training a \ont{} basecalling model, truth data refers to high-quality genome assemblies for the training samples. The \ont{} basecaller, \guppy{}, uses neural networks to convert the raw electrical signal into a DNA sequence. In order to train the network in how to make this inference it is necessary to label the raw signal with its corresponding "truth" sequence. Such datasets are difficult to find for certain species. However, the dataset we have collected for the work \autoref{chap:clustering} and \autoref{chap:dst} is perfectly suited. It contains samples with Illumina, PacBio, and \ont{} sequencing data from the exact same DNA extraction, ensuring any discrepancies between the \ont{} data and the truth are technology differences, and not \textit{in vitro} evolution. 
 
@@ -29,15 +30,38 @@ In addition to the eight training and validation samples, we evaluate on a \ont{
 %  I have emailed Sophie requesting these methods
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Training a \mtb{}-specific \ont{} basecalling model}
+\section{Training an \mtb{}-specific \ont{} basecalling model}
 
- Ideally, the training data should be from the same DNA extraction as the sequencing reads that produced the truth sequene. Given we have sequencing reads from the same DNA extraction across three sequencing technologies for nine samples, we chose to train an \mtb{}-specific model using the highest quality PacBio assembly from (\todo{link to asm methods}) for each sample as the truth. Using the PacBio assembly ensures no systematic biases from the \ont{} data are being reinforced.   
- 
-\ont{} provides a software suite, \taiyaki{}(CITE), to prepare data for and perform model training. The first step in training the model is mapping the \ont{} basecalled reads to the respective truth sequence for each sample. The mapping is done using `minimap2`(CITE), and we use parameters that ensure it only outputs primary alignments. The sequence for each read is then replaced with the reference sequence it aligns to and written out to a Fasta file using a \taiyaki{} script. The eight "read-reference" Fasta files are then combined into a single file. The recommended number of reads for model-training is somewhere in the range of tens-of-thousands or low hundreds-of-thousands if lengths are greater than 1000bp or less than 500bp, respectively, on average (personal correspondence with \ont{} staff). The resulting aggregated read-reference Fasta file contained 1,309,759 entries. As this is far more sequences than is required, we randomly sub-sampled the Fasta file into two chunks with 20\% (261,950) for training and the remainder (1,047,807) to be used for validation of the final model. Using the list of read identifiers in these two subsets, we additionally subset the raw data, used for training, for each read into separate locations for training and evaluation. A script from \taiyaki{} is then used to align the raw signal for a read to its sequence in the read-reference file. This mapping is a vital preparation step that indicates what nucleotides are the result of a given collection of the raw signal. The raw signal mapping file was then passed to the model-training script from \taiyaki{} and training took 108 hours (4.5 days) to complete on 2 GPUs.
+In order to be train a basecalling model for use with \guppy{}, there are a number of preparation steps required. For many of these preparation steps, we use the open-source software, Taiyaki, developed by Oxford Nanopore Technologies (ONT) to train their RNA and DNA model for \guppy{} (\url{https://github.com/nanoporetech/taiyaki}).
 
+We trained an \mtb{}-specific basecalling model - named \tubby{} - for use with three different versions of \guppy{}: 3.4.5, 3.6.0, and 4.4.0. The preparation, training, and evaluation steps are the same for each model, with the only difference being the version of \guppy{} used to basecall the initial data, and the pretrained models used to begin training from.
 
+\subsubsection{Preparation}
 
-To facilitate the training of the \mtb{}-specific model we used the \ont{} model-training tool \taiyaki{} (see \todo{add link to relevant methods section}). We use the samples with matched PacBio data for the training as they have high quality assemblies that can be used as truth (\autoref{sec:asm_results}). With the aid of \taiyaki{} we map the basecalled \ont{} reads to the truth assembly; creating a truth sequence for each read. The truth sequence for each read is then mapped to the raw signal, which is the main input format for training. Across the eight samples there was a total of 1,309,049 \ont{} reads that were mapped. Reads were split into training (20\% - 261,808 reads) and evaluation (80\% - 1,047,241 reads) sets. The model was trained by \taiyaki{} (using only the training set) and took 108 hours (4.5 days) to complete on 2 GPUs. The resulting \mtb{} model (referred to as 'tubby') was then used to re-basecall the reads in the evaluation set. We evaluate the tubby model and the default \guppy{} model inline with Wick *et al.*(CITE)(see \todo{add link to relevant methods section}).
+In the first stage of preparing the data for training, we basecall and demultiplex the data with the relevant version of \guppy{} using the default high-accuracy model configurations (HAC). Next, we align the basecalled reads for each sample to their truth assembly (\autoref{sec:tubby-data}) with \vrb{minimap2} \cite{li2018}, discarding unmapped and secondary alignments.
+
+The sequence for each aligned read is then replaced with the reference sequence it aligns to - in the same orientation - using \taiyaki{}. Any read with less than 50\%  of its sequence aligned is discarded in this process. The resulting FASTA file from this step acts as a way of mapping a read identifier to its truth sequence during training and contained 1,309,759 read-references.
+
+The recommended number of reads for \taiyaki{} model-training is in the range of tens-of-thousands or low hundreds-of-thousands if read lengths are greater than 1000bp or less than 500bp, respectively. As our read-reference file has many more sequences than is required, we randomly sub-sampled the FASTA file into two chunks with 20\% (261,950) for training and the remainder (1,047,807) to be used for validation of the final model. Using the list of read identifiers in these two subsets, we extract the raw (fast5) data for each read into separate training and evaluation batches. 
+
+Next, we use \taiyaki{} to trim 200 and 100 raw signal events from the start and end, respectively, of each training read. This trimming essentially serves to remove adapter and barcodes signals. \taiyaki{} is then used to align the raw signal for a read to its sequence in the read-reference file. This mapping is a vital preparation step that creates a signal-to-sequence file indicating what nucleotides are associated with a given collection of the raw signals and vice versa.
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{Chapter4/Figs/prep_runtime.png}
+\centering
+\caption{Runtimes (x-axis) of the different stages (rules; y-axis) of preparing data for basecall model training. Each individual run is represented with a black point and rules that have multiple runs have black 95\% confidence interval bars. s=seconds; m=minutes; h=hours; d=days.}
+\label{fig:prep_runtime}
+\end{figure}
+
+\autoref{fig:prep_runtime} shows the runtime of each step in the preparation phase of training. The two longest stages, trimming the raw signal (\vrb{create\_per\_read\_scaling\_params}) and mapping the raw signal to read-references (\vrb{create\_mapped\_read\_file}), took 4.1 and 4.7 days respectively. In total, the full preparation pipeline ran in 8.9 days. 
+
+\subsubsection{Training}
+
+The signal-to-sequencing mapping file produced from the preparation pipeline is the data file used for model training. In addition, we provide an initial model file from which training begins; the mLstm flipflop model distributed with \taiyaki{}.
+
+We train the model using \taiyaki{}'s \vrb{train\_flipflop.py} script with the following parameters: a base layer size of 256; a model stride of 2; a window length over the data of 19; a minimum and maximum length of random training data chunks of 2000 and 4000, respectively; and a maximum learning rate of $0.002\sqrt{g}$, where $g$ is the number of GPUs used for training. The training took 162 hours (6.75 days) to complete on 2 GPUs and had a peak memory usage of 57GB. 
+
+The final output from training the model is a checkpoint file, which we then convert to a \guppy{}-compatible JSON configuration file using \taiyaki{}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Evaluating a custom \ont{} basecalling model}
