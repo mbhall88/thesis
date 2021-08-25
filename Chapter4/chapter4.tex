@@ -272,20 +272,47 @@ Identity & 0.9886      & 0.9878      & 0.9881      & \textbf{0.9911}      & 0.98
 \subsection{Error types}
 \label{sec:tubby-error-types}
 
-Lastly, we classify the the types of errors that occur in the assemblies produced from each model's output. The \vrb{rebaler} assembly for each model and sample combination was aligned to the sample's truth assembly using `nucmer`(CITE). `nucmer` produces all positions of difference - errors in this case - between the two sequences. We classify errors as Dcm if the reported difference occurs in a known 5-methylcystosine methyltransferases motif(CITE), homopolymer insertion or deletion if the difference involves as base being added/removed from a region containing 3 or more of that same base. All deletions, insertions, and substitutions that do not fit into one of these categories after reported in their own group.
+Lastly, we classify the the types of errors that occur in the consensus assemblies produced from each model's output. Each \vrb{rebaler} assembly was aligned to the truth assembly using \vrb{nucmer} (from the MUMmer4 software suite \cite{mummer2018}). \vrb{nucmer} produces all positions of difference - errors in this case - between the two sequences. We classify errors as Dcm if the reported difference occurs in a known 5-methylcystosine methyltransferases motif, homopolymer insertion or deletion if the difference involves as base being added/removed from a region containing 3 or more of that same base. All deletions, insertions, and substitutions that do not fit into one of these categories after reported in their own group.
 
-Here we classify the types of errors that occur in the \vrb{rebaler} assemblies and look at how these errors compare across models. To determine the errors, we categorise the differences between the truth and \vrb{rebaler} assemblies (see \todo{link to relevant methods}). \autoref{fig:error_types} shows that the greater part of the error types (for both models) are attributable to deletions, with most being homopolymer deletions. We do however see that, except for non-homopolymer deletions, tubby's errors are lower than \guppy{}'s \todo{add some concrete numbers}. In the case of both insertion types, tubby has approximately 3.5-fold less insertions than \guppy{} - although these constitute a small portion of the overall errors. Both models have a very low level of Dcm-methylation errors, which is a nice control of sorts as \mtb{} does not have any known 5-methylcystosine methyltransferases(CITE)\improvement{ensure the wording of this and correct and that the claim is also correct}.
+We report the error rate for each error type as the number of errors attributable to that error type divided by the length of the truth assembly.
 
-% \begin{figure}
-% \includegraphics[width=1.0\textwidth]{Chapter4/Figs/consensus-error-types.png}
-% \centering
-% \caption{Error types in the \vrb{rebaler} assemblies produced from reads basecalled with tubby (blue) and \guppy{} (red). The consensus error rate is the percentage of the assembly these errors compose. The errors are per-assembly, so the confidence intervals represent variation in error types between samples/assemblies. dcm refers to Dcm-methylation motifs. homo\_ins/del are homopolymer insertions or deletions. sub is single-base substitutions.}
-% \label{fig:error_types}
-% \end{figure}
+\subsubsection{Validation data}
+
+\autoref{fig:eval-error_types} shows that the bulk of the error types (for both models and all versions) are attributable to deletions, with most being homopolymer deletions. We do however see that, except for non-homopolymer (other) deletions, \tubby{}'s errors are lower than \guppy{}'s. Of particular note is homopolymer deletions in version 3.6.0, where \tubby{} (0.0120\%) has nearly half the number of errors as \guppy{} (0.021\%). Both models have a very low, or non-existent, level of Dcm-methylation errors, which is a nice control of sorts as \mtb{} does not have any known 5-methylcystosine methyltransferases - although we do note this is still an active debate \cite{Danjuma2017}.
+
+When assessing each version and model, we find that \tubby{} version 3.6.0 has the overall lowest error rates.
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.9\textwidth}
+        \includegraphics[width=1.0\textwidth]{Chapter4/Figs/eval_error_types.png}
+        \centering
+        \caption{Validation data}
+        \label{fig:eval-error_types}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.9\textwidth}
+         \centering
+        \includegraphics[width=1.0\textwidth]{Chapter4/Figs/test_error_types.png}
+         \caption{Test data}
+         \label{fig:test-error_types}
+     \end{subfigure}
+        \caption{Error types in the \vrb{rebaler} assemblies produced from reads basecalled with \tubby{} and default \guppy{} basecalling models. The consensus error rate is the number of errors attributable to that error type divided by the length of the truth assembly. The errors are per-assembly, so the confidence intervals represent variation in error types between samples/assemblies, with the points showing each assembly's value. dcm (red) refers to Dcm-methylation motifs. homo refers to homopolymer insertions (purple) or deletions (blue). other refers to non-homopolymer insertions (yellow) or deletions (grey). sub (green) is substitutions (single- or multi-base).}
+        \label{fig:error_types}
+\end{figure}
+
+\subsubsection{Test data}
+
+\autoref{fig:test-error_types} shows the error types for the BCG test sample. Interestingly, for versions 3.6.0 and 4.4.0, we find substitutions are the most common form of error; in contrast to homopolymer deletions being the overwhelming most common in the validation data. However, we do note that the test sample is a single sample, whereas the evaluation data is from eight samples.
+
+\tubby{} version 3.6.0 has the lowest homopolymer deletions error rates, and the lowest overall error rate (0.0656\%) compared to \guppy{} (0.0755\%).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
 
+
+Wick et all see Dcm as the main error type
+% DCm motifs could be replaced with Mtb specific ones https://elifesciences.org/articles/58542
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
 
