@@ -12,7 +12,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-
+The accuracy of \ont{} sequencing data has been steadily increasing in recent years. 
 Taxon-specific \ont{} basecalling models have been shown to provide increased read and consensus accuracy(CITE).
 It has previously been shown(CITE) that a taxon-specific basecalling model can improve both the read-level and consensus accuracy of \ont{} sequencing reads. While this was shown for *Klebsiella pneumoniae*, it remains to be seen if this approach generalises to other species.
 
@@ -28,6 +28,8 @@ In addition to the eight training and validation samples, we evaluate on a \ont{
 
 \todo[inline]{add BCG sequencing methods}
 %  I have emailed Sophie requesting these methods
+% https://doi.org/10.1128/JCM.00670-20
+% That's fine Michael. I can point you towards this paper we published with the sample preparation details: https://pubmed.ncbi.nlm.nih.gov/32719032/ (I haven't got access to my old MMM files atm). The BCG run data you used was direct from MGIT culture (not spiked into human sputum) and was run as a single sample on a flow cell. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Training an \mtb{}-specific \ont{} basecalling model}
@@ -211,7 +213,7 @@ Version                & Model & Count   & Mean   & std    & Min    & 25\%   & 5
 
 To assess consensus-level accuracy of each model, we require assemblies from the basecalled reads. However, to allow for comparison of these model-specific consensus sequences (assemblies) to the truth assembly, a reference-guided method is needed to ensure overall structure of the truth and consensus sequences is the same. We use Rebaler (version 0.2.0; \url{https://github.com/rrwick/Rebaler}), a tool developed for exactly this use-case \cite{wick2019}. Briefly, \vrb{rebaler} aligns the reads to a reference sequence and replaces that sequence with the sequence from the best alignments, producing an unpolished assembly. After this, it polishes the assembly with \vrb{racon} to produce a consensus sequence. 
 
-We then use the same approach as in \cite{wick2020} to quantify the similarity of the consensus and truth assemblies for each sample. Each contig (chromosome) in the consensus assembly in aligned to the truth assembly with \vrb{minimap2}. We calculate the chromosome identity for each contig's longest alignment in the same fashion as BLAST identity (\autoref{sec:tubby-read}).
+We evaluate consensus accuracy in two ways. In the first, we use the same approach as in \cite{wick2020} to quantify the similarity of the consensus and truth assemblies for each sample. Each contig (chromosome) in the consensus assembly in aligned to the truth assembly with \vrb{minimap2}. We calculate the chromosome identity for each contig's longest alignment in the same fashion as BLAST identity (\autoref{sec:tubby-read}). Second, in the same manner as \cite{wick2019}, we cut the consensus assembly into 10kbp chunks - simulating consensus "reads" - and align these to the truth assembly to calculate the BLAST identity. 
 
 \subsubsection{Validation data}
 
@@ -238,23 +240,52 @@ Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 5
                        & \tubby{} & 12      & 0.9993 & 0.0009 & 0.9965 & 0.9994 & 0.9995 & 0.9997 & 0.9998 \\ \cmidrule(l){2-10} 
 \end{tabular}%
 }
-\caption{Chromosome identity for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the validation data. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the length of the alignment. std=standard deviation.}
+\caption{Chromosome identity summary statistics for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the validation data. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the length of the alignment. std=standard deviation.}
 \label{tab:eval-chrom-identity}
 \end{table}
 
-% In addition to the chromosome identity, we also investigate the longest indel in each consensus assembly. Large-scale indels are much harder to fix via polishing
-% The maximum indel length is taken from each chromosome's longest alignment to its truth assembly. maximum indel length is the CIGAR string insertion (I) or deletion (D) operation with the largest value.
+\autoref{fig:eval-consensus-blast} shows \tubby{} version 3.6.0 has a higher median consensus BLAST identity (99.98\%) compared with the best \guppy{} version (0.9997; v4.4.0). The consensus accuracy improvement of 0.0001 equates to approximately 440 less erroneous positions in the \mtb{} assembly. Summary statistics are shown in \autoref{tab:eval-consensus-blast}.
 
-% \begin{figure}
-% \includegraphics[width=0.9\textwidth]{Chapter4/Figs/eval_max_indel.png}
-% \centering
-% \caption{Maximum indel length (x-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue). Version (y-axis) indicates the \guppy{} version used for the basecalling prior to, and after, training. The maximum indel length is taken from each chromosome's longest alignment to its truth assembly. The coloured points indicate the individual values for each contig in each sample.}
-% \label{fig:eval-max-indel}
-% \end{figure}
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.9\textwidth}
+        \includegraphics[width=1\linewidth]{Chapter4/Figs/eval_consensus_blast_identity.png}
+        \centering
+        \caption{Validation data}
+        \label{fig:eval-consensus-blast}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.9\textwidth}
+         \centering
+        \includegraphics[width=1\linewidth]{Chapter4/Figs/test_consensus_blast_identity.png}
+         \caption{Test data}
+         \label{fig:test-consensus-blast}
+     \end{subfigure}
+        \caption{Consensus BLAST identity (Y-axis), where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model (colours), mapped to the truth genome. The subtitle of each plot indicates the data being assessed. Version (y-axis) indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. The median value for each boxplot is annotated on the middle line.}
+        \label{fig:consensus-blast}
+\end{figure}
+
+\begin{table}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 50\%   & 75\%   & Max    \\ \midrule
+\multirow{2}{*}{3.4.5} & \guppy{} & 3531  & 0.9987          & \textbf{0.0044} & \textbf{0.8635} & 0.9988          & 0.9992          & 0.9995          & 1.0000 \\
+                       & \tubby{} & 3532  & 0.9990          & 0.0041 & 0.8630          & 0.9990          & 0.9993          & 0.9995          & 1.0000 \\
+\multirow{2}{*}{3.6.0} & \guppy{} & 3532  & 0.9993          & 0.0041 & \textbf{0.8635} & 0.9994          & 0.9996          & 0.9998          & 1.0000 \\
+                       & \tubby{} & 3534  & \textbf{0.9995} & 0.0043          & 0.8634          & \textbf{0.9997} & \textbf{0.9998} & \textbf{0.9999} & 1.0000 \\
+\multirow{2}{*}{4.4.0} & \guppy{} & 3531  & 0.9992          & 0.0058          & 0.7961          & 0.9994          & 0.9997          & 0.9998          & 1.0000 \\
+                       & \tubby{} & 3533  & 0.9993          & 0.0049          & 0.8633          & 0.9995          & 0.9997          & 0.9998          & 1.0000 \\ \cmidrule(l){2-10} 
+\end{tabular}%
+}
+\caption{Consensus BLAST identity summary statistics for the validation data. Where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model, mapped to the truth genome. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. Count refers to the number of consensus chunks assessed. std=standard deviation.}
+\label{tab:eval-consensus-blast}
+\end{table}
 
 \subsubsection{Test data}
 
-Each basecalling model and version produced a single contig for the BCG test sample. These values are listed in \autoref{tab:test-chrom-identity}, where we see \tubby{} version 3.6.0 produces the highest chromosome identity of 99.11\%. This is a lot lower than the median value of 99.96\% obtained on the validation data; it is even less than the minimum chromosome identity for any validation data consensus assembly (99.63\%; \autoref{tab:eval-chrom-identity}).
+Each basecalling model and version produced a single contig for the BCG test sample. These values are listed in \autoref{tab:test-chrom-identity}, where we see \tubby{} version 3.6.0 produces the highest chromosome identity of 99.11\%. This is a lot lower than the median value of 99.96\% obtained on the validation data; it is even less than the minimum chromosome identity for any validation data consensus assembly (99.63\%; \autoref{tab:eval-chrom-identity}). However, it is significantly higher than the best \guppy{} value of 98.86\%, with the difference (0.25\%) equating to approximately 11,000 less erroneous positions in the \tubby{} assembly. 
 
 \begin{table}
 \centering
@@ -266,6 +297,26 @@ Identity & 0.9886      & 0.9878      & 0.9881      & \textbf{0.9911}      & 0.98
 \end{tabular}
 \caption{Chromosome identity for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the BCG test sample. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the length of the alignment.}
 \label{tab:test-chrom-identity}
+\end{table}
+
+\autoref{fig:test-consensus-blast} shows \tubby{} version 3.6.0 has a higher median consensus BLAST identity (99.97\%) compared with the best \guppy{} version (0.9996; v3.6.0 and v4.4.0). The consensus accuracy improvement of 0.0001 equates to approximately 440 less erroneous positions in the \mtb{} assembly. However, as shown in \autoref{tab:test-consensus-blast}, while \tubby{} version 3.6.0 had the highest percentile values, \guppy{} v3.6.0 had the highest mean (99.75\%).
+
+\begin{table}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llrrrrrrrr@{}}
+\toprule
+Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 50\%   & 75\%   & Max    \\ \midrule
+\multirow{2}{*}{3.4.5} & \guppy{} & 431   & 0.9963 & 0.0159          & 0.8247          & 0.9990 & 0.9993 & 0.9995          & 0.9999 \\
+                       & \tubby{} & 431   & 0.9974 & \textbf{0.0096} & \textbf{0.8575} & 0.9990 & 0.9993 & 0.9995          & 1.0000 \\
+\multirow{2}{*}{3.6.0} & \guppy{} & 431 & 0.9965          & 0.0162 & 0.8415 & 0.9994          & 0.9996          & \textbf{0.9998} & 1.0000 \\
+                       & \tubby{} & 432 & 0.9966          & 0.0171 & 0.8030 & \textbf{0.9995} & \textbf{0.9997} & \textbf{0.9998} & 1.0000 \\
+\multirow{2}{*}{4.4.0} & \guppy{} & 431 & \textbf{0.9975} & 0.0118 & 0.8445 & 0.9994          & 0.9996          & \textbf{0.9998} & 1.0000 \\
+                       & \tubby{} & 432   & 0.9966 & 0.0183          & 0.7393          & 0.9993 & 0.9996 & \textbf{0.9998} & 1.0000 \\ \cmidrule(l){2-10} 
+\end{tabular}%
+}
+\caption{Consensus BLAST identity summary statistics for the test data. Where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model, mapped to the truth genome. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. Count refers to the number of consensus chunks assessed. std=standard deviation.}
+\label{tab:test-consensus-blast}
 \end{table}
 
 % ====
@@ -310,14 +361,62 @@ When assessing each version and model, we find that \tubby{} version 3.6.0 has t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
 
+The accuracy of any sequencing data has flow-on effects in almost all meaningful bioinformatics applications. We have explored a number of these in \autoref{chap:denovo}, \autoref{chap:clustering} and \autoref{chap:dst} of this thesis, with most of the focus being on \ont{} data. In this chapter, we trained a \mtb{}-specific \ont{} basecalling model, \tubby{}, which improves the accuracy of ONT's basecalling software \guppy{} for both read- and consensus-level identity.
 
-Wick et all see Dcm as the main error type
-% DCm motifs could be replaced with Mtb specific ones https://elifesciences.org/articles/58542
+Wick \etal{} were the first to show that training a \ont{} basecalling model for a specific taxon leads to increased accuracy \cite{wick2019}. Indeed, their work has stood as a valuable resource for the comparison of basecalling methods and the temporal improvement of \ont{} sequencing error rates. While their taxon of interest  was \textit{Klebsiella pneumoniae}, we also find the same accuracy improvements over the default methods as a result of training specifically for \mtb{}.
+
+The most striking difference between the results obtained by Wick \etal{} and those in this chapter are the advancement in basecalling accuracy in the space of two years. The latest \guppy{} version tested by Wick \etal{} was version 2.2.3 - released in January 2019 - which yielded a median read identity of 87.15\% for the default model and 90.87\% for their taxon-specific model. In contrast, for \guppy{} version 3.6.0 - released in April 2020 - we find read-level accuracy of 94.13\% for the default model and 95.54\% for our custom \tubby{} model on the validation data. On our test data, we see even higher median identities of 95.89\% and 96.64\% respectively.
+
+Such improvements in read identity will likely have implications in many applications. For example, \kmer{}-based methods, such as genome assembly \cite{koren2017}, read alignment \cite{li2018}, species identification \cite{Breitwieser2018}, and even variant calling (\cite{iqbal2012} and \autoref{chap:denovo}), rely heavily on error rates. To illustrate, consider the how the error rate for \guppy{} v2.2.3 (0.1285; $1-$ read identity), and \guppy{} (0.0587) and \tubby{} (0.0446) versions 3.6.0 effects the number of erroneous \kmer{}s. The equation $p=(1-e)^k$, describes the probability $p$ of a \kmer{} having \emph{no} errors, given an error rate $e$. With a commonly used \ont{} \kmer{} size is 15, \guppy{} v2.2.3 has $p=0.1271$, while \guppy{} and \tubby{} version 3.6.0 have $p=0.4036$ and $p=0.5044$ respectively. If a genome contains a given \kmer{} once, and is sequenced with no errors to a depth of 100, we would expect 100 copies. However, with the \ont{} basecalling error rates outlined, \guppy{} v2.2.3 would produce only 13 perfect copies, while \guppy{} and \tubby{} v3.6.0 would generate 40 and 50 perfect copies respectively. 
+
+The differences between all of these basecalling models is quite stark when the impact on "lost" sequencing depth is considered this way. Focusing on the version 3.6.0 models assessed in this chapter, \tubby{} would provide 1.25x more 15-mers than \guppy{}, and 3.97x more than \guppy{} v2.2.3 reported by Wick \etal{}. This disparity in expected \kmer{} depth only increases as the \kmer{} size increase - as shown in \autoref{fig:err-rate-kmer}.
+
+\begin{figure}
+\includegraphics[width=0.9\textwidth]{Chapter4/Figs/error_rate_k.png}
+\centering
+\caption{Impact of error rate on expected \kmer{} depth. The y-axis shows the expected proportion of \kmer{}s with no sequencing errors for a given basecalling model (colours) with error rate, e.}
+\label{fig:err-rate-kmer}
+\end{figure}
+
+An interesting observation is that for both \guppy{} and \tubby{}, the test data yielded \emph{higher} read identity values than the validation data - e.g., 1.10\% higher for \tubby{} v3.6.0. As no test data was used in the training process, this would suggest our model generalises well. However, we caution that our test data contains only one sample. Future work would benefit from increasing the number of test samples to consolidate this result.
+
+\noindent
+We chose to assess consensus accuracy in two ways to balance the strengths and weaknesses of each. The chromosome identity, as used by Wick \etal{} in 2020 \cite{wick2020}, which provides a single value for each contig, is useful for gaining a sense of the reliability of the assembly produced from the \ont{} reads as a whole. However, one weakness of this approach is if there are a small number of large erroneous regions, the overall metric is impacted. The downside here is that you may lose sight of how well the rest of the genome is assembled. A perfect example of this is the \ppe{} genes in \mtb{}, which can have a GC-content as high as 80\%, and even short reads generally fail to accurately recreate these regions \cite{Phelan2016}. To counteracts this, we also calculate the consensus BLAST identity, as-per Wick \etal{} in their 2019 bascaller comparison work mentioned above. This method breaks the assembly into 10kbps pieces and aligns those to the truth genome, allowing us to calculate BLAST identity as we did for the read identity. The benefit to this approach is we get a better sense of the average accuracy of an assembly, and any erroneous regions, such as \ppe{} genes, do not have a large impact on the overall result. For applications where repetitive and GC-rich regions are masked, this metric is a fairer guide than the overall chromosome identity.
+
+In terms of the chromosome identity, \tubby{} v3.6.0 had the highest median value for the validation data (99.96\%) and the highest value for the single test data contig (99.11\%). In the case of the validation data, this was 0.02\% greater than the best \guppy{} value, equating to approximately 880 less erroneous positions. The test data difference was a massive 0.25\% (11,000 positions) difference between \tubby{} and \guppy{}. It is worth noting that these consensus assemblies are reference-guided, so comparisons to work such as \cite{wick2020} are not valid.
+
+When assessing the consensus BLAST identity, we again find that \tubby{} version 3.6.0 has the highest median value for both the validation and test data. As we used the same method as Wick \etal{} in their basecaller comparison work, we can compare our results to theirs. Doing this, we see the same trend as the read-level identity; consensus accuracy has increased dramatically in the last two years. Additionally, our taxon-specific basecalling model leads to even further improvements, as did theirs. 
+
+Comparing the latest version used by Wick \etal{}, \guppy{}'s default model has improved from a v2.2.3 (Jan. 2019) median of 99.47\% to our 99.97\% in v4.4.0 (Dec. 2020) - 22,000 less erroneous positions in an \mtb{} genome. However, we did not see the dramatic gain in a taxon-specific model they did. For \guppy{} v2.2.3 they saw the consensus identity increase to 99.93\% (+0.46\%), whereas we only found a 0.01\% increase to 99.98\%. Although, any improvement in consensus identity is valuable, especially when the percetage is nearing 100. Even an increase of 0.01\% leads to 440 less erroneous positions in an \mtb{} genome.
+
+\noindent
+The improved results from a species-specific basecalling model are not surprising given the previous work by Wick \etal{} \cite{wick2019}. However, it does raise the question of what data is used to train the default \guppy{} models. Information about the species used is not readily available to users, which is disappointing given the impact this clearly has on the results. As we have seen, the most recent \guppy{} version did not yield the highest accuracy, leading us to wonder whether there was a shift in the species and abundances used for training in the more recent version.
+
+While we appreciate that training a general model with all knowns species is not possible, providing a list of those being used would alert users to whether their species of interest might requires a taxon-specific model.
+
+Ultimately the \ont{} community may be better served by sharing species-specific basecalling models. An important caveat here though is that regular benchmarks, like those maintained by Wick \etal{} \cite{wick2019,wick2020}, would be necessary whenever a new \guppy{} version is released. 
+
+\noindent
+Indels have always been a known systematic issue in \ont{} data \cite{watson2019}, with the predominant problem being homopolymer deletions and methylation sites \cite{wick2019,jain2018}. In \autoref{sec:tubby-error-types}, we found the most common error types were homopolymer deletions (and substitutions in the test data). Importantly, \tubby{} v3.6.0 reduced the number of homopolymer deletions by nearly half. This reduction is the same as Wick \etal{} when comparing their taxon-specific model to the default \guppy{}. 
+
+As Wick \etal{} used \textit{K. pneumoniae}, which has active 5-methylcystosine methyltransferases, their major source of errors with the default \guppy{} model was Dcm methylation sites. However, training the taxon-specific model removed nearly all of those errors. \mtb{} does not have the same methyltranferases, and so Dcm methylation sites were not an issue.
+
+We did not see any reduction in substitutions or other types of indels using \tubby{}, indicating these errors may originate from a source other than the basecaller, such as the pore itself.
+
+\noindent
+The two main limitations for the work in this chapter were that we only have one test sample and that we did not assess how the basecaller improvements impact applications outside of assembly. We discuss these further in \autoref{sec:tubby-fw}.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
+In conclusion, the work in this chapter shows that an \mtb{}-specific \ont{} basecalling model yields higher read- and consensus-level accuracy than default \guppy{} models. Additionally, the \mtb{} model reduces the main source of \ont{} errors - homopolymer deletions.
+
+We trained and compared models for three \guppy{} versions. Surprisingly, the most recent version did not yield the best results for \mtb{} and highlights the need for regular benchmarks of \ont{} basecalling performance.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future work}
-
+\label{sec:tubby-fw}
+% de novo assembly assessment instead of reference-guided
+% DCm motifs could be replaced with Mtb specific ones https://elifesciences.org/articles/58542
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Availability of data and materials}
