@@ -10,19 +10,19 @@
 \section{Publication and collaboration acknowledgements}
 \label{sec:ch4-acknowledge}
 
-In addition to the acknowledgements in \autoref{sec:ch2-acknowledge} the work not completed by myself in this chapter was the sequencing of the BCG sample.
+In addition to the acknowledgements in \autoref{sec:ch2-acknowledge}, the work not completed by myself in this chapter was the sequencing of the BCG sample.
 
 The \ont{} sequencing of the BCG sample was performed by Sophie George at the Nuffield Department of Clinical Medicine, John Radcliffe Hospital, Oxford University.
 
-While I did all bioinformatic work in this chapter, I must acknowledge that much of it was motivated by the excellent \ont{} basecalling research performed by Ryan Wick \etal{} \cite{wick2019,wick2020} and some of the scripts from these studies were used in this chapter.
+While I did all bioinformatic work in this chapter, I must acknowledge that much of it was motivated by the excellent \ont{} basecalling research performed by Ryan Wick \etal{} \cite{wick2019,wick2020}. Also, some of the scripts from their studies were used in this chapter.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-The accuracy of \ont{} sequencing data has been steadily increasing since its inception. From a read accuracy 65\% in June 2014 \cite{Loman2015}, to 89.17\% in December 2018 \cite{wick2019} - an extraordinary 24\% increase in the space of 4.5 years. Taxon-specific \ont{} basecalling models have been shown to provide even further increased accuracy \cite{wick2019}.
+The accuracy of \ont{} sequencing data has been steadily increasing since its inception. From a read accuracy 65\% in June 2014 \cite{Loman2015}, to 89.17\% in December 2018 \cite{wick2019} - an extraordinary 24\% increase in the space of 4.5 years. 
 
 While there have been many successful attempts by the research community to develop new methods for basecalling \ont{} data \cite{chiron2018,Stoiber2017,Boza2020}, most are not able to keep pace with the speed of new \ont{} developments. As such, \guppy{}, the basecalling software provided by Oxford Nanopore Technologies (ONT), is the most commonly used method.
 
-Previous work by Wick \etal{} trained a taxon-specific basecalling model for \textit{Klebsiella pneumoniae} \cite{wick2019}. Their custom model improves the accuracy of \ont{} for that species, and importantly, significantly reduced systematic errors around homopolymer deletions and methylation sites. However, it remains to be seen if this approach generalises to other species.
+Taxon-specific \ont{} basecalling models have been shown to provide even further increased accuracy. Wick \etal{} trained a \textit{Klebsiella pneumoniae}-specific basecalling model \cite{wick2019}, showing their custom model improves the accuracy of \ont{} for that species, and importantly, significantly reduced systematic errors around homopolymer deletions and methylation sites. However, it remains to be seen if this approach generalises to other species.
 
 In both \autoref{chap:clustering} and \autoref{chap:dst} of this thesis, we use \ont{} data from \mtb{}, and been somewhat hampered by systematic issues (see \autoref{sec:indel-dst-fw}). Therefore, in this chapter, we set out to train an \mtb{}-specific \ont{} basecalling model using the unique dataset we collected in \autoref{sec:ch2-dataset}. The eight samples with sequencing data from Illumina, PacBio, and \ont{} provide the perfect training input for such a model as they have high-quality assemblies (\autoref{app:asm}) free from \ont{} biases, but with available \ont{} reads.
 
@@ -64,7 +64,7 @@ Next, we use \taiyaki{} to trim 200 and 100 raw signal events from the start and
 \begin{figure}
 \includegraphics[width=0.9\textwidth]{Chapter4/Figs/prep_runtime.png}
 \centering
-\caption{Runtimes (x-axis) of the different stages (rules; y-axis) of preparing data for basecall model training. Each individual run is represented with a black point and rules that have multiple runs have black 95\% confidence interval bars. s=seconds; m=minutes; h=hours; d=days.}
+\caption{Runtimes (x-axis) of the different stages (rules; y-axis) of preparing data for basecall model training (red) and training the model itself (blue). Each individual run is represented with a black point and rules that have multiple runs have black 95\% confidence interval bars. s=seconds; m=minutes; h=hours; d=days; w=weeks.}
 \label{fig:prep_runtime}
 \end{figure}
 
