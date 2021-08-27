@@ -1517,3 +1517,73 @@ volume = {18}
   year={2001},
     booktitle = {In International Conference on Machine Learning}
 }
+
+@article{Loman2015, 
+year = {2015}, 
+keywords = {nanopore}, 
+title = {{Successful test launch for nanopore sequencing}}, 
+author = {Loman, Nicholas J and Watson, Mick}, 
+journal = {Nature Methods}, 
+issn = {1548-7091}, 
+doi = {10.1038/nmeth.3327}, 
+pmid = {25825834}, 
+abstract = {{Nanopore sequencing gets a boost with accurate error modeling and variant-calling tools for Oxford Nanopore Technology's highly anticipated MinION platform.}}, 
+pages = {303--304}, 
+number = {4}, 
+volume = {12}
+}
+
+@article{chiron2018, 
+year = {2018}, 
+keywords = {nanopore,basecalling,neural-network}, 
+title = {{Chiron: Translating nanopore raw signal directly into nucleotide sequence using deep learning}}, 
+author = {Teng, Haotian and Cao, Minh Duc and Hall, Michael B and Duarte, Tania and Wang, Sheng and Coin, Lachlan J M}, 
+journal = {GigaScience}, 
+issn = {2047-217X}, 
+doi = {10.1093/gigascience/giy037}, 
+pmid = {29648610}, 
+abstract = {{Sequencing by translocating DNA fragments through an array of nanopores is a rapidly maturing technology which offers faster and cheaper sequencing than other approaches. However, accurately deciphering the DNA sequence from the noisy and complex electrical signal is challenging. Here, we report Chiron, the first deep learning model to achieve end-to-end basecalling: directly translating the raw signal to DNA sequence without the error-prone segmentation step. Trained with only a small set of 4000 reads, we show that our model provides state-of-the-art basecalling accuracy even on previously unseen species. Chiron achieves basecalling speeds of over 2000 bases per second using desktop computer graphics processing units.}}, 
+pages = {giy037--}, 
+number = {5}, 
+volume = {7}
+}
+
+@article{Stoiber2017, 
+year = {2017}, 
+keywords = {nanopore,basecalling}, 
+title = {{BasecRAWller: Streaming Nanopore Basecalling Directly from Raw Signal}}, 
+author = {Stoiber, Marcus and Brown, James}, 
+journal = {bioRxiv}, 
+doi = {10.1101/133058}, 
+abstract = {{All current nanopore basecalling applications begin with the segmentation of raw signal into discrete events, which are ultimately processed into called bases. We propose the basecRAWller algorithm, a pair of unidirectional recurrent neural networks that enables the calling of DNA bases in real time directly from the rawest form of nanopore output. This shift in nanopore basecalling provides a number of advantages over current processing pipelines including: 1) streaming basecalling, 2) tunable ratio of insertions to deletions, and 3) potential for streaming detection of modified bases. Key to the streaming basecalling capability is sequence prediction at a delay of less than 1/100th of a second, allowing future signal to continuously modulate sequence prediction. BasecRAWller is computationally efficient enabling basecalling at speeds faster than current nanopore instrument measurement speeds on a single core. Further, basecalling can be paused and resumed without any change in the resulting predicted sequence, transforming the potential applications for dynamic read rejection capabilities. The basecRAWller algorithm provides an alternative approach to nanopore basecalling at comparable accuracy and provides the community with the capacity to train their own basecRAWller neural networks with minimal effort.}}, 
+pages = {133058}
+}
+
+@article{Boza2020, 
+year = {2020}, 
+keywords = {nanopore,basecalling}, 
+title = {{DeepNano-blitz: a fast base caller for MinION nanopore sequencers}}, 
+author = {Boža, Vladimír and Perešíni, Peter and Brejová, Broňa and Vinař, Tomáš}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btaa297}, 
+pmid = {32374816}, 
+abstract = {{Abstract Motivation Oxford Nanopore MinION is a portable DNA sequencer that is marketed as a device that can be deployed anywhere. Current base callers, however, require a powerful GPU to analyze data produced by MinION in real time, which hampers field applications. Results We have developed a fast base caller DeepNano-blitz that can analyze stream from up to two MinION runs in real time using a common laptop CPU (i7-7700HQ), with no GPU requirements. The base caller settings allow trading accuracy for speed and the results can be used for real time run monitoring (i.e. sample composition, barcode balance, species identification, etc.) or prefiltering of results for more detailed analysis (i.e. filtering out human DNA from human–pathogen runs). Availability and implementation DeepNano-blitz has been developed and tested on Linux and Intel processors and is available under MIT license at https://github.com/fmfi-compbio/deepnano-blitz. Contact vladimir.boza@fmph.uniba.sk Supplementary information Supplementary data are available at Bioinformatics online.}}, 
+pages = {4191--4192}, 
+number = {14}, 
+volume = {36}
+}
+
+@article{George2020, 
+year = {2020}, 
+keywords = {MTBC,direct-from-sputum,nanopore}, 
+title = {{DNA Thermo-Protection Facilitates Whole-Genome Sequencing of Mycobacteria Direct from Clinical Samples}}, 
+author = {George, Sophie and Xu, Yifei and Rodger, Gillian and Morgan, Marcus and Sanderson, Nicholas D and Hoosdally, Sarah J and Thulborn, Samantha and Robinson, Esther and Rathod, Priti and Walker, A Sarah and Peto, Timothy E A and Crook, Derrick W and Dingle, Kate E}, 
+journal = {Journal of Clinical Microbiology}, 
+issn = {0095-1137}, 
+doi = {10.1128/jcm.00670-20}, 
+pmid = {32719032}, 
+abstract = {{Mycobacterium tuberculosis is the leading cause of death from bacterial infection. Improved rapid diagnosis and antimicrobial resistance determination, such as by whole-genome sequencing, are required. Our aim was to develop a simple, low-cost method of preparing DNA for sequencing direct from M. tuberculosis -positive clinical samples (without culture). Simultaneous sputum liquefaction, bacteria heat inactivation (99°C/30 min), and enrichment for mycobacteria DNA were achieved using an equal volume of thermo-protection buffer (4 M KCl, 0.}}, 
+number = {10}, 
+volume = {58}
+}

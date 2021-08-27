@@ -10,11 +10,25 @@
 \section{Publication and collaboration acknowledgements}
 \label{sec:ch4-acknowledge}
 
+In addition to the acknowledgements in \autoref{sec:ch2-acknowledge} the work not completed by myself in this chapter was the sequencing of the BCG sample.
+
+The \ont{} sequencing of the BCG sample was performed by Sophie George at the Nuffield Department of Clinical Medicine, John Radcliffe Hospital, Oxford University.
+
+While I did all bioinformatic work in this chapter, I must acknowledge that much of it was motivated by the excellent \ont{} basecalling research performed by Ryan Wick \etal{} \cite{wick2019,wick2020} and some of the scripts from these studies were used in this chapter.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-The accuracy of \ont{} sequencing data has been steadily increasing in recent years. 
-Taxon-specific \ont{} basecalling models have been shown to provide increased read and consensus accuracy(CITE).
-It has previously been shown(CITE) that a taxon-specific basecalling model can improve both the read-level and consensus accuracy of \ont{} sequencing reads. While this was shown for *Klebsiella pneumoniae*, it remains to be seen if this approach generalises to other species.
+The accuracy of \ont{} sequencing data has been steadily increasing since its inception. From a read accuracy 65\% in June 2014 \cite{Loman2015}, to 89.17\% in December 2018 \cite{wick2019} - an extraordinary 24\% increase in the space of 4.5 years. Taxon-specific \ont{} basecalling models have been shown to provide even further increased accuracy \cite{wick2019}.
+
+While there have been many successful attempts by the research community to develop new methods for basecalling \ont{} data \cite{chiron2018,Stoiber2017,Boza2020}, most are not able to keep pace with the speed of new \ont{} developments. As such, \guppy{}, the basecalling software provided by Oxford Nanopore Technologies (ONT), is the most commonly used method.
+
+Previous work by Wick \etal{} trained a taxon-specific basecalling model for \textit{Klebsiella pneumoniae} \cite{wick2019}. Their custom model improves the accuracy of \ont{} for that species, and importantly, significantly reduced systematic errors around homopolymer deletions and methylation sites. However, it remains to be seen if this approach generalises to other species.
+
+In both \autoref{chap:clustering} and \autoref{chap:dst} of this thesis, we use \ont{} data from \mtb{}, and been somewhat hampered by systematic issues (see \autoref{sec:indel-dst-fw}). Therefore, in this chapter, we set out to train an \mtb{}-specific \ont{} basecalling model using the unique dataset we collected in \autoref{sec:ch2-dataset}. The eight samples with sequencing data from Illumina, PacBio, and \ont{} provide the perfect training input for such a model as they have high-quality assemblies (\autoref{app:asm}) free from \ont{} biases, but with available \ont{} reads.
+
+We show that our \mtb{} \ont{} model yields increased read- and consensus-level accuracy and reduced homopolymer deletions. Additionally, we demonstrate the generalisability of this model to another member of the \mtb{} complex (MTBC) - an \textit{M. bovis} BCG strain.
+
+By making this \mtb{}-specific model available to all, we hope the application of \ont{} sequencing to \mtb{} - a major theme of this thesis - will increasingly provide novel insights.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dataset}
@@ -26,15 +40,14 @@ For the training and validation of our \mtb{}-specific model, we use the eight s
 
 In addition to the eight training and validation samples, we evaluate on a \ont{} sequencing run of the \textit{Mycobacterium bovis} strain used in the Bacille Calmette-Guérin (BCG) vaccine. This strain (AF2122/97) is an attenuated \textit{M. bovis} bacillus \cite{luca2013} with a well-characterised reference genome (accession LT708304.1) \cite{Malone2017}. As the genome similarity between \textit{M. bovis} and \mtb{} is 99.95\% \cite{Kanipe2020}, this BCG strain acts as a great test for the model's ability to call both a sample not from the training set and not from the exact species, but a very closely related one.
 
-\todo[inline]{add BCG sequencing methods}
-%  I have emailed Sophie requesting these methods
-% https://doi.org/10.1128/JCM.00670-20
-% That's fine Michael. I can point you towards this paper we published with the sample preparation details: https://pubmed.ncbi.nlm.nih.gov/32719032/ (I haven't got access to my old MMM files atm). The BCG run data you used was direct from MGIT culture (not spiked into human sputum) and was run as a single sample on a flow cell. 
+The \ont{} sequencing of this BCG sample was performed by Sophie George at the Nuffield Department of Clinical Medicine, John Radcliffe Hospital, Oxford University. The sample preparation was performed according to \cite{George2020}, except, rather than being spiked in and sequenced direct from human sputum, this sample was direct from Mycobacteria Growth Indicator Tube (MGIT) culture on a single sample flow cell.
+% email from sophie
+% I can point you towards this paper we published with the sample preparation details: https://pubmed.ncbi.nlm.nih.gov/32719032/ (I haven't got access to my old MMM files atm). The BCG run data you used was direct from MGIT culture (not spiked into human sputum) and was run as a single sample on a flow cell. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Training an \mtb{}-specific \ont{} basecalling model}
 
-In order to be train a basecalling model for use with \guppy{}, there are a number of preparation steps required. For many of these preparation steps, we use the open-source software, Taiyaki, developed by Oxford Nanopore Technologies (ONT) to train their RNA and DNA model for \guppy{} (\url{https://github.com/nanoporetech/taiyaki}).
+In order to be train a basecalling model for use with \guppy{}, there are a number of preparation steps required. For many of these preparation steps, we use the open-source software, Taiyaki, developed by ONT to train their RNA and DNA model for \guppy{} (\url{https://github.com/nanoporetech/taiyaki}).
 
 We trained an \mtb{}-specific basecalling model - named \tubby{} - for use with three different versions of \guppy{}: 3.4.5, 3.6.0, and 4.4.0. The preparation, training, and evaluation steps are the same for each model, with the only difference being the version of \guppy{} used to basecall the initial data, and the pretrained models used to begin training from.
 
@@ -70,7 +83,7 @@ The final output from training the model is a checkpoint file, which we then con
 
 The model-training process produces a JSON file that can be used as a model configuration to basecall \ont{} reads using \guppy{}. The first step in evaluating whether our \mtb{}-specific model, \tubby{}, provides improved accuracy compared to \guppy{}'s default model is to basecall the validation reads that were set aside prior to training. These validation reads provide an unbiased dataset to evaluate on as they were not involved in the training process. 
 
-Although the validation data was not used for training, they are from from the same data source (sample). Therefore, we additionally assess both models on an independent BCG dataset (\autoref{sec:tubby-data}). This BCG sample was not sequenced in the same experiment as the training and validation samples. Additionally, it is a different species (\textit{M. bovis}), but still part of the same genus and the \mtb{} complex (MTBC). As such, it serves as a test of each model's generalisation capabilities. 
+Although the validation data was not used for training, they are from from the same data source (sample). Therefore, we additionally assess both models on an independent BCG dataset (\autoref{sec:tubby-data}). This BCG sample was not sequenced in the same experiment as the training and validation samples. Additionally, it is a different species (\textit{M. bovis}), but still part of the same genus and the MTBC. As such, it serves as a test of each model's generalisation capabilities. 
 
 We evaluate the read- and consensus-level accuracy of reads produced by \guppy{} and \tubby{} and assess the types of errors made by each. 
 
@@ -363,7 +376,7 @@ When assessing each version and model, we find that \tubby{} version 3.6.0 has t
 
 The accuracy of any sequencing data has flow-on effects in almost all meaningful bioinformatics applications. We have explored a number of these in \autoref{chap:denovo}, \autoref{chap:clustering} and \autoref{chap:dst} of this thesis, with most of the focus being on \ont{} data. In this chapter, we trained a \mtb{}-specific \ont{} basecalling model, \tubby{}, which improves the accuracy of ONT's basecalling software \guppy{} for both read- and consensus-level identity.
 
-Wick \etal{} were the first to show that training a \ont{} basecalling model for a specific taxon leads to increased accuracy \cite{wick2019}. Indeed, their work has stood as a valuable resource for the comparison of basecalling methods and the temporal improvement of \ont{} sequencing error rates. While their taxon of interest  was \textit{Klebsiella pneumoniae}, we also find the same accuracy improvements over the default methods as a result of training specifically for \mtb{}.
+Wick \etal{} were the first to show that training a \ont{} basecalling model for a specific taxon leads to increased accuracy \cite{wick2019}. Indeed, their work has stood as a valuable resource for the comparison of basecalling methods and the temporal improvement of \ont{} sequencing error rates. While their taxon of interest  was \textit{K. pneumoniae}, we also find the same accuracy improvements over the default methods as a result of training specifically for \mtb{}.
 
 The most striking difference between the results obtained by Wick \etal{} and those in this chapter are the advancement in basecalling accuracy in the space of two years. The latest \guppy{} version tested by Wick \etal{} was version 2.2.3 - released in January 2019 - which yielded a median read identity of 87.15\% for the default model and 90.87\% for their taxon-specific model. In contrast, for \guppy{} version 3.6.0 - released in April 2020 - we find read-level accuracy of 94.13\% for the default model and 95.54\% for our custom \tubby{} model on the validation data. On our test data, we see even higher median identities of 95.89\% and 96.64\% respectively.
 
