@@ -416,7 +416,31 @@ We trained and compared models for three \guppy{} versions. Surprisingly, the mo
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future work}
 \label{sec:tubby-fw}
-% de novo assembly assessment instead of reference-guided
-% DCm motifs could be replaced with Mtb specific ones https://elifesciences.org/articles/58542
+
+\subsection{\denovo{} assembly assessment}
+The methods we used for assessing the consensus-level accuracy of \tubby{} generated reference-guided assemblies using \vrb{rebaler}. While this helps keep the overall structure of the assemblies the same, and thus allow for focusing on the base-level accuracy, it fails to show what differences basecalling models cause on overall assembly structure.
+
+One solution would be to also assess the consensus accuracy of \denovo{} genome assemblies generated from the \ont{} reads basecalled with each model. Such an analysis is similar to Wick \etal{} (2020), and could also assess other metrics like contiguity of assemblies \cite{wick2020}.
+
+\subsection{\mtb{} methylation sites}
+The major cause of \guppy{} basecalling errors in Enterobacteriaceae are Dcm methylation motifs \cite{wick2019}. While \mtb{} does not show evidence for these sites (\cite{Danjuma2017} and \autoref{sec:tubby-error-types}), it would be enlightening to see what impact \mtb{}-specific methylation sites have on the error rate. As such, future versions of this model benchmark could include such \mtb{}-specific methylation motifs \cite{chiner2019,modlin2020}.
+
+\subsection{Impact on previous work}
+While we have shown in this chapter that an \mtb{}-specific basecalling model improves accuracy and reduces homopolymer deletions, it remains to be seen what impact such advances have on "real-world" applications. \autoref{chap:clustering} and \autoref{chap:dst} of this thesis use \ont{} data for \mtb{} transmission clustering and drug resistance prediction. One simple enough test of the utility of \tubby{} would be to rerun the analyses for those chapters with \ont{} data basecalled with \tubby{}. That way, any change in results can be directly attributed to the taxon-specific model.
+
+\subsection{Increased diversity of data}
+One of the main challenges with training a basecalling model is data. The data one trains, validates, and trains on must have a known, reliable truth genome and ideally would be free of laboratory biases too. While the number of reads we use for training and validation in this chapter were more than sufficient, they were all sequenced at a similar time by the same technician, in the same laboratory. It would be prudent to include some data in the training process that was sequenced at a separate time and ideally by different people in a different place. Additionally, including data from other species in the MTBC would likely prove beneficial as non-tuberculous mycobacteria (NTM) are becoming an ever increasing cause for concern globally \cite{Johansen2020}.
+
+\subsection{New Conditional random field models}
+As mentioned alreayd, \ont{} sequencing technology is evolving at a rapid pace. Whenever a study using \ont{} is published, it is undoubtedly out-of-date with the latest tools being used - due to no fault of the authors. At the time of writing, a new major version of \guppy{} (version 5) has been released which uses a new model format based on conditional random fields (CRFs), which use probabilistic model try segment and label data \cite{Lafferty2001} - a vital component of the basecalling process. These new models can be trained using a new (easier) process in the ONT software Bonito (\url{https://github.com/nanoporetech/bonito}).
+
+The new CRF-based models (dubbed "super-accurate" models by ONT) are reported to provide a modal read accuracy increase of 0.5\% over the \guppy{} versions used in this chapter (\url{https://community.nanoporetech.com/posts/guppy-v5-0-7-release-note}). Therefore, updating \tubby{}'s training process for these new CRF-based models may yield an even further improvement to the accuracy report in this chapter. (However, we note this section itself will likely be out-of-date by the time it is read). 
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Availability of data and materials}
+
+\todo[inline]{need to make tubby public prior to submission}
+
+\tubby{} is open-source and freely available under an MIT license at \url{https://github.com/mbhall88/tubby}. The models are available under Releases in compressed JSON format. The pipelines and scripts used in this chapter are available at the same location. All analyses were run using the workflow management program \vrb{snakemake} \cite{snakemake2021}. All figures were generated using the Python libraries \vrb{matplotlib} \cite{matplotlib} and \vrb{seaborn} \cite{seaborn}.
+
+\towrite[inline]{availability of the data if it has been deposited prior to submission}
