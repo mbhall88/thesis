@@ -81,9 +81,9 @@ The final output from training the model is a checkpoint file, which we then con
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Evaluating a custom \ont{} basecalling model}
 
-The model-training process produces a JSON file that can be used as a model configuration to basecall \ont{} reads using \guppy{}. The first step in evaluating whether our \mtb{}-specific model, \tubby{}, provides improved accuracy compared to \guppy{}'s default model is to basecall the validation reads that were set aside prior to training. These validation reads provide an unbiased dataset to evaluate on as they were not involved in the training process. 
+The model-training process generates a JSON file that can be used as a model configuration to basecall \ont{} reads using \guppy{}. Therefore, the first step in evaluating whether our \mtb{}-specific model, \tubby{}, provides improved accuracy compared to \guppy{}'s default model is to basecall the validation reads set aside before training. These validation reads provide an unbiased dataset to evaluate as they were not involved in the training process. 
 
-Although the validation data was not used for training, they are from from the same data source (sample). Therefore, we additionally assess both models on an independent BCG dataset (\autoref{sec:tubby-data}). This BCG sample was not sequenced in the same experiment as the training and validation samples. Additionally, it is a different species (\textit{M. bovis}), but still part of the same genus and the MTBC. As such, it serves as a test of each model's generalisation capabilities. 
+Although the validation data was absent from training, they are from the same source (sample). Therefore, we additionally assess both models on an independent BCG dataset (\autoref{sec:tubby-data}). This BCG sample was not sequenced in the same experiment as the training and validation samples. Additionally, it is a different species (\textit{M. bovis}) but still part of the MTBC. As such, it serves as a test of each model's generalisation capabilities. 
 
 We evaluate the read- and consensus-level accuracy of reads produced by \guppy{} and \tubby{} and assess the types of errors made by each. 
 
@@ -91,15 +91,13 @@ We evaluate the read- and consensus-level accuracy of reads produced by \guppy{}
 \subsection{Read-level performance}
 \label{sec:tubby-read}
 
-The first evaluation metric, read BLAST identity, determines the read-level accuracy produced by the basecalling model. We align the basecalled reads to their respective truth assembly with \vrb{minimap2}, discarding secondary alignments (but keeping unmapped reads). From the resulting pairwise alignment (PAF) file we calculate the BLAST identity as, for each mapping, the number of matching bases divided by the length of the alignment. 
-
-In addition to read BLAST identity, we also assess the relative read lengths produced by each basecalling model. We define relative read length as the length of the aligned part of the read, divided by the total length of the read. The purpose of this metric is to see whether there is a bias towards insertions (greater than 1.0) or deletions (less than 1.0). 
+The first evaluation metric, read BLAST identity, determines the read-level accuracy produced by the basecalling model. First, we align the basecalled reads to their respective truth assembly with \vrb{minimap2}, discarding secondary alignments (but keeping unmapped reads). Then, from the resulting pairwise alignment (PAF) file, we calculate the BLAST identity as, for each mapping, the number of matching bases divided by the length of the alignment. 
 
 \subsubsection{Validation data}
 
-\autoref{fig:eval-read-blast} shows the distribution of read BLAST identity values for each \guppy{} version and associated \tubby{} model. For all versions, \tubby{} has the highest read BLAST identity values - i.e., distribution of values is tighter, and the mode is further to the right. Interestingly, the best performing version for both models was 3.6.0, with a median BLAST identity of 95.54\% and 94.13\% for \tubby{} and \guppy{} respectively. \autoref{tab:read-blast} describes the summary statistics of the read BLAST identity distributions.
+\autoref{fig:eval-read-blast} shows the distribution of read BLAST identity values for each \guppy{} version and associated \tubby{} model. For all versions, \tubby{} has the highest average read BLAST identity values. Interestingly, the best performing version for both models was 3.6.0, with a median BLAST identity of 95.54\% and 94.13\% for \tubby{} and \guppy{} respectively. \autoref{tab:read-blast} describes the summary statistics of the read identity distributions.
 
-While version 3.6.0 has the highest median values for both models, it is important not to rely on this alone. For instance, version 4.4.0 has the highest minimum value for both models, and the highest mode (\tubby{} version 3.6.0 and 4.4.0 have the same mode). However, the percentiles are highest for version 3.6.0.
+While version 3.6.0 has the highest median values for both models, version 4.4.0 has the highest minimum value for both models and the equal highest mode (with \tubby{} version 3.6.0). We note this result as some people in the \ont{} community prefer modal accuracy to median accuracy.
 
 \begin{figure}
      \centering
@@ -116,7 +114,7 @@ While version 3.6.0 has the highest median values for both models, it is importa
          \caption{Test data}
          \label{fig:test-read-blast}
      \end{subfigure}
-    \caption{Read BLAST identity (x-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue). The subtitle of each plot indicates the data being assessed. Version (y-axis) indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a read alignment) divided by the length of the alignment. The median value for each violin is annotated on the middle dashed line.}
+    \caption{Read BLAST identity (x-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue). The subtitle of each plot indicates the data being assessed. Version (y-axis) indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases in a read alignment divided by the length of the alignment. The median value for each violin is annotated on the middle dashed line.}
         \label{fig:read-blast}
 \end{figure}
 
@@ -134,52 +132,13 @@ Version                & Model & Count   & Mean   & std    & Min    & 25\%   & 5
                        & \tubby{} & 1143410 & 0.9381 & 0.0435 & 0.4723 & 0.9220 & 0.9520 & 0.9678 & 1.0000 & \textbf{0.9688} \\ \cmidrule(l){2-11} 
 \end{tabular}%
 }
-\caption{Read BLAST identity summary statistics for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the validation data. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a read alignment) divided by the length of the alignment. Count refers to the number of reads evaluated. std=standard deviation.}
+\caption{Read BLAST identity summary statistics for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the validation data. Version indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases in a read alignment divided by the length of the alignment. Count refers to the number of reads evaluated. std=standard deviation.}
 \label{tab:read-blast}
-\end{table}
-
-\autoref{fig:eval-read-rel-len} shows that \tubby{} has a slight tendency towards deletions (shorter reads) compared to \guppy{}. However, this result is a little more complex than just looking at median values. The distribution of lengths for \guppy{} extends much further past 1.0 compared with \tubby{}, indicating an increase in insertions. We will return to this result when we look at the error types (\autoref{sec:tubby-error-types}). Summary statistics for the relative read lengths are shown in \autoref{tab:read-rel-len}.
-
-\begin{figure}
-     \centering
-     \begin{subfigure}[b]{0.9\textwidth}
-        \includegraphics[width=1\linewidth]{Chapter4/Figs/read_rel_len.png}
-        \centering
-        \caption{Validation data}
-        \label{fig:eval-read-rel-len}
-     \end{subfigure}
-     \hfill
-     \begin{subfigure}[b]{0.9\textwidth}
-         \centering
-        \includegraphics[width=1\linewidth]{Chapter4/Figs/test_read_rel_len.png}
-         \caption{Test data}
-         \label{fig:test-read-rel-len}
-     \end{subfigure}
-        \caption{Relative read length (y-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue). The subtitle of each plot indicates the data being assessed. Relative read length is the length of the aligned part of the read, divided by the total length of the read. Version indicates the \guppy{} version used for the basecalling prior to, and after, training.}
-        \label{fig:read-rel-len}
-\end{figure}
-
-\begin{table}
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}llrrrrrrrr@{}}
-\toprule
-Version                & Model & Count   & Mean   & std    & Min    & 25\%   & 50\%   & 75\%   & Max    \\ \midrule
-\multirow{2}{*}{3.4.5} & \guppy{} & 1047829 & 0.9919 & 0.0240 & 0.4558 & 0.9842 & 0.9932 & 1.0014 & 1.9881 \\
-                       & \tubby{} & 1047508 & 0.9764 & 0.0239 & 0.4936 & 0.9698 & 0.9822 & 0.9892 & 1.8949 \\
-\multirow{2}{*}{3.6.0} & \guppy{} & 1110664 & 0.9873 & 0.0233 & 0.4495 & 0.9819 & 0.9914 & 0.9974 & 2.0322 \\
-                       & \tubby{} & 1110098 & 0.9817 & 0.0241 & 0.4531 & 0.9761 & 0.9882 & 0.9943 & 1.9031 \\
-\multirow{2}{*}{4.4.0} & \guppy{} & 1144426 & 0.9862 & 0.0241 & 0.5085 & 0.9806 & 0.9907 & 0.9969 & 1.9146 \\
-                       & \tubby{} & 1143410 & 0.9814 & 0.0246 & 0.4963 & 0.9758 & 0.9879 & 0.9941 & 1.8851 \\ \cmidrule(l){2-10} 
-\end{tabular}%
-}
-\caption{Relative read length for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the validation data. Relative read length is the length of the aligned part of the read, divided by the total length of the read. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. Count refers to the number of reads evaluated. std=standard deviation.}
-\label{tab:read-rel-len}
 \end{table}
 
 \subsubsection{Test data}
 
-\autoref{fig:test-read-blast} shows the read BLAST identities for the test BCG sample. As with the validation data, version 3.6.0 \tubby{} has the highest median read identity of 96.64\% - 1.10\% greater than the validation data. From \autoref{tab:test-read-blast}, we see that \tubby{} version 3.6.0 has the highest percentiles, mode (97.67\%), and mean (95.87\%) of all the models and versions.
+\autoref{fig:test-read-blast} shows the read BLAST identities for the test BCG sample. As with the validation data, \tubby{} version 3.6.0 has the highest median read identity of 96.64\% - 1.10\% greater than the validation data. From \autoref{tab:test-read-blast}, we see that \tubby{} version 3.6.0 has the highest percentiles, mode (97.67\%), and mean (95.87\%) of all the models and versions.
 
 Again, for each version, \tubby{} outperforms \guppy{} on all summary statistics (except the mode for version 4.4.0, which is the same).
 
@@ -197,45 +156,25 @@ Version                & Model & Count   & Mean   & std    & Min    & 25\%   & 5
                        & \tubby{} & 791217 & 0.9566 & \textbf{0.0305} & 0.3915 & 0.9479 & 0.9642 & 0.9742 & 1.0000 & 0.9688 \\ \cmidrule(l){2-11} 
 \end{tabular}%
 }
-\caption{Read BLAST identity summary statistics for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the test data. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a read alignment) divided by the length of the alignment. Count refers to the number of reads evaluated. std=standard deviation.}
+\caption{Read BLAST identity summary statistics for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the test data. Version indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases in a read alignment divided by the length of the alignment. Count refers to the number of reads evaluated. std=standard deviation.}
 \label{tab:test-read-blast}
-\end{table}
-
-The relative read length distributions show in \autoref{fig:test-read-rel-len} indicate that on the test data, \tubby{} and \guppy{} have the same slight tendency towards deletions (shorter reads). However, both models have much similar relative read lengths to each other when compared to the validation data - except version 3.4.5. Summary statistics for the relative read lengths are shown in \autoref{tab:test-read-rel-len}.
-
-\begin{table}
-\centering
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{@{}llllllllll@{}}
-\toprule
-Version                & Model & Count   & Mean   & std    & Min    & 25\%   & 50\%   & 75\%   & Max    \\ \midrule
-\multirow{2}{*}{3.4.5} & \guppy{} & 787170 & 0.990146 & 0.020453 & 0.507716 & 0.983563 & 0.991832 & 0.998854 & 1.885660 \\
-                       & \tubby{} & 790230 & 0.982657 & 0.020303 & 0.512180 & 0.976847 & 0.985492 & 0.991870 & 2.011945 \\
-\multirow{2}{*}{3.6.0} & \guppy{} & 791527 & 0.990858 & 0.019202 & 0.516049 & 0.986090 & 0.993108 & 0.998485 & 2.519333 \\
-                       & \tubby{} & 791356 & 0.989297 & 0.019148 & 0.519136 & 0.984899 & 0.992054 & 0.997132 & 2.017065 \\
-\multirow{2}{*}{4.4.0} & \guppy{} & 790291 & 0.990601 & 0.019214 & 0.515123 & 0.985816 & 0.992832 & 0.998220 & 2.137884 \\
-                       & \tubby{} & 791217 & 0.989091 & 0.019307 & 0.514339 & 0.984615 & 0.991718 & 0.996894 & 2.525117 \\ \cmidrule(l){2-10} 
-\end{tabular}%
-}
-\caption{Relative read length for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the test data. Relative read length is the length of the aligned part of the read, divided by the total length of the read. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. Count refers to the number of reads evaluated. std=standard deviation.}
-\label{tab:test-read-rel-len}
 \end{table}
 
 % =====
 \subsection{Consensus-level performance}
 
-To assess consensus-level accuracy of each model, we require assemblies from the basecalled reads. However, to allow for comparison of these model-specific consensus sequences (assemblies) to the truth assembly, a reference-guided method is needed to ensure overall structure of the truth and consensus sequences is the same. We use Rebaler (version 0.2.0; \url{https://github.com/rrwick/Rebaler}), a tool developed for exactly this use-case \cite{wick2019}. Briefly, \vrb{rebaler} aligns the reads to a reference sequence and replaces that sequence with the sequence from the best alignments, producing an unpolished assembly. After this, it polishes the assembly with \vrb{racon} to produce a consensus sequence. 
+To assess the consensus-level accuracy of each model, we require assemblies from the basecalled reads. However, to compare these model-specific consensus sequences (assemblies) to the truth assembly, a reference-guided method is needed to ensure the overall structure of the truth and consensus sequences is the same. We use Rebaler (version 0.2.0; \url{https://github.com/rrwick/Rebaler}), a tool developed for exactly this use-case \cite{wick2019}. Briefly, \vrb{rebaler} aligns the reads to a reference and replaces the reference sequence with the sequence from the best alignments, producing an unpolished assembly. After this, it polishes the assembly with multiple rounds of \vrb{racon} to produce a consensus sequence. 
 
-We evaluate consensus accuracy in two ways. In the first, we use the same approach as in \cite{wick2020} to quantify the similarity of the consensus and truth assemblies for each sample. Each contig (chromosome) in the consensus assembly in aligned to the truth assembly with \vrb{minimap2}. We calculate the chromosome identity for each contig's longest alignment in the same fashion as BLAST identity (\autoref{sec:tubby-read}). Second, in the same manner as \cite{wick2019}, we cut the consensus assembly into 10kbp chunks - simulating consensus "reads" - and align these to the truth assembly to calculate the BLAST identity. 
+We evaluate consensus accuracy in two ways. In the first, we use the same approach as in \cite{wick2020} to quantify the similarity of the consensus and truth assemblies for each sample. For that approach, each contig (chromosome) in the consensus assembly is aligned to the truth assembly with \vrb{minimap2}. Then, we calculate the chromosome identity for each contig's longest alignment in the same manner as the read BLAST identity (\autoref{sec:tubby-read}). In the second, matching \cite{wick2019}, we cut the consensus assembly into 10kbp chunks - imitating consensus "reads" - and align these to the truth assembly to calculate the BLAST identity. 
 
 \subsubsection{Validation data}
 
-\autoref{fig:eval-chrom-identity} shows the chromosome identity for each version and model. We again see that \tubby{} version 3.6.0 leads to the highest identity values, with a median chromosome identity value of 99.96\%. Compared to the best median \guppy{} identity of 99.94\% (version 3.6.0), \tubby{} provides an improvement of 0.02\%, which equates to approximately 880 less erroneous positions in the \mtb{} assembly.
+\autoref{fig:eval-chrom-identity} shows the chromosome identity for each version and model. We again see that \tubby{} version 3.6.0 leads to the highest identity values, with a median chromosome identity value of 99.96\%. Compared to the best median \guppy{} identity of 99.94\% (version 3.6.0), \tubby{} provides an improvement of 0.02\%, which equates to approximately 880 less erroneous positions in the \mtb{} assembly. Full summary statistics are also given in \autoref{tab:eval-chrom-identity}.
 
 \begin{figure}
 \includegraphics[width=0.9\textwidth]{Chapter4/Figs/eval_chromosome_identity.png}
 \centering
-\caption{Chromosome identity (x-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue) on the validation data. Version (y-axis) indicates the \guppy{} version used for the basecalling prior to, and after, training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the length of the alignment. The coloured points indicate the individual chromosome identity for each contig in each sample.}
+\caption{Chromosome identity (x-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue) on the validation data. Version (y-axis) indicates the \guppy{} version used for the basecalling before and after training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the alignment length. The coloured points indicate the individual chromosome identity for each contig in each sample.}
 \label{fig:eval-chrom-identity}
 \end{figure}
 
@@ -253,11 +192,11 @@ Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 5
                        & \tubby{} & 12      & 0.9993 & 0.0009 & 0.9965 & 0.9994 & 0.9995 & 0.9997 & 0.9998 \\ \cmidrule(l){2-10} 
 \end{tabular}%
 }
-\caption{Chromosome identity summary statistics for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the validation data. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the length of the alignment. std=standard deviation.}
+\caption{Chromosome identity summary statistics for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the validation data. Version indicates the \guppy{} version used for the basecalling before and after training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the alignment length. std=standard deviation.}
 \label{tab:eval-chrom-identity}
 \end{table}
 
-\autoref{fig:eval-consensus-blast} shows \tubby{} version 3.6.0 has a higher median consensus BLAST identity (99.98\%) compared with the best \guppy{} version (0.9997; v4.4.0). The consensus accuracy improvement of 0.0001 equates to approximately 440 less erroneous positions in the \mtb{} assembly. Summary statistics are shown in \autoref{tab:eval-consensus-blast}.
+Next, for consensus BLAST identity, \autoref{fig:eval-consensus-blast} shows \tubby{} version 3.6.0 also has the highest median value (99.98\%) compared with the best \guppy{} version (99.97\%; v4.4.0). The consensus accuracy improvement of 0.01\% equates to approximately 440 less erroneous positions in the \mtb{} assembly. Summary statistics are shown in \autoref{tab:eval-consensus-blast}.
 
 \begin{figure}
      \centering
@@ -274,7 +213,7 @@ Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 5
          \caption{Test data}
          \label{fig:test-consensus-blast}
      \end{subfigure}
-        \caption{Consensus BLAST identity (Y-axis), where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model (colours), mapped to the truth genome. The subtitle of each plot indicates the data being assessed. Version (y-axis) indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. The median value for each boxplot is annotated on the middle line.}
+        \caption{Consensus BLAST identity (Y-axis), where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads for each model (colours), mapped to the truth genome. The subtitle of each plot indicates the data being assessed. Version (y-axis) indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the alignment length. The median value for each boxplot is annotated on the middle line.}
         \label{fig:consensus-blast}
 \end{figure}
 
@@ -292,13 +231,13 @@ Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 5
                        & \tubby{} & 3533  & 0.9993          & 0.0049          & 0.8633          & 0.9995          & 0.9997          & 0.9998          & 1.0000 \\ \cmidrule(l){2-10} 
 \end{tabular}%
 }
-\caption{Consensus BLAST identity summary statistics for the validation data. Where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model, mapped to the truth genome. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. Count refers to the number of consensus chunks assessed. std=standard deviation.}
+\caption{Consensus BLAST identity summary statistics for the validation data. Where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model, mapped to the truth genome. Version indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. Count refers to the number of consensus chunks assessed. std=standard deviation.}
 \label{tab:eval-consensus-blast}
 \end{table}
 
 \subsubsection{Test data}
 
-Each basecalling model and version produced a single contig for the BCG test sample. These values are listed in \autoref{tab:test-chrom-identity}, where we see \tubby{} version 3.6.0 produces the highest chromosome identity of 99.11\%. This is a lot lower than the median value of 99.96\% obtained on the validation data; it is even less than the minimum chromosome identity for any validation data consensus assembly (99.63\%; \autoref{tab:eval-chrom-identity}). However, it is significantly higher than the best \guppy{} value of 98.86\%, with the difference (0.25\%) equating to approximately 11,000 less erroneous positions in the \tubby{} assembly. 
+For the BCG test sample, the \vrb{rebaler} assembly for each basecalling model and version has a single contig. The chromosome identity values are listed in \autoref{tab:test-chrom-identity}, where we see \tubby{} version 3.6.0 produces the highest identity of 99.11\%. This is a lot lower than the median value of 99.96\% obtained on the validation data; it is even less than the minimum chromosome identity for any validation data consensus assembly (99.63\%; \autoref{tab:eval-chrom-identity}). Although, it is significantly higher than the best \guppy{} value of 98.86\%, with the difference (0.25\%) equating to approximately 11,000 less erroneous positions in the \tubby{} assembly. 
 
 \begin{table}
 \centering
@@ -308,11 +247,11 @@ Version  & \multicolumn{2}{l}{3.4.5} & \multicolumn{2}{l}{3.6.0} & \multicolumn{
 Model    & \guppy{}       & \tubby{}       & \guppy{}        & \tubby{}       & \guppy{}        & \tubby{}       \\
 Identity & 0.9886      & 0.9878      & 0.9881      & \textbf{0.9911}      & 0.9883      & 0.9884      \\ \bottomrule
 \end{tabular}
-\caption{Chromosome identity for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the BCG test sample. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the length of the alignment.}
+\caption{Chromosome identity for the \mtb{}-specific basecalling model \tubby{} compared with the default \guppy{} model on the BCG test sample. Version indicates the \guppy{} version used for the basecalling before and after training. For each chromosome's longest alignment to its truth assembly, chromosome identity is the number of matching bases divided by the alignment length.}
 \label{tab:test-chrom-identity}
 \end{table}
 
-\autoref{fig:test-consensus-blast} shows \tubby{} version 3.6.0 has a higher median consensus BLAST identity (99.97\%) compared with the best \guppy{} version (0.9996; v3.6.0 and v4.4.0). The consensus accuracy improvement of 0.0001 equates to approximately 440 less erroneous positions in the \mtb{} assembly. However, as shown in \autoref{tab:test-consensus-blast}, while \tubby{} version 3.6.0 had the highest percentile values, \guppy{} v3.6.0 had the highest mean (99.75\%).
+\autoref{fig:test-consensus-blast} shows \tubby{} version 3.6.0 has a higher median consensus BLAST identity (99.97\%) compared with the best \guppy{} version (99.96\%; v3.6.0 and v4.4.0). The consensus accuracy improvement of 0.01\% equates to approximately 440 less erroneous positions in the \mtb{} assembly. However, as shown in \autoref{tab:test-consensus-blast}, while \tubby{} version 3.6.0 had the highest percentile values, \guppy{} v3.6.0 had the highest mean (99.75\%).
 
 \begin{table}
 \centering
@@ -328,7 +267,7 @@ Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 5
                        & \tubby{} & 432   & 0.9966 & 0.0183          & 0.7393          & 0.9993 & 0.9996 & \textbf{0.9998} & 1.0000 \\ \cmidrule(l){2-10} 
 \end{tabular}%
 }
-\caption{Consensus BLAST identity summary statistics for the test data. Where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model, mapped to the truth genome. Version indicates the \guppy{} version used for the basecalling prior to, and after, training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. Count refers to the number of consensus chunks assessed. std=standard deviation.}
+\caption{Consensus BLAST identity summary statistics for the BCG test sample. Where consensus refers to 10kbp "chunks" of the genome assembly produced by the basecalled reads, for each model, mapped to the truth genome. Version indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases (in a chunk alignment) divided by the length of the alignment. Count refers to the number of consensus chunks assessed. std=standard deviation.}
 \label{tab:test-consensus-blast}
 \end{table}
 
@@ -336,13 +275,13 @@ Version                & Model & Contigs & Mean   & std    & Min    & 25\%   & 5
 \subsection{Error types}
 \label{sec:tubby-error-types}
 
-Lastly, we classify the the types of errors that occur in the consensus assemblies produced from each model's output. Each \vrb{rebaler} assembly was aligned to the truth assembly using \vrb{nucmer} (from the MUMmer4 software suite \cite{mummer2018}). \vrb{nucmer} produces all positions of difference - errors in this case - between the two sequences. We classify errors as Dcm if the reported difference occurs in a known 5-methylcystosine methyltransferases motif, homopolymer insertion or deletion if the difference involves as base being added/removed from a region containing 3 or more of that same base. All deletions, insertions, and substitutions that do not fit into one of these categories after reported in their own group.
+Lastly, we classify the types of errors that occur in the consensus assemblies. Each \vrb{rebaler} assembly was aligned to the truth assembly using \vrb{nucmer} (from the MUMmer4 software suite \cite{mummer2018}). \vrb{nucmer} identifies all positions of difference - errors in this case - between the two sequences. We classify errors as \emph{Dcm} if the reported difference occurs in a known 5-methylcytosine methyltransferases motif. We label an error as \emph{homo\_del} or \emph{homo\_ins} if there are three or more consecutive deletions or insertions of the same nucleotide, respectively. Finally, any deletions, insertions, or substitutions that do not fit into one of the categories as mentioned above are classified as \emph{other\_del}, \emph{other\_ins}, or \emph{sub}, respectively.
 
 We report the error rate for each error type as the number of errors attributable to that error type divided by the length of the truth assembly.
 
 \subsubsection{Validation data}
 
-\autoref{fig:eval-error_types} shows that the bulk of the error types (for both models and all versions) are attributable to deletions, with most being homopolymer deletions. We do however see that, except for non-homopolymer (other) deletions, \tubby{}'s errors are lower than \guppy{}'s. Of particular note is homopolymer deletions in version 3.6.0, where \tubby{} (0.0120\%) has nearly half the number of errors as \guppy{} (0.021\%). Both models have a very low, or non-existent, level of Dcm-methylation errors, which is a nice control of sorts as \mtb{} does not have any known 5-methylcystosine methyltransferases - although we do note this is still an active debate \cite{Danjuma2017}.
+\autoref{fig:eval-error_types} shows that the bulk of the errors for both models are deletions, with the predominant form being homopolymers. However, we do see that, except for non-homopolymer (other) deletions, \tubby{}'s errors are lower than \guppy{}'s. Of particular note is homopolymer deletions in version 3.6.0, where \tubby{} (0.012\%) has nearly half the number of errors as \guppy{} (0.021\%). Both models have a very low level of Dcm-methylation errors, which is a good control as \mtb{} does not have any known 5-methylcytosine methyltransferases - although we do note this is still an active debate \cite{Danjuma2017}.
 
 When assessing each version and model, we find that \tubby{} version 3.6.0 has the overall lowest error rates.
 
@@ -361,15 +300,15 @@ When assessing each version and model, we find that \tubby{} version 3.6.0 has t
          \caption{Test data}
          \label{fig:test-error_types}
      \end{subfigure}
-        \caption{Error types in the \vrb{rebaler} assemblies produced from reads basecalled with \tubby{} and default \guppy{} basecalling models. The consensus error rate is the number of errors attributable to that error type divided by the length of the truth assembly. The errors are per-assembly, so the confidence intervals represent variation in error types between samples/assemblies, with the points showing each assembly's value. dcm (red) refers to Dcm-methylation motifs. homo refers to homopolymer insertions (purple) or deletions (blue). other refers to non-homopolymer insertions (yellow) or deletions (grey). sub (green) is substitutions (single- or multi-base).}
+        \caption{Error types in the \vrb{rebaler} assemblies produced from \tubby{} and default \guppy{} basecalling models. The consensus error rate is the number of errors attributable to a given type, divided by the length of the truth assembly. The errors are per assembly, so the confidence intervals represent variation in error types between samples/assemblies, with the points showing each assembly's value. \vrb{dcm} (red) refers to errors in Dcm-methylation motifs. \vrb{homo} refers to homopolymer insertions (purple) or deletions (blue). \vrb{other} refers to non-homopolymer insertions (yellow) or deletions (grey). \vrb{sub} (green) is substitutions (single- or multi-base).}
         \label{fig:error_types}
 \end{figure}
 
 \subsubsection{Test data}
 
-\autoref{fig:test-error_types} shows the error types for the BCG test sample. Interestingly, for versions 3.6.0 and 4.4.0, we find substitutions are the most common form of error; in contrast to homopolymer deletions being the overwhelming most common in the validation data. However, we do note that the test sample is a single sample, whereas the evaluation data is from eight samples.
+\autoref{fig:test-error_types} shows the error types for the BCG test sample. Interestingly, for versions 3.6.0 and 4.4.0, substitutions are the most common form of error in the test data, in contrast to the validation data, where homopolymer deletions are the dominant form. The homopolymer deletion rate for the test data is the same as the validation, but the substitution rate is much higher. However, we note that the test sample is a single sample, whereas the evaluation data is from eight samples.
 
-\tubby{} version 3.6.0 has the lowest homopolymer deletions error rates, and the lowest overall error rate (0.0656\%) compared to \guppy{} (0.0755\%).
+\tubby{} version 3.6.0 has the lowest homopolymer deletion error rates, and the lowest overall error rate (0.0656\%) compared to \guppy{} (0.0755\%). We could not discover an explanation for the higher substitution rate in the test data.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
