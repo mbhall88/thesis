@@ -18,7 +18,7 @@ While I did all bioinformatic work in this chapter, I must acknowledge that much
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
-The accuracy of \ont{} sequencing data has been steadily increasing since its inception. For example, read accuracy has progressed from 65\% in June 2014 \cite{Loman2015} to 89.17\% in December 2018 \cite{wick2019} - an extraordinary 24\% increase in the space of 4.5 years. 
+The accuracy of \ont{} sequencing data has been steadily increasing since its inception. For example, read accuracy has progressed from 65\% in June 2014 \cite{Loman2015} to 89.17\% in December 2018 \cite{wick2019} - an extraordinary 37\% increase in the space of 4.5 years. 
 
 While there have been many successful attempts by the research community to develop new methods for basecalling \ont{} data \cite{chiron2018,Stoiber2017,Boza2020}, most cannot keep pace with the speed of new Nanopore developments. As such, \guppy{}, the basecalling software provided by Oxford Nanopore Technologies (ONT), is the most commonly used method.
 
@@ -34,7 +34,7 @@ By making this \mtb{}-specific model available to all, we hope the application o
 \section{Dataset}
 \label{sec:tubby-data}
 
-Perhaps the most critical aspect of training a basecalling model is providing a "truth" for the data. In this context, truth data refers to high-quality genome assemblies for the training samples. The ONT-maintained basecaller, \guppy{}, uses neural networks to convert the raw electrical signal into a DNA sequence. In order to train the network to make this inference, it is necessary to label the raw signal with its corresponding "truth" sequence. Unfortunately, such datasets are difficult to find for certain species. However, the dataset we have collected for the work in \autoref{chap:clustering} and \autoref{chap:dst} is ideally suited. It contains samples with Illumina, PacBio, and \ont{} sequencing data from the same DNA extraction, ensuring any discrepancies between the \ont{} data and the truth are technology differences, and not \textit{in vitro} evolution. 
+Perhaps the most critical aspect of training a basecalling model is providing a "truth" for the data. In this context, truth data refers to high-quality genome assemblies for the training samples. The ONT-maintained basecaller, \guppy{}, uses neural networks to convert the raw electrical signal into a DNA sequence. In order to train the network to make this inference, it is necessary to label the raw signal with its corresponding truth sequence. Unfortunately, such datasets are difficult to find for certain species. However, the dataset we have collected for the work in \autoref{chap:clustering} and \autoref{chap:dst} is ideally suited. It contains samples with Illumina, PacBio, and \ont{} sequencing data from the same DNA extraction, ensuring any discrepancies between the \ont{} data and the truth are technology differences, and not \textit{in vitro} evolution. 
 
 Hence, for the training and validation of our \mtb{}-specific model, we use the eight samples we generated high-quality PacBio assemblies for in \autoref{sec:asm_results} (see \autoref{app:asm} for full methods). We use the PacBio assemblies produced by \flye{} and polished with Illumina by Pilon - not correcting for SNPs. By using the Illumina-polished PacBio assemblies for each sample, we ensure no \ont{} biases are present in the truth genomes from which the custom model is trained.
 
@@ -47,7 +47,7 @@ The \ont{} sequencing of this BCG sample was performed by Sophie George at the N
 
 In order to train a basecalling model for use with \guppy{}, there are numerous preparation steps required. For many of these, we use the open-source software, Taiyaki, developed by ONT to train their RNA and DNA models for \guppy{} (\url{https://github.com/nanoporetech/taiyaki}).
 
-We trained an \mtb{}-specific basecalling model - named \tubby{} - for use with three different versions of \guppy{}: 3.4.5, 3.6.0, and 4.4.0. The preparation, training, and evaluation steps are the same for each model, with the only difference being the version of \guppy{} used to basecall the initial data and the pre-trained models from which to begin training.
+We trained an \mtb{}-specific basecalling model - named \tubby{} - for use with three different versions of \guppy{}: 3.4.5, 3.6.0, and 4.4.0. The preparation, training, and evaluation steps are the same for each version, with the only difference being the version of \guppy{} used to basecall the initial data and the pre-trained models from which to begin training.
 
 \subsubsection{Preparation}
 
@@ -97,7 +97,7 @@ The first evaluation metric, read BLAST identity, determines the read-level accu
 
 \autoref{fig:eval-read-blast} shows the distribution of read BLAST identity values for each \guppy{} version and associated \tubby{} model. For all versions, \tubby{} has the highest average read BLAST identity values. Interestingly, the best performing version for both models was 3.6.0, with a median BLAST identity of 95.54\% and 94.13\% for \tubby{} and \guppy{} respectively. \autoref{tab:read-blast} describes the summary statistics of the read identity distributions.
 
-While version 3.6.0 has the highest median values for both models, version 4.4.0 has the highest minimum value for both models and the equal highest mode (with \tubby{} version 3.6.0). We note this result as some people in the \ont{} community prefer modal accuracy to median accuracy.
+While version 3.6.0 has the highest median values for both models, version 4.4.0 has the highest minimum value for both models and the equal highest mode (with \tubby{} version 3.6.0). We note this result as others in the \ont{} community prefer modal accuracy to median accuracy.
 
 \begin{figure}
      \centering
@@ -114,7 +114,7 @@ While version 3.6.0 has the highest median values for both models, version 4.4.0
          \caption{Test data}
          \label{fig:test-read-blast}
      \end{subfigure}
-    \caption{Read BLAST identity (x-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue). The subtitle of each plot indicates the data being assessed. Version (y-axis) indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases in a read alignment divided by the length of the alignment. The median value for each violin is annotated on the middle dashed line.}
+    \caption{Read BLAST identity (x-axis) for the \mtb{}-specific basecalling model \tubby{} (red) compared with the default \guppy{} model (blue). The subtitle of each plot indicates the data being assessed. Version (y-axis) indicates the \guppy{} version used for the basecalling before and after training. BLAST identity is the number of matching bases in a read alignment divided by the length of the alignment. The dashed lines represent the 25, 50, and $75^{th}$ percentiles.}
         \label{fig:read-blast}
 \end{figure}
 
@@ -313,7 +313,7 @@ When assessing each version and model, we find that \tubby{} version 3.6.0 has t
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
 
-The accuracy of any sequencing data influences almost all meaningful bioinformatics applications. We have explored a number of these in \autoref{chap:denovo}, \autoref{chap:clustering} and \autoref{chap:dst}, with most of the focus being on \ont{} data. In this chapter, we trained a \mtb{}-specific \ont{} basecalling model, \tubby{}, which improves the accuracy of ONT's basecalling software \guppy{} at both the read and consensus level.
+The accuracy of any sequencing data influences almost all meaningful bioinformatics applications. We have explored a number of these in \autoref{chap:denovo}, \autoref{chap:clustering} and \autoref{chap:dst}, with most of the focus being on \ont{} data. In this chapter, we trained an \mtb{}-specific \ont{} basecalling model, \tubby{}, which improves the accuracy of ONT's basecalling software \guppy{} at both the read and consensus level.
 
 Wick \etal{} were the first to show that training a \ont{} basecalling model for a specific taxon leads to increased accuracy \cite{wick2019}. Indeed, their work has stood as a valuable resource for the comparison of basecalling methods and the temporal improvement of \ont{} sequencing error rates. Although their taxon of interest was \textit{K. pneumoniae}, we find the same accuracy improvements over the default methods as a result of training specifically for \mtb{}.
 
@@ -363,7 +363,7 @@ The two main limitations for the work in this chapter were that we only have one
 \section{Conclusion}
 In conclusion, the work in this chapter shows that an \mtb{}-specific \ont{} basecalling model yields higher read- and consensus-level accuracy than default models. Additionally, the \mtb{} model reduces the main source of \ont{} errors - homopolymer deletions.
 
-We trained and compared models for three \guppy{} versions. Surprisingly, the most recent version did not yield the best results for \mtb{} and highlighted the need for regular benchmarks of \ont{} basecalling performance.
+We trained and compared models for three \guppy{} versions. Surprisingly, the most recent version did not yield the best results for \mtb{} and highlights the need for regular benchmarks of \ont{} basecalling performance.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Future work}
