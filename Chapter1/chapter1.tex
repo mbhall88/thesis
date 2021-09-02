@@ -10,15 +10,18 @@
 \else
     \graphicspath{{Chapter1/Figs/Vector/}{Chapter1/Figs/}}
 \fi
+% ==================================================================
+\setcounter{section}{-1}
+\section{Publication and collaboration acknowledgements}
+\label{sec:denovo-acknowledge}
+% ==================================================================
+\section{Introduction}
 
-
-%********************************** %First Section  **************************************
-\section{Motivation}
-
-%********************************** %Second Section  *************************************
+% ==================================================================
 \section{Methods}
+% subcommand discover
+We define a method that extends \pandora{} to allow for the discovery of variants not present in the \prg{} provided to a given run. It is implemented within the \pandora{} code base, in the C++ programming language. 
 
-We define a method that extends \pandora{} to allow for the discovery of variants not present in the \prg{} provided to a given run. It is implemented within the \pandora{} code base, in the C++ programming language. \\
 In addition, we describe a framework for evaluating the validity of variant calls from \pandora{} and how to compare them with other methods which operate on single, linear reference sequence.
 
 The first step in *de novo* variant discovery in genome graphs is finding the candidate regions of the graph that show evidence of dissimilarity from the sample's reads.
@@ -53,33 +56,56 @@ In addition to $T_r$, obtained by performing DFS on $G_r$, we produce a distance
 We can use $D_r$ to prune the path-space by requiring, for each node, $n \in p_r$, is $n \in D_r$ and can $a_R$ be reached from $n$ in a minimum of $i$ nodes, where $i$ is defined as the maximum allowed path length minus the number of nodes walked to reach $n$. If one of these conditions is not met, we abandon $p_r$. The advantage of this pruning process is that we never explore paths that will not reach our required end point and when caught in a cycle, we will abandon the path once we have made too many iterations around the cycle.
 
 \subsection{Inserting new paths back into graph}
+\label{sec:denovo-insert}
 
-%********************************** % Third Section  *************************************
-\section{Results}
-\label{section1.3}
+\towrite[inline]{describe the convoluted process of adding paths to graph and why they cant be straight addd directly}
 
-\subsection{Simulated data}
+% ==================================================================
+\section{Simulations}
+Having described an extension of the \pandora{} program that allows for \denovo{} variant discovery, we now turn our attention to its evaluation.
 
-\subsubsection{Performance on SNPs}
+The first step in evaluating the effect of adding \denovo{} variant calling to \pandora{} is with a simulated dataset. We aim to show that the addition of \denovo{} discovery allows \pandora{} to improve its probability of variant detection (recall) with minimal impact on the quality of the calls (precision). 
 
-\subsubsection{Performance on indels}
+To construct our simulated dataset, we randomly select 100 gene MSAs from a pool of 29,702 obtained for \ecoli{} from the panX database \cite{panx}. Next, a local \prg{} is constructed for each MSA with \makeprg{}. We used a range of maximum nesting levels (\todo[inline]{link to intro section on make prg}) - 1, 3, 5, and 10 - in order to investigate whether \prg{} nesting has an impact on our ability to discover novel variants. The local \prg{}s are combined into a single \panrg{} for each nesting level. A random path through each \prg{} is selected using \pandora{} and concatenated together to form a single "genome" sequence. 
 
-\subsection{Real data}
+We subsequently add SNPs to the simulated genome at different rates of SNPs per-gene using \vrb{snp-mutator} \cite{snpmutator}. For this work, we introduce 100, 400, and 1,000 SNPs to the simulated genome, which equate to approximately 1, 4, and 10 SNPs per gene, respectively. \vrb{snp-mutator} produces a VCF of the SNPs that were introduced, along with the mutated genome sequence.
 
-\subsubsection{Performance on SNPs}
+Next, we simulated 30,000 \ont{} reads from the mutated genomes using \vrb{nanosim-h} \cite{yang2017,brinda2018}. As the most recent model offered by \vrb{nanosim-h} was from the old R9 \ont{} flow cell, we trained and used a model from a freely-available \ecoli{} R9.4 dataset (\url{http://lab.loman.net/2017/03/09/ultrareads-for-nanopore/}). Each read set was randomly subsampled to a read depth (coverage) of 15, 30, 60, and 100 with \vrb{rasusa} \cite{rasusa2019} so we can investigate the impact of coverage on our ability to discover novel variants.
 
-\subsubsection{Performance on indels}
+\pandora{}'s \vrb{discover} routine is then run, using the original panX-derived \panrg{} and the reads simulated from the mutated genome. With this approach, we know that the reads originate from a sequence in our \panrg{}, but with some SNP differences and \ont{} errors. It is possible that some of the random SNPs introduced by \vrb{snp-mutator} already exist in the \panrg{}, but this is likely to be a very small number. We use three different \kmer{} sizes for the \denovo{} discovery: 11, 13, and 15. 
 
-\subsection{Effect of different basecalling versions}
+After running the \vrb{discover} routine, we are left with a collection of candidate paths produced by the \denovo{} component. We then add these candidate paths back into the \panrg{} as per \autoref{sec:denovo-insert}. The updated \panrg{} is then used as input - along with the simulated reads - to \pandora{} \vrb{map} to produce a genotyped VCF that hopefully contains all of the simulated SNPs.
 
-%********************************** % Fourth Section  *************************************
+In parallel to this, we also run \pandora{} \vrb{map} on the original \panrg{} and simulated reads - i.e., without variant discovery. The genotyped VCF produced by this run shows how \pandora{} performed prior to the addition of \denovo{} variant discovery in this chapter. Theoretically, we only expect this VCF to contain simulated SNPs that were already in the \panrg{}.
+
+At the end of this workflow, we have a genotyped VCF with and without \denovo{} variant discovery for each combination of maximum nesting, \denovo{} \kmer{} size, SNP rate, and read depth (coverage).
+
+% To avoid error-prone conversion of linear coordinates into graph coordinates the evaluation of whether the variants called by \pandora{} are correct was undertaken in a slightly more convoluted manner. We define a probe-set $P$ as a collection of probes, $p$, where $p$ represents an entry, $e$, in a VCF file, $V$. For each $e \in V$, $p$ is constructed by the concatenation of $l_w$, $e_c$, and $r_w$ (in that order), where $e_c$ is the called variant of $e$, and $l_w$ and $r_w$ are the sequences, of maximum length $w$, in the VCF reference to the left and right, respectively, of $e_c$. 
+
+% A truth probe-set, $P_t$, was constructed from the VCF of variants added to the simulated genome and a query probe-set, $P_q$, from the variants called by \pandora{}. We then mapped all probes from $P_t$ to $P_q$ using \texttt{bwa mem}\cite{bwamem}. We then classify each mapped probe as a false positive or true positive and calculate precision and recall for the pre-\denovo{} and post-\denovo{} VCF files from \pandora{}. As expected,  \autoref{fig:simulation_roc} shows that without \denovo{} variant discovery, we are unable to find almost all introduced variants.
+% In future work, we plan to add indels to the simulations.
+
+
+
+% ==================================================================
+\section{Empirical data}
+
+% \subsection{Effect of different basecalling versions}
+
+% ==================================================================
 \section{Discussion}
 \label{sec:denovo-discussion}
 
-%********************************** % Fifth Section  *************************************
+% ==================================================================
 \section{Limitations}
 \label{sec:denovo-limits}
+% this is refrred to by Appendix 1 - i.e., getting stick in cycles in the dbg
+% ==================================================================
+\section{Conclusion}
 
-%********************************** % Sixth Section  *************************************
+% ==================================================================
 \section{Future Work}
 \label{sec:denovo-fw}
+
+% ==================================================================
+\section{Availability of data and materials}
