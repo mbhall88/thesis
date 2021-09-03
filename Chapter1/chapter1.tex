@@ -19,46 +19,69 @@
 
 % ==================================================================
 \section{Methods}
-% subcommand discover
-We define a method that extends \pandora{} to allow for the discovery of variants not present in the \prg{} provided to a given run. It is implemented within the \pandora{} code base, in the C++ programming language. 
+\label{sec:denovo-method}
 
-In addition, we describe a framework for evaluating the validity of variant calls from \pandora{} and how to compare them with other methods which operate on single, linear reference sequence.
+We define a method that extends \pandora{}, with a subcommand \vrb{discover}, to allow for the \denovo{} discovery of variants not present a \prg{}. It is implemented within the \pandora{} code base, in the C++ programming language. 
 
-The first step in *de novo* variant discovery in genome graphs is finding the candidate regions of the graph that show evidence of dissimilarity from the sample's reads.
-
+The first step of \denovo{} variant discovery in genome graphs is finding the candidate regions of the graph that show evidence of dissimilarity from the sample's reads.
 
 \subsection{Finding candidate regions}
 
-The input required for finding candidate regions are a node, $n$, within the \pandora{} pangraph, the maximum likelihood path of both sequence and \kmer{}s in $n$, $lmp_n$ and $kmp_n$ respectively, and a padding size $w$ for the number of positions surrounding the candidate region to retrieve. \\
+The input required for finding candidate regions are a local \prg{} (node), $n$, within the \pandora{} \panrg{}; the maximum likelihood path of both sequence and \kmer{}s in $n$, $lmp_n$ and $kmp_n$ respectively; and a padding size, $w$, for the number of positions surrounding the candidate region to retrieve.
 
-We define a candidate region, $r$, as an interval within $n$ where coverage on $lmp_n$ is less than a given threshold, $c$, for more than $l$ and less than $m$ consecutive positions. We note that coverage is actually stored on $kmp_n$, but is stored for the whole \kmer{}. We convert the coverage on $kmp_n$ into per-position coverage on $lmp_n$ and use that for identifying low-coverage segments as just described. $m$ acts to restrict the size of variants we are able to detect. If set too large, the following steps become much slower due to the combinatorial expansion of possible paths. \\
-For a given read, $s$, that has a mapping to $r$ we define $s_r$ to be the subsequence of $s$ that maps to $r$, including an extra $w$ positions either side of the mapping. We define the pileup $P_r$ as the set of all $s_r \in r$.
+We define a candidate region, $r$, as an interval within $n$ where read depth (coverage) on $lmp_n$ is less than a given threshold, $c$, for more than $l$ and less than $m$ consecutive positions. We note that coverage is actually stored on $kmp_n$, but is stored for the whole \kmer{}. We convert the coverage on $kmp_n$ into per-position coverage on $lmp_n$ and use that for identifying low-coverage segments as just described. $m$ acts to restrict the size of variants we are able to detect. If set too large, the following steps become much slower due to the combinatorial expansion of possible paths. 
+
+For a given read, $s$, that has a mapping to $r$, we define $s_r$ to be the subsequence of $s$ that maps to $r$, including an extra $w$ positions either side of the mapping. We define the pileup $P_r$ as the set of all $s_r \in r$.
 
 \subsection{Enumerating paths through candidate regions}
 \label{sec:path-enum}
 
-For $r \in R$, where $R$ is the set of all candidate regions, we construct a de Bruijn graph $G_r$ from $P_r$ using the GATB library(CITE). \\
-$A_L$ and $A_R$ are defined as sets of \kmer{}s to the left and right of $r$ in the local graph. They are anchors to allow re-insertion of new sequences, found by \textit{de novo} discovery, into the local graph. If  $\nexists a \in A_L : a \in G_r \lor \nexists a \in A_R : a \in G_r$ then we abandon \textit{de novo} discovery for $r$. We use sets of \kmer{}s for $A_L$ and $A_R$, rather than a single anchor \kmer{}, to provide redundancy in the case where sequencing errors cause some anchors to not be in $G_r$. Once $G_r$ is built, and we define the start anchor \kmer{}, $a_L$, as the first $a_L \in A_L \land a_L \in G_r$. Likewise, we define the end anchor \kmer{}, $a_R$, as the first $a_R \in A_R \land a_R \in G_r$.\\
+For $r \in R$, where $R$ is the set of all candidate regions, we construct a de Bruijn graph $G_r$ from $P_r$ using the GATB library \cite{gatb2014}. 
 
-$T_r$ is the spanning tree obtained by performing depth-first search (DFS) on $G_r$, beginning from node $a_L$. $p_r$ is defined as a path, from the root node $a_L$ of $T_r$ and ending at node $a_R$, which fulfils the following two conditions:
+$A_L$ and $A_R$ are defined as sets of \kmer{}s to the left and right of $r$ in the maximum likelihood path $lmp_n$. They are anchors to allow insertion of new sequences found by \denovo{} discovery into the local \prg{}. Each set has a maximum size of $k$.
+
+We abandon \denovo{} discovery if $A_L \cap G_r = \emptyset \lor A_R \cap G_r = \emptyset$. That is, if no pairwise combination of left and right anchor \kmer{}s exists in the de Bruijn graph $G_r$.
+
+We use sets of \kmer{}s for $A_L$ and $A_R$, rather than a single anchor \kmer{}, to provide redundancy in the case where sequencing errors cause some anchors to not be in $G_r$. We define the start anchor \kmer{}, $a_L$, as the first (left-most) $a_L \in A_L \land a_L \in G_r$. Likewise, we define the end anchor \kmer{}, $a_R$, as the left-most $a_R \in A_R \land a_R \in G_r$.
+
+Now that we have two anchor \kmer{}s, $a_L$ and $a_R$, our goal is to find all (valid) paths between these anchors in the de Bruijn graph ($G_r$).
+
+$T_r$ is the spanning tree obtained by performing depth-first search (DFS) on $G_r$, beginning from $a_L$. $p_r$ is defined as a path, from the root node $a_L$ of $T_r$ and ending at node $a_R$, which fulfils the following two conditions:
 
 \begin{enumerate}
   \item $p_r$ is shorter than the maximum allowed path length.
-  \item No more than $k$ nodes along $p_r$ have coverage $< (n_r \times 0.1) \times e_r$, where $e_r$ is the expected \kmer{} coverage for $r$ and $n_r$ is the number of iterations of path enumeration for $r$.
+  \item No more than $k$ nodes along $p_r$ have coverage $< (0.1 n_r e_r)$, where $e_r$ is the expected \kmer{} coverage for $r$ and $n_r$ is the number of iterations of path enumeration for $r$.
 \end{enumerate}
 
-$V_r$ is the set of all $p_r$. If $|V_r|$ is greater than a predefined threshold, $n_r$ is incremented by 1 and $V_r$ is repopulated. If $n_r \times 0.1 = 1.0$ then \textit{de novo} discovery is abandoned for $r$.
+$V_r$ is the set of all $p_r$. If $|V_r|$ is greater than a predefined threshold, $n_r$ is incremented by 1 and $V_r$ is repopulated. If $0.1n_r = 1.0$ then \denovo{} discovery is abandoned for $r$.
+
+The second condition listed above, which relies on $n_r$ and $e_r$ has the effect of progressively increasing the amount of coverage we demand on a candidate path ($p_r$). In the first iteration, $n_r=1$, therefore we require the path has 10\% of the expected read depth (coverage). If this yields too many paths (condition 1), we restart and require all paths to have 20\% of the expected coverage. If we reach a stage where we require 100\% of the expected coverage, but still have too many paths, we quit \denovo{} discovery for the candidate region.
 
 \subsubsection{Pruning the path-space in a candidate region}
 
-As \pandora{} operates on both accurate and error-prone sequencing reads, the number of valid paths in $G_r$ can be very large. In testing, this results in run-times beyond seven days (the longest any attempt was allowed to run). The increased run-time is due to cycles that can occur in $G_r$ and exploring paths that will never reach our required end anchor $a_R$. In order to reduce the path-space within $G_r$ we prune paths based on multiple criteria. Critically, this pruning happens at each step of the graph walk (path-building).\\
-In addition to $T_r$, obtained by performing DFS on $G_r$, we produce a distance map $D_r$ that results from running reversed breadth-first search (BFS) on $G_r$, beginning from node $a_R$. We say reversed BFS as we explore the predecessors of each node, rather than the successors. $D_r$ is implemented as a binary search tree where each node in the tree represents a \kmer{} in $G_r$ that is reachable from $a_R$ via reversed BFS. Each node additionally has an integer attached to it that describes the shortest path from that node to $a_R$.\\
-We can use $D_r$ to prune the path-space by requiring, for each node, $n \in p_r$, is $n \in D_r$ and can $a_R$ be reached from $n$ in a minimum of $i$ nodes, where $i$ is defined as the maximum allowed path length minus the number of nodes walked to reach $n$. If one of these conditions is not met, we abandon $p_r$. The advantage of this pruning process is that we never explore paths that will not reach our required end point and when caught in a cycle, we will abandon the path once we have made too many iterations around the cycle.
+As \pandora{} operates on both accurate and error-prone sequencing reads, the number of valid paths in $G_r$ can be very large. In testing, we found the path enumeration process can result in runtimes beyond seven days in some scenarios. The increased runtime is due to cycles that can occur in $G_r$ and exploring paths that will never reach our required end anchor ($a_R$). 
 
-\subsection{Inserting new paths back into graph}
+In order to reduce the path-space within $G_r$, we prune paths based on multiple criteria. Critically, this pruning happens at each step of the graph walk (path-building; \autoref{sec:path-enum}).
+
+In addition to $T_r$, obtained by performing DFS on $G_r$, we produce a distance map $D_r$ that results from running reversed breadth-first search (BFS) on $G_r$, beginning from \emph{the end anchor} ($a_R$). We say reversed BFS as we explore the \emph{predecessors} of each node, rather than the successors. $D_r$ is implemented as a binary search tree where each node in the tree represents a \kmer{} in $G_r$ that is reachable from $a_R$ via reversed BFS. Each node additionally has an integer attached to it that describes the shortest path from that node to $a_R$.
+
+We can use $D_r$ to prune the path-space as follows. As we walk (enumerate) the candidate path ($p_r$) in \autoref{sec:path-enum}, for each node (\kmer{}; $v$) in $G_r$, starting at $a_L$, we check if $a_R$ be reached from $v$ in a minimum of $i$ nodes, where $i$ is defined as the maximum allowed path length minus the number of nodes walked to reach $v$. If one of these conditions is not met, we abandon $p_r$. 
+
+The advantage of this pruning process is that we never explore paths that will not reach our required end point. Additionally, we will discard any path once we have made too many loops around a graph cycle.
+
+\noindent
+In the end, for each candidate region ($r$), we are left with a collection of paths ($V_r$) between two \kmer{}s ($a_L$ and $a_R$). We create the final candidate paths by replacing the sequence between $a_L$ and $a_R$ in the maximum likelihood path ($lmp_n$) with each path ($p_r$) in $V_r$. These are written to file - with one file per candidate region. Padding the candidate paths in this way ensures they are inserted into the \prg{} in the correct location (see \autoref{sec:denovo-insert}). 
+
+\subsection{Updating a \panrg{} with candidate paths}
 \label{sec:denovo-insert}
 
-\towrite[inline]{describe the convoluted process of adding paths to graph and why they cant be straight addd directly}
+As new paths alter the structure of a \prg{}, we cannot insert them directly, and must rebuild each \prg{} for which a candidate path is discovered.
+
+The first step of rebuilding each local \prg{} is to add the new candidate paths to the original multiple sequence alignment (MSA). Because we padded each path with the maximum likelihood path, this ensures the novel path aligns with the correct section of the locus. We combine all candidate paths for a locus into a single, unaligned FASTA file and add them to the existing locus MSA with the \vrb{--add} routine in MAFFT \cite{katoh2012}. 
+
+Next, \makeprg{} is run on the subsequent alignments, and the resulting updated local \prg{}s are combined into a single \panrg{} and indexed with \pandora{}. 
+
+This updated \panrg{} can then be used as input to \pandora{} and subsequent genotyping will include the novel variants.
 
 % ==================================================================
 \section{Simulations}
@@ -89,6 +112,8 @@ At the end of this workflow, we have a genotyped VCF with and without \denovo{} 
 
 % ==================================================================
 \section{Empirical data}
+
+In addition, we describe a framework for evaluating the validity of variant calls from \pandora{} and how to compare them with other methods which operate on single, linear reference sequence.
 
 % \subsection{Effect of different basecalling versions}
 
