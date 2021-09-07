@@ -254,9 +254,9 @@ To calculate AvgAR (recall) for tool-reference pair, we perform the following: i
 
 We determine precision in a somewhat similar manner. First, we create probes for each variant in a given VCF, with 150bp flanking sequence taken from the VCF reference sequence. Second, we map each probe to the sample's assembly sequence. Third, we filter out poor quality mappings or mappings to low quality regions of the assembly. Fourth, each mapping's precision is classified as a continuous score - rather than a binary true or false positive - by dividing the number of matching bases (ignoring the flanking sequences), divided by the length of the alignment. For example, if the called allele is ATG and it maps to a sequence ATTG, the precision score is 0.75. Finally, we calculate the precision as the sum of precision scores, divided by the number of evaluated calls.
 
-\subsection{Effect of different basecalling versions}
+\subsection{Effect of different \ont{} basecalling models}
 
-
+Previous work from Wick \etal{} has shown that for Enterobacteriaceae the majority of \ont{} sequencing errors are related to Dcm methylation sites \cite{wick2019}. In version X of \guppy{} (the ONT-provided basecalling software) a new \emph{methylation-aware} model was made available. However, this new model is considerably slower to basecall reads than the default model. As \ecoli{} is a member of this family, we set out to test a subset of 4 samples from our dataset to see whether a methylation-aware model indeed has a noticeable impact on the precision and recall.
 % precision-recall curves fig 6 top panels
 
 % precision per-sample-reference pair fig 6 bottom panel
