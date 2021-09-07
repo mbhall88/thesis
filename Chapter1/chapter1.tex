@@ -256,6 +256,7 @@ To calculate AvgAR (recall) for tool-reference pair, we perform the following: i
 We determine precision in a somewhat similar manner. First, we create probes for each variant in a given VCF, with 150bp flanking sequence taken from the VCF reference sequence. Second, we map each probe to the sample's assembly sequence. Third, we filter out poor quality mappings or mappings to low quality regions of the assembly. Fourth, each mapping's precision is classified as a continuous score - rather than a binary true or false positive - by dividing the number of matching bases (ignoring the flanking sequences), divided by the length of the alignment. For example, if the called allele is ATG and it maps to a sequence ATTG, the precision score is 0.75. Finally, we calculate the precision as the sum of precision scores, divided by the number of evaluated calls.
 
 \subsection{Effect of different \ont{} basecalling models}
+\label{sec:denovo-methylation}
 
 Previous work from Wick \etal{} has shown that for Enterobacteriaceae the majority of \ont{} sequencing errors are related to Dcm methylation sites \cite{wick2019}. In version 3.2.1 of \guppy{} (the ONT-provided basecalling software) a new \emph{methylation-aware} model was made available. However, this new model is considerably slower to basecall reads than the default model. As \ecoli{} is a member of this family, we set out to test a subset of 4 samples from our dataset to see whether a methylation-aware model indeed has a noticeable impact on the precision and recall from \pandora{} - with and without \denovo{} variant dicsovery.
 
@@ -264,7 +265,7 @@ We basecall the raw data for 4 samples from our dataset with both the default an
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{Chapter1/Figs/pandora_basecaller_roc.png}
-    \caption{Effect of \ont{} methylation-aware basecalling model on \pandora{} \denovo{} variant discovery. The lines show the recall (average alleleic recall; y-axis) and error rate ($$$1-$precision; x-axis) of \pandora{} with increasing genotype confidence score thresholds with (solid line) and without (dashed line) \denovo{} variant discovery. The red line shows samples that were basecalled with the default \guppy{} model, with those in blue being basecalled with a methylation-aware model.}
+    \caption{Effect of \ont{} methylation-aware basecalling model on \pandora{} \denovo{} variant discovery. The lines show the recall (average alleleic recall; y-axis) and error rate ($1-$precision; x-axis) of \pandora{} with increasing genotype confidence score thresholds with (solid line) and without (dashed line) \denovo{} variant discovery. The red line shows samples that were basecalled with the default \guppy{} model, with those in blue being basecalled with a methylation-aware model.}
     \label{fig:denovo-methylation}
 \end{figure}
 
@@ -284,11 +285,45 @@ We basecall the raw data for 4 samples from our dataset with both the default an
 
 \noindent
 Given the dramatic improvement in precision and recall from using the methylation-aware basecalling model, we re-basecalled all data for subsequent analyses with this model.
-% precision-recall curves fig 6 top panels
 
-% precision per-sample-reference pair fig 6 bottom panel
+\subsection{Performance of \pandora{} against single-reference tools}
 
-% recall across locus frequency spectrum fig 7
+We now compare the precision and recall of \pandora{} on Illumina and \ont{} data against to two single-reference variant callers for each technology. For the \ont{} analysis, we use the reads basecalled with the methylation-aware model (\autoref{sec:denovo-methylation}). In addition, we run \pandora{} with and without \denovo{} variant discovery in order to see the impact of the work in this chapter.
+
+We use AvgAR as the measure of recall (see \autoref{sec:denovo-empirical-eval}) and error rate as the measure of precision ($1-$precision) and apply increasing genotype confidence thresholds to illustrate the precision-recall trade-off. 
+
+The results of this analysis are shown in \autoref{fig:pandora-roc}. For both sequencing technologies, \pandora{} with \denovo{} variant discovery has the highest (unfiltered) recall of 85.82\% on Illumina data and 85.51\% on \ont{}. In terms of error rate, \vrb{snippy} had the lowest Illumina unfiltered value of 0.01\% (with reference CP010170.1), while \pandora{} without \denovo{} variant discovery had the lowest \ont{} unfiltered rate of 0.19\%. 
+
+Of particular interest to the work in this chapter is the observation that, on Illumina data, \denovo{} variant discovery leads to greater recall and precision (see inset of \autoref{fig:pandora-roc-illumina}); however, on \ont{} data \denovo{} discovery only provides greater recall, at the cost of lower precision (see inset of \autoref{fig:pandora-roc-ont}). This suggests that systematic errors in \ont{} create incorrect novel alleles which are in turn deemed correct by genotyping.
+
+The most striking result from this work though is the error rate of \pandora{} on \ont{} data, which is 12.9 times lower than \vrb{nanopolish} and 79 times lower than \vrb{medaka}. In real terms, this equates to 22 and 146 less error per 1000 variants, respectively.
+
+Equally impressive is the improvement in recall over \vrb{snippy} using \pandora{} with variant discovery on Illumina data, leading to 47/1000 more variants being discovered. However, as noted above, this does come at the expense of a higher error rate than \vrb{snippy}.
+
+\begin{figure}
+     \begin{subfigure}[b]{0.475\textwidth}
+        \includegraphics[width=1\linewidth]{Chapter1/Figs/illumina_roc.png}
+        \centering
+        \caption{Illumina}
+        \label{fig:pandora-roc-illumina}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.475\textwidth}
+         \centering
+        \includegraphics[width=1\linewidth]{Chapter1/Figs/nanopore_roc.png}
+         \caption{\ont{}}
+         \label{fig:pandora-roc-ont}
+     \end{subfigure}
+    \caption{Precision-recall curve for variant calls from Illumina (left; \textbf{a}) and \ont{} (right; \textbf{b}) data for different variant calling tools (colours). Each curve represents increasing genotype confidence thresholds, starting with no filtering in the top-right of each curve and increasing towards the bottom-left. \pandora{} has a single line with and without \denovo{} variant discovery, which represents the error rate and recall across all 20 samples. The other variant callers are traditional single-reference tools; therefore each line represents the use of 1/24 reference genomes from across five major \ecoli{} phylogroups. Inset windows are used to give more granularity for error rate in the best performing tools.}
+        \label{fig:pandora-roc}
+\end{figure}
+
+\subsection{Summary}
+
+In this section, using 20 diverse \ecoli{} samples we have shown that the \denovo{} variant discovery methoud outlined in \autoref{sec:denovo-method} allows \pandora{} to discover more variants (increases recall). On Illumina data it additionally improves the error rate, however on \ont{} data it appears to increase the error rate.
+
+We also illustrated that a methylation-aware \ont{} basecalling model decreases the \pandora{} error rate - quite significantly for \denovo{} - indicating that many of the novel variants "discovered" by our method are in fact systematic technology errors.
+
+Finally, we show that \pandora{} provides higher recall than single-reference-based variant callers for both Illumina and \ont{} data. In addition, is leads to a \ont{} error rate that is an order of magnitude lower than other tools. However, \vrb{snippy} provides lower error rates than \pandora{} on Illumina data.
 
 % ==================================================================
 \section{Discussion}
