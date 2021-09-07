@@ -14,6 +14,7 @@
 \setcounter{section}{-1}
 \section{Publication and collaboration acknowledgements}
 \label{sec:denovo-acknowledge}
+
 % ==================================================================
 \section{Introduction}
 
@@ -84,11 +85,12 @@ Next, \makeprg{} is run on the subsequent alignments, and the resulting updated 
 This updated \panrg{} can then be used as input to \pandora{} and subsequent genotyping will include the novel variants.
 
 % ==================================================================
-\section{Simulations}
+\section{Simulation data}
 \label{sec:denovo-sims}
 Having described an extension of the \pandora{} program that allows for \denovo{} variant discovery, we now turn our attention to its evaluation.
 
 \subsection{Methods}
+\label{sec:denovo-sims-methods}
 
 The first step in evaluating the effect of adding \denovo{} variant calling to \pandora{} is with a simulated dataset. We aim to show that the addition of \denovo{} discovery allows \pandora{} to improve its probability of variant detection (recall) with minimal impact on the quality of the calls (precision). 
 
@@ -107,6 +109,7 @@ In parallel to this, we also run \pandora{} \vrb{map} on the original \panrg{} a
 At the end of this workflow, we have a genotyped VCF with and without \denovo{} variant discovery for each combination of maximum nesting, \denovo{} \kmer{} size, SNP rate, and read depth (coverage).
 
 \subsection{Evaluation}
+\label{sec:denovo-sims-eval}
 
 Comparing the truth VCF to the one produced by \pandora{} requires care. The variants in the truth VCF are with respect to a linear reference genome; as we only simulated SNPs, these are single positions records. However, the \pandora{} variants are with respect to a graph, and depending on the density of variation in the graph, may not appear as single position records (see \autoref{fig:min-match-len-example} for an illustration of this). 
 
@@ -205,10 +208,60 @@ We have also shown that on average, approximately 10.5\% of (simulated) SNPs are
 
 % ==================================================================
 \section{Empirical data}
+\label{sec:denovo-empirical}
 
-In addition, we describe a framework for evaluating the validity of variant calls from \pandora{} and how to compare them with other methods which operate on single, linear reference sequence.
+Having shown, for simulated data, that the \denovo{} variant discovery method indeed alleviates the major limitation of \pandora{}, we now turn our attention to evaluating its performance on empirical data. However, rather than the single-sample (\pandora{} \vrb{map}) approach we used for genotyping in \autoref{sec:denovo-sims}, we evaluate \pandora{}'s multi-sample comparison protocol - \compare{}.
 
-% \subsection{Effect of different basecalling versions}
+The inference of variation within a collection of samples is one of the unique aspects of \pandora{}. As detailed in \autoref{sec:pandora-compare}, the \vrb{compare} routine of \pandora{} genotypes multiple samples against a \panrg{} simultaneously, with the aim of representing variation in the most succinct manner possible (see \autoref{fig:var-representation}). It does this by selecting a maximum likelihood path that best approximates the samples under investigation.
+
+Evaluating the variant calls from such a graph-based method is by no means trivial. In this section we aim to compare the variant calls made by \pandora{} against those made by single-reference (linear) methods for both Illumina and \ont{} data. As such, in addition to the variant calling evaluation, we outline a novel approach to compare variants produced from a graph-based reference with those from a linear reference.
+
+In keeping with the focus of this chapter, we will also assess the utility of \denovo{} variant discovery within \pandora{}. While we have shown its benefit on simulated data, the \panrg{} used did not contain many of the simulated SNPs. However, we expect many of the SNPs in real data to also be present in a \panrg{} built from a pan-genome of diverse samples. 
+
+\textit{Note: all work in this section is described in full in \cite{pandora}. See \autoref{sec:denovo-acknowledge} for a detailed description of what work was completed by myself.}
+
+\subsection{Dataset}
+\label{sec:denovo-empirical-data}
+
+\subsubsection{Samples}
+The empirical data we use for this evaluation is a diverse set of 20 \ecoli{} samples from four different phylogroups. Each sample was sequenced on both \ont{} and Illumina platforms and have high quality assemblies available. The sequencing reads for each technology were subsampled to 100x read depth.
+
+\subsubsection{References}
+The \panrg{} we use as the reference for \pandora{} was constructed from a combination of \ecoli{} genes and intergenic regions. 23,054 gene MSAs from 350 RefSeq genomes were obtained from the panX database \cite{panx}, while 14,374 intergenic region MSAs from 228 ST131 genomes were collected from \cite{thorpe2018}. \prg{}s were constructed for each locus using \makeprg{} and then all were combined into a single \panrg{} file and indexed with \pandora{}.
+
+As single-reference variant callers cannot use a \panrg{}, we selected 24 reference genomes from five major phylogroups; one phylogroup is not contained within the sample set. These refeerences were selected to be spread across each phylogroup, ensuring some were close to our samples and some not. By calling variants for each sample with respect to each reference genome, we can directly view the impact of reference selection on the results of standard variant callers.
+
+\subsection{Variant calling}
+
+\subsubsection{Graph-based: Pandora}
+To produce a multi-sample VCF file of variants for \pandora{} we follow a somewhat similar approach to \autoref{sec:denovo-sims-methods}, with some important differences. Rather than adding all \denovo{} variants for a single sample to the original \panrg{} we instead add the novel variants for \emph{all} samples to the original \panrg{}. In the end, we have an updated \panrg{} which contains all novel variants for all samples under comparison. We then perform multi-sample genotyping with this updated \panrg{} using \compare{}. This entire process is completed separately for Illumina and \ont{} data.
+
+\subsubsection{Linear-based}
+We compare the Illumina variant calls from \pandora{} against those from \vrb{samtools} \cite{samtools2009} and Snippy (\url{https://github.com/tseemann/snippy}) (which is a wrapper around Freebayes \cite{Garrison2012}). The \ont{} variant callers we evaluate against are Medaka (\url{https://github.com/nanoporetech/medaka}) and Nanopolish \cite{Loman2015}. Each variant caller is run on all 20 samples with all 24 reference genomes. 
+
+\noindent
+In total, we produce 480 VCFs for each linear variant caller and 20 (one per sample) for \pandora{}.
+
+\subsection{Evaluation}
+
+A direct comparison of the VCF files produced by \pandora{} and the single-reference tools is not possible due to coordinate incompatibilities. As such, we use a probe-based method, akin to that in \autoref{sec:denovo-sims-eval}, for assessing the variant calls. 
+
+The first step in this evaluation is the generation of a pan-genome SNP truth set. \autoref{app:pangenome-snp-truth} details the construction of this truth set, resulting in 618,305 SNPs we expect to find amongst the 20 samples.
+
+There are two measures of recall in a pan-genome (see \autoref{app:pangenome-snp-truth}), but of interest to this section is the average allelic recall (AvgAR). Briefly, AvgAR  is the average recall of all pan-genome variants. For example, say we have three genomes with 2 pan-genome variants $P1$ and $P2$ between them. $P1$ has the alleles A, G, and T across the three genomes and $P2$ has alleles C and T. If we find the $P1$ alleles A and T, we have a $P1$ recall of 0.66 (2/3) and if we only find $P2$ alleles C, we have a $P2$ recall of 0.5 (1/2). Therefore, in this example, we have an AvgAR of $\frac{0.66+0.5}{2}=0.58$.
+
+To calculate AvgAR (recall) for tool-reference pair, we perform the following: i) apply the variant calls for each sample to the reference sequence the calls were made with respect to (giving 20 mutated sequences); ii) we map all truth set probes to these mutated reference sequence with \vrb{bwa mem}; iii) we classify a mapping as TP if the aligned sequences match. We then count, for each pan-genome variant, what proportion of its alleles have a TP mapping and calculate AvgAR accordingly. In the end, we have an AvgAR value for each variant caller and reference sequence combination - i.e., 24 AvgAR values for each caller.
+
+We determine precision in a somewhat similar manner. First, we create probes for each variant in a given VCF, with 150bp flanking sequence taken from the VCF reference sequence. Second, we map each probe to the sample's assembly sequence. Third, we filter out poor quality mappings or mappings to low quality regions of the assembly. Fourth, each mapping's precision is classified as a continuous score - rather than a binary true or false positive - by dividing the number of matching bases (ignoring the flanking sequences), divided by the length of the alignment. For example, if the called allele is ATG and it maps to a sequence ATTG, the precision score is 0.75. Finally, we calculate the precision as the sum of precision scores, divided by the number of evaluated calls.
+
+\subsection{Effect of different basecalling versions}
+
+
+% precision-recall curves fig 6 top panels
+
+% precision per-sample-reference pair fig 6 bottom panel
+
+% recall across locus frequency spectrum fig 7
 
 % ==================================================================
 \section{Discussion}

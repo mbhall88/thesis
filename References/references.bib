@@ -1652,3 +1652,46 @@ pages = {2959--2961},
 number = {20}, 
 volume = {30}
 }
+
+@phdthesis{rachelthesis, 
+title={ Pan-genomic analysis of clonal bacterial samples using nanopore reads and genome graphs}, 
+author={ Colquhoun, Rachel}, 
+year={2019},
+school={University of Oxford},
+type={DPhil thesis}
+} 
+
+@article{pandora, 
+year = {2020}, 
+keywords = {genome-graphs,variant-calling,bacterial-genomics}, 
+title = {{Nucleotide-resolution bacterial pan-genomics with reference graphs}}, 
+author = {Colquhoun, Rachel M and Hall, Michael B and Lima, Leandro and Roberts, Leah W and Malone, Kerri M and Hunt, Martin and Letcher, Brice and Hawkey, Jane and George, Sophie and Pankhurst, Louise and Iqbal, Zamin}, 
+journal = {bioRxiv}, 
+doi = {10.1101/2020.11.12.380378}, 
+abstract = {{Bacterial genomes follow a U-shaped frequency distribution whereby most genomic loci are either rare (accessory) or common (core); the union of these is the pan-genome. The alignable fraction of two genomes from a single species can be low (e.g. 50-70\%), such that no single reference genome can access all single nucleotide polymorphisms (SNPs). The pragmatic solution is to choose a close reference, and analyse SNPs only in the core genome. Given much bacterial adaptability hinges on the accessory genome, this is an unsatisfactory limitation. We present a novel pan-genome graph structure and algorithms implemented in the software pandora, which approximates a sequenced genome as a recombinant of reference genomes, detects novel variation and then pan-genotypes multiple samples. The method takes fastq as input and outputs a multi-sample VCF with respect to an inferred data-dependent reference genome, and is available at https://github.com/rmcolq/pandora. Constructing a reference graph from 578 E. coli genomes, we analyse a diverse set of 20 E. coli isolates. We show pandora recovers at least 13k more rare SNPs than single-reference based tools, achieves equal or better error rates with Nanopore as with Illumina data, 6-24x lower Nanopore error rates than other tools, and provides a stable framework for analysing diverse samples without reference bias. We also show that our inferred recombinant VCF reference genome is significantly better than simply picking the closest RefSeq reference. This is a step towards comprehensive cohort analysis of bacterial pan-genomic variation, with potential impacts on genotype/phenotype and epidemiological studies.}}
+}
+
+@article{thorpe2018, 
+year = {2018}, 
+keywords = {msa,ecoli,pangenome,bacterial-genomics,intergenic}, 
+title = {{Piggy: A Rapid, Large-Scale Pan-Genome Analysis Tool for Intergenic Regions in Bacteria.}}, 
+author = {Thorpe, Harry A and Bayliss, Sion C and Sheppard, Samuel K and Feil, Edward J}, 
+journal = {GigaScience}, 
+issn = {2047-217X}, 
+doi = {10.1093/gigascience/giy015}, 
+pmid = {29635296}, 
+abstract = {{The concept of the "pan-genome," which refers to the total complement of genes within a given sample or species, is well established in bacterial genomics. Rapid and scalable pipelines are available for managing and interpreting pan-genomes from large batches of annotated assemblies. However, despite overwhelming evidence that variation in intergenic regions in bacteria can directly influence phenotypes, most current approaches for analyzing pan-genomes focus exclusively on protein-coding sequences.}}, 
+pages = {giy015--}, 
+number = {4}, 
+volume = {7}
+}
+
+@article{Garrison2012, 
+year = {2012}, 
+keywords = {variant-calling,software,algorithms}, 
+title = {{Haplotype-based variant detection from short-read sequencing}}, 
+author = {Garrison, Erik and Marth, Gabor}, 
+journal = {arXiv}, 
+eprint = {1207.3907}, 
+abstract = {{The direct detection of haplotypes from short-read DNA sequencing data requires changes to existing small-variant detection methods. Here, we develop a Bayesian statistical framework which is capable of modeling multiallelic loci in sets of individuals with non-uniform copy number. We then describe our implementation of this framework in a haplotype-based variant detector, FreeBayes.}}
+}
