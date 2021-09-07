@@ -269,7 +269,7 @@ We basecall the raw data for 4 samples from our dataset with both the default an
     \label{fig:denovo-methylation}
 \end{figure}
 
-\begin{table}[]
+\begin{table}
 \centering
 \begin{tabular}{@{}llrr@{}}
 \toprule
@@ -328,7 +328,17 @@ Finally, we show that \pandora{} provides higher recall than single-reference-ba
 % ==================================================================
 \section{Discussion}
 \label{sec:denovo-discussion}
-%  why not just assemble best sequence in dbg?
+
+In this chapter we described a method for discovering \denovo{} variation in a genome graph from both Illumina and \ont{} data. We implemented it in the \vrb{discover} procedure of the reference graph program \pandora{} and evaluated its utility on both simulated and empirical data. Additionally, we demonstrate an approach for comparing variant calls made from single-reference or graph-based tools that is independent of genome coordinates.
+
+Prior to the work in this chapter, \pandora{} was only able to genotype with respect to variation present in a pan-genome reference graph. To allow \pandora{} to discover novel variants, we use a localised form of genome assembly in segments of the graph with low \kmer{} coverage. We first identify candidate regions of the genome where read depth (observed as \kmer{} coverage) drops below a predefined threshold. Next, we slice out the segments of the reads that map to these candidate regions and construct a de Bruijn graph from them. Finally, we enumerate paths in this de Bruijn graph that pass coverage and insertion size filters and output them as novel candidate alleles. These alleles can then be added into the original \panrg{} to allow for genotyping against these new alleles.
+
+This \denovo{} discovery process detailed in \autoref{sec:denovo-method} is somewhat analogous to the method used by GATK's HaplotypeCaller \cite{Poplin2018}. There are two noticeabl differences between their approach and the method we outlined in this chapter. First, they determine candidate regions (described as \emp{ActiveRegions}), based on an "activity score" that is calculated based on the read alignment quality and genotype likelihood at a locus. In contrast, we use a naive approach that looks for \kmer{}s in the maximum likelihood path with coverage less than a hard threshold. While our approach may seem simple, it relies on information gained by performing quasi-mapping to the graph and inference of a maximum likelihood path, which are far from simple. Second, the pruning methods employed by GATK involve removing edges with low support and when the terminal \kmer{} of a path does not match the reference sequencing they attempt to use local alignment to merge it. By comparison, we require a path contain the terminal \kmer{}, thus avoiding local alignment, and we prune the de Bruijn graph by using depth- and breadth-first search to construct a distance map so we know whether a given \kmer{} in the de Bruijn graph can reach the terminal \kmer{} within a predefined number of graph walks. In this way we never get stuck in cycles or produce paths longer than a user-defined insertion size. While we did not compare \pandora{} runtime to GATK, given the results in \cite{Poplin2018}, and the algorithmic details of their method, we suspect our method leads to much faster runtimes due to the pruning of paths and lack of local alignment.
+
+In \autoref{sec:denovo-sims} we selected random paths from a \panrg{} and randomly introduced SNPs to them at varying rates. We then simulated \ont{} reads from these mutated random genomes and used them to test different parameters relating to our \denovo{} discovery method. Read depth (coverage) had the most obvious impact on the ability to detect novel variants. Given the simulated \ont{} read error rate of approximately 11\%, the decrease in recall is expected as coverage decreases as our method relies on \kmer{} coverage along the candidate paths. Without sufficient \kmer{} coverage to support a path, we cannot produce any candidate alleles. While a \kmer{} size of 13 for the \denovo{} assembly was found to perform slightly better than 11 and 15, this was only marginal and may warrant further investigation. Indeed, for the work in \cite{pandora} we used a \denovo{} \kmer{} size of 15 in order to speed up variant discovery in some problematic loci.
+
+While we compared the precision and recall of \pandora{} with and without variant discovery in the simulations, this was not a fair comparison. 
+
 % nearly all errors in best performing params were not within the power of de novo to discover
 % a better filtering strategy than gt conf alone is needed re: sims
 % ==================================================================
@@ -337,6 +347,7 @@ Finally, we show that \pandora{} provides higher recall than single-reference-ba
 % this is refrred to by Appendix 1 - i.e., getting stick in cycles in the dbg
 % homopolymer deletions - maybe ignore them? tubby?
 % variants near ends of genes
+
 % ==================================================================
 \section{Conclusion}
 
