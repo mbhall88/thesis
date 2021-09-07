@@ -243,6 +243,7 @@ We compare the Illumina variant calls from \pandora{} against those from \vrb{sa
 In total, we produce 480 VCFs for each linear variant caller and 20 (one per sample) for \pandora{}.
 
 \subsection{Evaluation}
+\label{sec:denovo-empirical-eval}
 
 A direct comparison of the VCF files produced by \pandora{} and the single-reference tools is not possible due to coordinate incompatibilities. As such, we use a probe-based method, akin to that in \autoref{sec:denovo-sims-eval}, for assessing the variant calls. 
 
@@ -256,7 +257,33 @@ We determine precision in a somewhat similar manner. First, we create probes for
 
 \subsection{Effect of different \ont{} basecalling models}
 
-Previous work from Wick \etal{} has shown that for Enterobacteriaceae the majority of \ont{} sequencing errors are related to Dcm methylation sites \cite{wick2019}. In version X of \guppy{} (the ONT-provided basecalling software) a new \emph{methylation-aware} model was made available. However, this new model is considerably slower to basecall reads than the default model. As \ecoli{} is a member of this family, we set out to test a subset of 4 samples from our dataset to see whether a methylation-aware model indeed has a noticeable impact on the precision and recall.
+Previous work from Wick \etal{} has shown that for Enterobacteriaceae the majority of \ont{} sequencing errors are related to Dcm methylation sites \cite{wick2019}. In version 3.2.1 of \guppy{} (the ONT-provided basecalling software) a new \emph{methylation-aware} model was made available. However, this new model is considerably slower to basecall reads than the default model. As \ecoli{} is a member of this family, we set out to test a subset of 4 samples from our dataset to see whether a methylation-aware model indeed has a noticeable impact on the precision and recall from \pandora{} - with and without \denovo{} variant dicsovery.
+
+We basecall the raw data for 4 samples from our dataset with both the default and methylation-aware models from \guppy{} version 3.4.5. Precision and recall (AvgAR) are calculated as per \autoref{sec:denovo-empirical-eval} and presented in \autoref{fig:denovo-methylation}. The precision-recall curves represent increasing genotype confidence filtering; the top-right of each curve is no filtering, and as the genotype confidence requirement is gradually increased, we reduce the error rate (increase precision) at the loss of recall. Two important observations from \autoref{fig:denovo-methylation} are that the use of a methylation-aware model increases both precision \emph{and} recall, and the use of \denovo{} discovery increases recall at the cost of precision. \autoref{tab:denovo-methylation} shows the precision and recall values for the unfiltered results (i.e., the top-right of each curve in \autoref{fig:denovo-methylation}). From this, we see that without \denovo{} variant discovery, using a methylation-aware model would allow us to recover 894.7 variants in 10000 - 3.3 more than with the default model; likewise, we would expect to make 0.5 errors per 1000 variants. Using \denovo{} variant discovery, the methylation-aware model allows us to disocver 906.3 variants in 1000 - 4.8 more than the default model and 11.6 more than methylation-aware without \denovo{} discovery. In terms of errors, using a methylation-aware model leads to 3.7 less error per 1000 variants with novel variant discovery enabled, however, it does 0.41 more errors per 1000 variants than without novel variant discovery. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Chapter1/Figs/pandora_basecaller_roc.png}
+    \caption{Effect of \ont{} methylation-aware basecalling model on \pandora{} \denovo{} variant discovery. The lines show the recall (average alleleic recall; y-axis) and error rate ($$$1-$precision; x-axis) of \pandora{} with increasing genotype confidence score thresholds with (solid line) and without (dashed line) \denovo{} variant discovery. The red line shows samples that were basecalled with the default \guppy{} model, with those in blue being basecalled with a methylation-aware model.}
+    \label{fig:denovo-methylation}
+\end{figure}
+
+\begin{table}[]
+\centering
+\begin{tabular}{@{}llrr@{}}
+\toprule
+    Methylation-aware    & with \denovo{} & Recall (AvgAR)  & Error rate ($1-$precision) \\ \midrule
+\multirow{2}{*}{no}  & yes                   & 0.9015          & 0.0060                   \\
+                     & no                    & 0.8914          & 0.0023                   \\
+\multirow{2}{*}{yes} & yes                   & \textbf{0.9063} & 0.0022                   \\
+                     & no                    & 0.8947          & \textbf{0.0018}          \\ \cmidrule(l){2-4} 
+\end{tabular}
+    \caption{Effect of \ont{} methylation-aware basecalling model on \pandora{} \denovo{} variant discovery (unfiltered) precision and recall.}
+\label{tab:denovo-methylation}
+\end{table}
+
+\noindent
+Given the dramatic improvement in precision and recall from using the methylation-aware basecalling model, we re-basecalled all data for subsequent analyses with this model.
 % precision-recall curves fig 6 top panels
 
 % precision per-sample-reference pair fig 6 bottom panel
