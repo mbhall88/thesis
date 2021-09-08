@@ -27,6 +27,7 @@ We define a method that extends \pandora{}, with a subcommand \vrb{discover}, to
 The first step of \denovo{} variant discovery in genome graphs is finding the candidate regions of the graph that show evidence of dissimilarity from the sample's reads.
 
 \subsection{Finding candidate regions}
+\label{sec:denovo-candidate-regions}
 
 The input required for finding candidate regions are a local \prg{} (node), $n$, within the \pandora{} \panrg{}; the maximum likelihood path of both sequence and \kmer{}s in $n$, $lmp_n$ and $kmp_n$ respectively; and a padding size, $w$, for the number of positions surrounding the candidate region to retrieve.
 
@@ -59,6 +60,7 @@ $V_r$ is the set of all $p_r$. If $|V_r|$ is greater than a predefined threshold
 The second condition listed above, which relies on $n_r$ and $e_r$ has the effect of progressively increasing the amount of coverage we demand on a candidate path ($p_r$). In the first iteration, $n_r=1$, therefore we require the path has 10\% of the expected read depth (coverage). If this yields too many paths (condition 1), we restart and require all paths to have 20\% of the expected coverage. If we reach a stage where we require 100\% of the expected coverage, but still have too many paths, we quit \denovo{} discovery for the candidate region.
 
 \subsubsection{Pruning the path-space in a candidate region}
+\label{sec:denovo-prune}
 
 As \pandora{} operates on both accurate and error-prone sequencing reads, the number of valid paths in $G_r$ can be very large. In testing, we found the path enumeration process can result in runtimes beyond seven days in some scenarios. The increased runtime is due to cycles that can occur in $G_r$ and exploring paths that will never reach our required end anchor ($a_R$). 
 
@@ -122,6 +124,7 @@ A truth probe-set, $P_t$, was constructed from the VCF of variants added to the 
 Precision is defined as the number of TPs divided by the number of TPs and FPs $precision=\frac{TP}{TP+FP}$; it represents the fraction of variant calls made that are correct. Likewise, recall is calculated as $recall=\frac{TP}{TP+FN}$ and describes the proportion of expected variants correctly discovered.
 
 \subsection{Results}
+\label{sec:denovo-sims-results}
 
 We first look at \autoref{fig:denovo-sims}, which shows how precision and recall of the \pandora{} \denovo{} variants changes depending on the combination of parameters chosen. Those parameters were the read depth (coverage) of the simulated reads (\autoref{fig:denovo-sims-covg}), the number of SNPs introduced into the simulated genome (\autoref{fig:denovo-sims-num-snps}), the \kmer{} size used for variant discovery (\autoref{fig:denovo-sims-kmer-size}), and the maximum nesting level allowed in the \prg{}s (\autoref{fig:denovo-sims-nesting}). In total, there are 144 different combinations of parameters, and thus data points.
 
@@ -339,7 +342,7 @@ In \autoref{sec:denovo-sims} we selected random paths from a \panrg{} and random
 
 While we compared the precision and recall of \pandora{} with and without variant discovery in the simulations, this was not a realistic scenario. In reality positions within a bacterial genome are under differing levels of selection pressure - e.g., sites that correspond to the third codon position are under weaker pressure than those in the first position \cite{Lobry2002}. However, these simulations do serve to illustrate the limitations of \pandora{} without the capacity to discover variation not present in a \panrg{}.  
 
-Given the contrived nature of the simulation analysis, we additionally used an empirical dataset of 20 \ecoli{} samples from across four major phylogroups to examine the benefit of \denovo{} variant discovery in \autoref{sec:denovo-empirical}. In the process of performing this analysis, we devised a novel method for comparing variant-calling precision and recall across tools in a coordinate-agnostic manner. The main benefit of such an approach is the removal of hard reference bias for \pandoraP{}, which occurs when the reference genome used for variant calling (or mapping) does not contain a locus (see \autoref{fig:reference-bias}). As the pan-genome of \ecoli{} is open, hard reference bias is a major problem when comparing cohorts of diverse sample - as we are. Indeed, as shown in Figure 7 of \cite{pandora}, \pandora{}'s use of a locus-specific reference that is dynamically selected based on the cohort under study leads to tens of thousands more SNPs being discovered in rare loci (loci in 2-5 genomes) compared to single-reference variant callers.
+Given the contrived nature of the simulation analysis, we additionally used an empirical dataset of 20 \ecoli{} samples from across four major phylogroups to examine the benefit of \denovo{} variant discovery in \autoref{sec:denovo-empirical}. In the process of performing this analysis, we devised a novel method for comparing variant-calling precision and recall across tools in a coordinate-agnostic manner. The main benefit of such an approach is the removal of hard reference bias for \pandora{}, which occurs when the reference genome used for variant calling (or mapping) does not contain a locus (see \autoref{fig:reference-bias}). As the pan-genome of \ecoli{} is open, hard reference bias is a major problem when comparing cohorts of diverse sample - as we are. Indeed, as shown in Figure 7 of \cite{pandora}, \pandora{}'s use of a locus-specific reference that is dynamically selected based on the cohort under study leads to tens of thousands more SNPs being discovered in rare loci (loci in 2-5 genomes) compared to single-reference variant callers.
 
 An important finding from our empirical analysis is the impact of Enterobacteriaceae methylation on \pandora{}'s \ont{} error rate seen in \autoref{fig:denovo-methylation}. In particular, when using \denovo{} discovery, the \ont{} error rate is 3-fold lower when a methylation-aware basecalling model is utilised. This observation is also confirmed by Wick \etal{} in their work benchmarking \ont{} basecalling methods for Enterobacteriaceae \cite{wick2019}. They saw that the overwhelming error source was in Dcm methylation sites and that these errors could be virtually erased by training a taxon-specific basecalling model. It follows that given the dramatic decreae in \denovo{} errors as a result of using the methylation-aware model, these systematic biases are being captured and incorporated back into the \panrg{} by variant discovery. Therefore, any \ont{} work involving genomes subject to Dcm methylation would be wise to employ methylation-aware basecalling. Other tools such as \vrb{nanopolish} have incorporated error modeling to remove these systematic biases \cite{Loman2015}. However, as \ont{} sequencing evolves at a rapid pace, the constant tweaking required to model these errors can become very laborious. As such, we feel that taxon-specific basecalling models are a more robust solution to these systematic errors.
 
@@ -348,19 +351,42 @@ Despite the incorporation of some \ont{} systematic errors caused by \denovo{} v
 Without the addition of \denovo{} variant discovery, \pandora{}'s recall is higher than all other variant callers tested - although only marginally higher than \vrb{medaka}. This shows the power of genome graphs to provide access to sections of the genome previously unavailable to single-reference methods. Now that we have provided the functionality for \pandora{} to perform novel variant detection, the door is open to access even more of the pan-genome. One application that stands to benefit from this is prospective surveillance of a bacterial population during an outbreak. The \panrg{} used by \pandora{} is a stable reference capable of handling an evolving cohort, and can importantly detect if a strain appears with a new locus. For example, the appearance of the $bla_{NDM-1}$ gene - which confers resistance to carbapenem in Gram-negative bacteria - on plasmids \cite{Yong2009,Kumarasamy2010} might have been more readily detected with the use of a \panrg{}. In this circumstance, hard reference bias can become quite dangerous and methods without this limitation will lead to quicker detection of concerning loci.
 
 % ==================================================================
-\section{Limitations}
+\section{Limitations and future work}
 \label{sec:denovo-limits}
-% nearly all errors in best performing params were not within the power of de novo to discover
-% this is refrred to by Appendix 1 - i.e., getting stick in cycles in the dbg
-% homopolymer deletions - maybe ignore them? tubby?
-% variants near ends of genes
 
-% ==================================================================
-\section{Conclusion}
+\subsection{Path enumeration}
 
-% ==================================================================
-\section{Future Work}
-\label{sec:denovo-fw}
-% In future work, we plan to add indels to the simulations.
+A fundamental limitation of the \denovo{} variant discovery method outlined in this chapter is the need for anchor \kmer{}s to initiate local assembly and perform path enumeration. While this is not of particular concern in most areas of a locus, it does become problematic near the start and ends of loci (within $2k-1$ positions of the ends). Indeed, we see in \autoref{fig:denovo-errors} that on simulated data, variants that occur near the ends of loci account for a recall loss of 8\%.
+
+One plausible solution for removing this anchor \kmer{} limitation would be to use a unique \kmer{} approach analogous to Kevlar \cite{Standage2019}. Briefly, Kevlar aims to detect \denovo{} variants by looking for unique \kmer{}s in a child, with respect to the parents. Reads containing these "interesting" \kmer{}s are then assembled with an overlap graph and the resulting contig is aligned to and genotyped against the reference.
+
+Our idea for how the Kevlar method could be adapted to \pandora{} is to identify candidate regions and extract the read pileups for these regions as we currently do (\autoref{sec:denovo-candidate-regions}), and then, for each candidate region, perform the following: i) let $M$ be the set of all minimizer \kmer{}s along the maximum likelihood path in the candidate region; ii) construct a \kmer{} count table $h(k,c)$ from the read pileup of the candidate region, where $k$ is a minimizer \kmer{} not in $M$ and $c$ is the number of occurrences of $k$ in the pileup; iii) filter out any $k$ with $c$ less than some threshold determined by the number of reads in the pileup, leaving a set of unique minimizer \kmer{}s $N$. We would then construct a de Bruijn graph from only those reads containing \kmer{}s in $N$. The enumeration of paths through this graph would then involve beginning from any one of the \kmer{}s in $N$ - removing the need for anchors - and only keeping those paths that contain a \kmer{} in $N$. One element of this approach that requires careful thought is how to facilitate incorporating the paths obtained from this approach back into the graph without the anchor \kmer{}s we currently use.
+
+\subsection{Cycle detection}
+\label{sec:denovo-cycles}
+The major computational bottleneck we have encountered during \denovo{} variant discovery is infinite cycles in the de Bruijn graph. As de Bruijn graphs are directed, but not necessarily acyclic, a cycle can occur when a \kmer{} (node) can reach itself by following a path from any of its successor (out) nodes. When multiple such cycles occur within a graph, computational performance can, and does, suffer. Such cycles can be detected using depth-first search, however we do not want to disallow them as cycles are not invalid biologically. 
+
+To limit being stuck infinitely in cycles, we employ pruning heuristics (\autoref{sec:denovo-prune}) that prevent paths from reaching a maximum length, and prevent the exploration of paths that will never reach our end anchor \kmer{}. However, if many cycles occur in close proximity, even these heuristics do not prevent bottlenecks. In some low complexity \prg{}s we have seen this process take on the order of days for a single candidate region. As such, future work to improve the computational performance would be well-served to investigate further pruning strategies. 
+
+\subsection{\ont{} homopolymer deletions}
+While Wick \etal{} found Dcm methylation sites to be the major source of errors in Enterobacteriaceae, when these were eliminated with their taxon-specific model, homopolymer deletions were the primary error source \cite{wick2019}. While we did not report the number of homopolymer deletions we found, we did discover one as the source of 1/9 false negatives in our best-performing parameter set in the simulations (\autoref{sec:denovo-sims-results}). As mentioned, some methods attempt to explicitly remove these errors as part of their model. One such possibility would be to refuse to perform \denovo{} discovery on candidate regions containing homopolymer sites. However, we feel such an approach is crude, and explore a potentially solution in \autoref{chap:tubby} that entails training a species-specific \ont{} basecalling model.  
+
+\subsection{Inserting novel alleles into the \panrg{}}
+\label{denovo-fw-insert}
+
+In \autoref{sec:denovo-insert} we described a somewhat convoluted process for inserting candidate paths found by \denovo{} discovery into a \panrg{}. This insertion approach is another of the main computational bottlenecks we encountered, due to the need to perform a multiple sequence alignment. 
+
+Leandro Ishi has been working on a prototype version of \makeprg{} (\url{https://github.com/leoisl/make_prg}) that facilitates much faster insertion of novel variants into a \panrg{}. When building a \prg{}, it additionally produces a customised data structure that acts as a way of remembering how sequences were clustered and collapsed. In addition, a very recent version (0.9.0) of \pandora{} changes the way \denovo{} discovery produces candidate paths. Rather than outputting them as sequence flanked by the maximum likelihood path sequence, it describes them in a custom format similar to VCF, with the addition of information about the \prg{} site the novel variant occurs in. Leandro has then implemented a new routine within \makeprg{} - \vrb{update} - which takes these custom data structures and attempts to add the novel variants directly into the \prg{}, only requiring the relevant sites to be recalculated. 
+
+\subsection{Insertions and deletions}
+
+A limitation we regret is not including indels in the simulation section (\autoref{sec:denovo-sims}). Evaluating indels can become quite complex and we suspect fine-tuning our method to produce high quality indel calls will require a lot of time and care. Simulations are the ideal environment in which to begin this work, as gathering a truth set of indels for empirical data is notoriously difficult. As such future work will begin by including indels in these simulations and then moving to well-characterised indel models for empirical data such as \cite{Bush2021}.
+
 % ==================================================================
 \section{Availability of data and materials}
+
+The \pandora{} software is available at \url{https://github.com/rmcolq/pandora} under an MIT license. The \denovo{} method described in this chapter is implement in the command \pandora{} \vrb{discover}.
+
+The analysis pipeline for the simulations in \autoref{sec:denovo-sims} is available at \url{https://github.com/mbhall88/pandora_simulations}. The data used for the \panrg{} in these simulations was obtained from \url{https://pangenome.org/Escherichia_coli}, using the script \url{https://github.com/mbhall88/pandora_simulations/blob/master/scripts/setup_panx_data.sh}. The \ont{} reads used in the simulations was downloaded from Nic Loman's blog post \url{http://lab.loman.net/2017/03/09/ultrareads-for-nanopore/}.
+
+All data and materials for the empirical data analysis in \autoref{sec:denovo-empirical} is described in \cite{pandora} and the corresponding GitHub repository \url{https://github.com/iqbal-lab-org/paper_pandora2020_analyses}.

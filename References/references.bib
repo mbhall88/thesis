@@ -1719,13 +1719,12 @@ abstract = {{When there are no strand-specific biases in mutation and selection 
 pages = {research0058.1}, 
 number = {10}, 
 volume = {3}, 
-keywords = {}
 }
 
 @article{Yong2009, 
 year = {2009}, 
 keywords = {amr,plasmid,HGT}, 
-title = {{Characterization of a New Metallo-β-Lactamase Gene, blaNDM-1, and a Novel Erythromycin Esterase Gene Carried on a Unique Genetic Structure in Klebsiella pneumoniae Sequence Type 14 from India ▿}}, 
+title = {{Characterization of a New Metallo-$\beta$-Lactamase Gene, blaNDM-1, and a Novel Erythromycin Esterase Gene Carried on a Unique Genetic Structure in Klebsiella pneumoniae Sequence Type 14 from India}}, 
 author = {Yong, Dongeun and Toleman, Mark A. and Giske, Christian G. and Cho, Hyun S. and Sundman, Kristina and Lee, Kyungwon and Walsh, Timothy R.}, 
 journal = {Antimicrobial Agents and Chemotherapy}, 
 issn = {0066-4804}, 
@@ -1752,4 +1751,31 @@ abstract = {{BackgroundGram-negative Enterobacteriaceae with resistance to carba
 pages = {597--602}, 
 number = {9}, 
 volume = {10}
+}
+
+@article{Standage2019, 
+year = {2019}, 
+keywords = {dbg,algorithms,variant-calling,denovo}, 
+title = {{Kevlar: A Mapping-Free Framework for Accurate Discovery of De Novo Variants}}, 
+author = {Standage, Daniel S. and Brown, C. Titus and Hormozdiari, Fereydoun}, 
+journal = {iScience}, 
+issn = {2589-0042}, 
+doi = {10.1016/j.isci.2019.07.032}, 
+pmid = {31377530}, 
+abstract = {{De novo genetic variants are an important source of causative variation in complex genetic disorders. Many methods for variant discovery rely on mapping reads to a reference genome, detecting numerous inherited variants irrelevant to the phenotype of interest. To distinguish between inherited and de novo variation, sequencing of families (parents and siblings) is commonly pursued. However, standard mapping-based approaches tend to have a high false-discovery rate for de novo variant prediction. Kevlar is a mapping-free method for de novo variant discovery, based on direct comparison of sequences between related individuals. Kevlar identifies high-abundance k-mers unique to the individual of interest. Reads containing these k-mers are partitioned into disjoint sets by shared k-mer content for variant calling, and preliminary variant predictions are sorted using a probabilistic score. We evaluated Kevlar on simulated and real datasets, demonstrating its ability to detect both de novo single-nucleotide variants and indels with high accuracy.}}, 
+pages = {28--36}, 
+volume = {18}
+}
+
+@article{Bush2021, 
+year = {2021}, 
+keywords = {variant-calling,bacterial-genomics,benchmark}, 
+title = {{Generalizable characteristics of false-positive bacterial variant calls}}, 
+author = {Bush, Stephen J}, 
+journal = {Microbial Genomics}, 
+doi = {10.1099/mgen.0.000615}, 
+pmid = {34346861}, 
+abstract = {{Minimizing false positives is a critical issue when variant calling as no method is without error. It is common practice to post-process a variant-call file (VCF) using hard filter criteria intended to discriminate true-positive (TP) from false-positive (FP) calls. These are applied on the simple principle that certain characteristics are disproportionately represented among the set of FP calls and that a user-chosen threshold can maximize the number detected. To provide guidance on this issue, this study empirically characterized all false SNP and indel calls made using real Illumina sequencing data from six disparate species and 166 variant-calling pipelines (the combination of 14 read aligners with up to 13 different variant callers, plus four ‘all-in-one’ pipelines). We did not seek to optimize filter thresholds but instead to draw attention to those filters of greatest efficacy and the pipelines to which they may most usefully be applied. In this respect, this study acts as a coda to our previous benchmarking evaluation of bacterial variant callers, and provides general recommendations for effective practice. The results suggest that, of the pipelines analysed in this study, the most straightforward way of minimizing false positives would simply be to use Snippy. We also find that a disproportionate number of false calls, irrespective of the variant-calling pipeline, are located in the vicinity of indels, and highlight this as an issue for future development.}}, 
+number = {8}, 
+volume = {7}
 }
