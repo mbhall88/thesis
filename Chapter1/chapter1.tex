@@ -15,6 +15,26 @@
 \section{Publication and collaboration acknowledgements}
 \label{sec:denovo-acknowledge}
 
+The software program that this chapter extends, \pandora{}, is the result of Rachel Colquhoun's DPhil thesis \cite{rachelthesis}.
+
+A preprint describing \pandora{}, the work in this chapter, and the evaluation (which is partly covered in this chapter) is available at \cite{pandora}. This paper is a collaborative project that spans five years of work by Rachel (first author), myself (second author), Leandro Ishi (third author), and others.
+
+My aim here is to make it clear what work is solely mine and what was completed in collaboration. Where possibly I have also attempted to indicate within certain sections the work not completed by myself.
+
+The method for performing \denovo{} variant discovery in \autoref{sec:denovo-method} is my own, with input from collaborators. However, I implemented it within the \pandora{} code base. \autoref{sec:denovo-prune} describes a process for pruning the path-space in a de Bruijn graph, this work was the joint idea of myself and Leandro Ishi, and Leandro added the implementation for the distance map calculation.
+
+All of the work in \autoref{sec:denovo-sims} is my own.
+
+\autoref{sec:denovo-empirical} describes a subset of the results in \cite{pandora}. The evaluation framework for this section of the paper (and this chapter) underwent many iterations over a period of two years. Leandro Ishi and I conceived of, and implemented, the original method of calculating precision and recall in a coordinate-agnostic manner with the mapping of variant probes. This framework was later incorporated and adapted by Martin Hunt in the tool Varifier (\url{https://github.com/iqbal-lab-org/varifier}). The final method used for evaluation was implemented by Leandro Ishi, but is heavily based on the original work we performed together.
+
+In addition, many components of the pipeline to run the analysis in \autoref{sec:denovo-empirical} and \cite{pandora} were originally implemented by myself, but were later refactored or changed by Leandro.
+
+The idea for the \ont{} basecalling model comparison in \label{sec:denovo-methylation} was mine, as was the initial implementation - but not the final. \autoref{sec:pandora-roc-results} was ultimately performed by Leandro Ishi, however I had a lot of input and contributed pipeline code in the beginning.
+
+The construction of the pan-genome truth set of variants discussed in \autoref{sec:denovo-empirical-eval} and \autoref{app:pangenome-snp-truth} is the sole work of Leandro Ishi. It is included in this chapter to aid the reader's understanding of how recall is calculated.
+
+I will be forever grateful to Rachel, Leandro, and Zam for their tireless work on this project. I will cherish the \emph{many} insightful whiteboard sessions, cafeteria discussions, and convoluted Slack and GitHub messages.
+
 % ==================================================================
 \section{Introduction}
 
@@ -290,6 +310,7 @@ We basecall the raw data for 4 samples from our dataset with both the default an
 Given the dramatic improvement in precision and recall from using the methylation-aware basecalling model, we re-basecalled all data for subsequent analyses with this model.
 
 \subsection{Performance of \pandora{} against single-reference tools}
+\label{sec:pandora-roc-results}
 
 We now compare the precision and recall of \pandora{} on Illumina and \ont{} data against to two single-reference variant callers for each technology. For the \ont{} analysis, we use the reads basecalled with the methylation-aware model (\autoref{sec:denovo-methylation}). In addition, we run \pandora{} with and without \denovo{} variant discovery in order to see the impact of the work in this chapter.
 
