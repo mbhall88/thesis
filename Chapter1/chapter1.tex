@@ -17,26 +17,38 @@
 
 The software program that this chapter extends, \pandora{}, is the result of Rachel Colquhoun's DPhil thesis \cite{rachelthesis}.
 
-A preprint describing \pandora{}, the work in this chapter, and the evaluation (which is partly covered in this chapter) is available at \cite{pandora}. This paper is a collaborative project that spans five years of work by Rachel (first author), myself (second author), Leandro Ishi (third author), and others.
+A preprint describing \pandora{} and the work in this chapter is available at \cite{pandora}. This paper is a collaborative project that spans five years of work by Rachel (first author), myself (second author), Leandro Ishi (third author), and others.
 
-My aim here is to make it clear what work is solely mine and what was completed in collaboration. Where possibly I have also attempted to indicate within certain sections the work not completed by myself.
+My aim here is to clarify what work is solely mine and what was completed in collaboration. Where possible, I have also attempted to indicate within certain sections the work not completed by myself.
 
 The method for performing \denovo{} variant discovery in \autoref{sec:denovo-method} is my own, with input from collaborators. However, I implemented it within the \pandora{} code base. \autoref{sec:denovo-prune} describes a process for pruning the path-space in a de Bruijn graph, this work was the joint idea of myself and Leandro Ishi, and Leandro added the implementation for the distance map calculation.
 
 All of the work in \autoref{sec:denovo-sims} is my own.
 
-\autoref{sec:denovo-empirical} describes a subset of the results in \cite{pandora}. The evaluation framework for this section of the paper (and this chapter) underwent many iterations over a period of two years. Leandro Ishi and I conceived of, and implemented, the original method of calculating precision and recall in a coordinate-agnostic manner with the mapping of variant probes. This framework was later incorporated and adapted by Martin Hunt in the tool Varifier (\url{https://github.com/iqbal-lab-org/varifier}). The final method used for evaluation was implemented by Leandro Ishi, but is heavily based on the original work we performed together.
+\autoref{sec:denovo-empirical} describes a subset of the results in \cite{pandora}. The evaluation framework used in the paper (and this section) underwent many iterations over two years. Leandro Ishi and I conceived and implemented the original method of calculating precision and recall in a coordinate-agnostic manner with the mapping of variant probes. This framework was later incorporated and adapted by Martin Hunt in the tool Varifier (\url{https://github.com/iqbal-lab-org/varifier}). Leandro Ishi implemented the final evaluation method but it is heavily based on the original work we performed together.
 
-In addition, many components of the pipeline to run the analysis in \autoref{sec:denovo-empirical} and \cite{pandora} were originally implemented by myself, but were later refactored or changed by Leandro.
+In addition, several components of the pipeline to run the analysis in \autoref{sec:denovo-empirical} and \cite{pandora} were initially implemented by myself but were later refactored or changed by Leandro.
 
-The idea for the \ont{} basecalling model comparison in \label{sec:denovo-methylation} was mine, as was the initial implementation - but not the final. \autoref{sec:pandora-roc-results} was ultimately performed by Leandro Ishi, however I had a lot of input and contributed pipeline code in the beginning.
+The idea for the \ont{} basecalling model comparison in \autoref{sec:denovo-methylation} was mine, as was the initial implementation - but not the final. \autoref{sec:pandora-roc-results} was ultimately performed by Leandro Ishi; however, I had much input and contributed pipeline code in the beginning.
 
-The construction of the pan-genome truth set of variants discussed in \autoref{sec:denovo-empirical-eval} and \autoref{app:pangenome-snp-truth} is the sole work of Leandro Ishi. It is included in this chapter to aid the reader's understanding of how recall is calculated.
+The construction of the pan-genome truth set of variants discussed in \autoref{sec:denovo-empirical-eval} and \autoref{app:pangenome-snp-truth} is the work of Leandro Ishi. It is included in this chapter to aid the reader's understanding of how recall is calculated.
 
-I will be forever grateful to Rachel, Leandro, and Zam for their tireless work on this project. I will cherish the \emph{many} insightful whiteboard sessions, cafeteria discussions, and convoluted Slack and GitHub messages.
+I am forever grateful to Rachel, Leandro, and Zam for their tireless work on this project. I will cherish the \emph{many} insightful whiteboard sessions, cafeteria discussions, and convoluted Slack and GitHub messages.
 
 % ==================================================================
 \section{Introduction}
+
+ Standard approaches to variant analysis are effectively a first-order approximation. In such an approximation, samples are considered identical to a selected reference; one maps reads to it, identifies clear variations via the read pileup, and then the reference is modified to get an estimate of the sample's genome. We term such a procedure a "linear" or "single-reference" approach. 
+ 
+ As mentioned in \autoref{sec:pandora-intro}, Pandora is a method developed by a previous PhD student in our lab, Rachel Colquhoun \cite{rachelthesis}. It works on the premise of approximating a genome as a hierarchical mosaic. At a high-level, \pandora{} represents a pan-genome as a mosaic of loci, while at the locus-level, it is a mosaic of previously-seen genomes. Loci can represent any genomic unit desired; a gene, intergenic region, or a mobile genetic element - the method is agnostic. Sequences from many genomes in a population are collapsed into a graph structure (\autoref{sec:make_prg}) to form a locus population reference graph (\prg{}). All of the pan-genome's \prg{}s are then collected into this high-level hierarchical mosaic: a pan-genome reference graph (\panrg{}).
+ 
+ Given a set of Illumina or \ont{} sequencing reads \pandora{} identifies which \panrg{} loci are present and infers a consensus sequence for each, as the maximum likelihood path through the respective \prg{}. These paths are used as the first-order approximation for the sample and variants are genotyped with respect to the consensus sequences. 
+ 
+ While \pandora{} allows comparison of genomes to a level of detail provided by no other tool, there is still a significant shortcoming: it cannot discover novel variation. If a sample contains a variant not present in a \prg{}, the best \pandora{} can do is select the path that is closest to that variant. Therefore, we begin this chapter by describing a method for performing \denovo{} variant discovery in a genome graph and implement it in \pandora{}.
+ 
+ We use a simulated genome and associated \ont{} dataset to show that without this discovery capability, \pandora{} cannot detect variants absent from a \prg{}. In addition, we explore the impact of various parameters on the \denovo{} discovery method, and find read depth to have a vital influence.
+ 
+ Finally, we use an empirical dataset consisting of 20 diverse \ecoli{} samples to show that with our new variant discovery approach, \pandora{} has higher recall than all single-reference tools tested for both Illumina and \ont{} data. We identify methylation sites as a major source of our errors on \ont{} data and provide a solution for removing many of these errors. In the process of performing this analysis, we additionally outline a coordinate-free method for evaluating variant caller precision and recall, facilitating the comparison of linear- and graph-based methods. 
 
 % ==================================================================
 \section{Methods}
