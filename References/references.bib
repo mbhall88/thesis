@@ -1661,14 +1661,30 @@ school={University of Oxford},
 type={DPhil thesis}
 } 
 
-@article{pandora, 
-year = {2020}, 
-keywords = {genome-graphs,variant-calling,bacterial-genomics}, 
-title = {{Nucleotide-resolution bacterial pan-genomics with reference graphs}}, 
-author = {Colquhoun, Rachel M and Hall, Michael B and Lima, Leandro and Roberts, Leah W and Malone, Kerri M and Hunt, Martin and Letcher, Brice and Hawkey, Jane and George, Sophie and Pankhurst, Louise and Iqbal, Zamin}, 
-journal = {bioRxiv}, 
-doi = {10.1101/2020.11.12.380378}, 
-abstract = {{Bacterial genomes follow a U-shaped frequency distribution whereby most genomic loci are either rare (accessory) or common (core); the union of these is the pan-genome. The alignable fraction of two genomes from a single species can be low (e.g. 50-70\%), such that no single reference genome can access all single nucleotide polymorphisms (SNPs). The pragmatic solution is to choose a close reference, and analyse SNPs only in the core genome. Given much bacterial adaptability hinges on the accessory genome, this is an unsatisfactory limitation. We present a novel pan-genome graph structure and algorithms implemented in the software pandora, which approximates a sequenced genome as a recombinant of reference genomes, detects novel variation and then pan-genotypes multiple samples. The method takes fastq as input and outputs a multi-sample VCF with respect to an inferred data-dependent reference genome, and is available at https://github.com/rmcolq/pandora. Constructing a reference graph from 578 E. coli genomes, we analyse a diverse set of 20 E. coli isolates. We show pandora recovers at least 13k more rare SNPs than single-reference based tools, achieves equal or better error rates with Nanopore as with Illumina data, 6-24x lower Nanopore error rates than other tools, and provides a stable framework for analysing diverse samples without reference bias. We also show that our inferred recombinant VCF reference genome is significantly better than simply picking the closest RefSeq reference. This is a step towards comprehensive cohort analysis of bacterial pan-genomic variation, with potential impacts on genotype/phenotype and epidemiological studies.}}
+@article{pandora,
+author={Colquhoun, Rachel M.
+and Hall, Michael B.
+and Lima, Leandro
+and Roberts, Leah W.
+and Malone, Kerri M.
+and Hunt, Martin
+and Letcher, Brice
+and Hawkey, Jane
+and George, Sophie
+and Pankhurst, Louise
+and Iqbal, Zamin},
+title={Pandora: nucleotide-resolution bacterial pan-genomics with reference graphs},
+journal={Genome Biology},
+year={2021},
+month={Sep},
+day={14},
+volume={22},
+number={1},
+pages={267},
+abstract={We present pandora, a novel pan-genome graph structure and algorithms for identifying variants across the full bacterial pan-genome. As much bacterial adaptability hinges on the accessory genome, methods which analyze SNPs in just the core genome have unsatisfactory limitations. Pandora approximates a sequenced genome as a recombinant of references, detects novel variation and pan-genotypes multiple samples. Using a reference graph of 578 Escherichia coli genomes, we compare 20 diverse isolates. Pandora recovers more rare SNPs than single-reference-based tools, is significantly better than picking the closest RefSeq reference, and provides a stable framework for analyzing diverse samples without reference bias.},
+issn={1474-760X},
+doi={10.1186/s13059-021-02473-1},
+url={https://doi.org/10.1186/s13059-021-02473-1}
 }
 
 @article{thorpe2018, 
@@ -1939,4 +1955,183 @@ volume = {25}
   doi = {10.1007/978-3-030-38281-0},
   urldate = {2021-09-14},
   year = {2020}
+}
+
+@article{Page2015, 
+year = {2015}, 
+keywords = {pangenome,msa,bacterial-genomics,software}, 
+title = {{Roary: rapid large-scale prokaryote pan genome analysis}}, 
+author = {Page, Andrew J. and Cummins, Carla A. and Hunt, Martin and Wong, Vanessa K. and Reuter, Sandra and Holden, Matthew T.G. and Fookes, Maria and Falush, Daniel and Keane, Jacqueline A. and Parkhill, Julian}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btv421}, 
+pmid = {26198102}, 
+pmcid = {PMC4817141}, 
+abstract = {{Summary: A typical prokaryote population sequencing study can now consist of hundreds or thousands of isolates. Interrogating these datasets can provide detailed insights into the genetic structure of prokaryotic genomes. We introduce Roary, a tool that rapidly builds large-scale pan genomes, identifying the core and accessory genes. Roary makes construction of the pan genome of thousands of prokaryote samples possible on a standard desktop without compromising on the accuracy of results. Using a single CPU Roary can produce a pan genome consisting of 1000 isolates in 4.5 hours using 13 GB of RAM, with further speedups possible using multiple processors. Availability and implementation: Roary is implemented in Perl and is freely available under an open source GPLv3 license from http://sanger-pathogens.github.io/Roary Contact:roary@sanger.ac.uk Supplementary information:Supplementary data are available at Bioinformatics online.}}, 
+pages = {3691--3693}, 
+number = {22}, 
+volume = {31}
+}
+
+@article{Treangen2014, 
+year = {2014}, 
+keywords = {pangenome,variant-calling,bacterial-genomics,msa,software,visualisation}, 
+title = {{The Harvest suite for rapid core-genome alignment and visualization of thousands of intraspecific microbial genomes}}, 
+author = {Treangen, Todd J and Ondov, Brian D and Koren, Sergey and Phillippy, Adam M}, 
+journal = {Genome Biology}, 
+doi = {10.1186/s13059-014-0524-x}, 
+pmid = {25410596}, 
+abstract = {{Whole-genome sequences are now available for many microbial species and clades, however existing whole-genome alignment methods are limited in their ability to perform sequence comparisons of multiple sequences simultaneously. Here we present the Harvest suite of core-genome alignment and visualization tools for the rapid and simultaneous analysis of thousands of intraspecific microbial strains. Harvest includes Parsnp, a fast core-genome multi-aligner, and Gingr, a dynamic visual platform. Together they provide interactive core-genome alignments, variant calls, recombination detection, and phylogenetic trees. Using simulated and real data we demonstrate that our approach exhibits unrivaled speed while maintaining the accuracy of existing methods. The Harvest suite is open-source and freely available from: http://github.com/marbl/harvest.}}, 
+pages = {524}, 
+number = {11}, 
+volume = {15}
+}
+
+@article{Arnold2018, 
+year = {2018}, 
+keywords = {recombination,evolution,bacterial-genomics}, 
+title = {{Weak Epistasis May Drive Adaptation in Recombining Bacteria}}, 
+author = {Arnold, Brian J. and Gutmann, Michael U. and Grad, Yonatan H. and Sheppard, Samuel K. and Corander, Jukka and Lipsitch, Marc and Hanage, William P.}, 
+journal = {Genetics}, 
+issn = {0016-6731}, 
+doi = {10.1534/genetics.117.300662}, 
+pmid = {29330348}, 
+abstract = {{Abstract The impact of epistasis on the evolution of multi-locus traits depends on recombination. While sexually reproducing eukaryotes recombine so frequently that epistasis between polymorphisms is not considered to play a large role in short-term adaptation, many bacteria also recombine, some to the degree that their populations are described as “panmictic” or “freely recombining.” However, whether this recombination is sufficient to limit the ability of selection to act on epistatic contributions to fitness is unknown. We quantify homologous recombination in five bacterial pathogens and use these parameter estimates in a multilocus model of bacterial evolution with additive and epistatic effects. We find that even for highly recombining species (e.g., Streptococcus pneumoniae or Helicobacter pylori), selection on weak interactions between distant mutations is nearly as efficient as for an asexual species, likely because homologous recombination typically transfers only short segments. However, for strong epistasis, bacterial recombination accelerates selection, with the dynamics dependent on the amount of recombination and the number of loci. Epistasis may thus play an important role in both the short- and long-term adaptive evolution of bacteria, and, unlike in eukaryotes, is not limited to strong effect sizes, closely linked loci, or other conditions that limit the impact of recombination.}}, 
+pages = {genetics.300662.2017}, 
+number = {3}, 
+volume = {208}
+}
+
+@article{Azarian2018, 
+year = {2018}, 
+keywords = {evolution,pangenome,bacterial-genomics}, 
+title = {{The impact of serotype-specific vaccination on phylodynamic parameters of Streptococcus pneumoniae and the pneumococcal pan-genome}}, 
+author = {Azarian, Taj and Grant, Lindsay R. and Arnold, Brian J. and Hammitt, Laura L. and Reid, Raymond and Santosham, Mathuram and Weatherholtz, Robert and Goklish, Novalene and Thompson, Claudette M. and Bentley, Stephen D. and O’Brien, Katherine L. and Hanage, William P. and Lipsitch, Marc}, 
+journal = {PLOS Pathogens}, 
+issn = {1553-7366}, 
+doi = {10.1371/journal.ppat.1006966}, 
+pmid = {29617440}, 
+abstract = {{In the United States, the introduction of the heptavalent pneumococcal conjugate vaccine (PCV) largely eliminated vaccine serotypes (VT); non-vaccine serotypes (NVT) subsequently increased in carriage and disease. Vaccination also disrupts the composition of the pneumococcal pangenome, which includes mobile genetic elements and polymorphic non-capsular antigens important for virulence, transmission, and pneumococcal ecology. Antigenic proteins are of interest for future vaccines; yet, little is known about how the they are affected by PCV use. To investigate the evolutionary impact of vaccination, we assessed recombination, evolution, and pathogen demographic history of 937 pneumococci collected from 1998–2012 among Navajo and White Mountain Apache Native American communities. We analyzed changes in the pneumococcal pangenome, focusing on metabolic loci and 19 polymorphic protein antigens. We found the impact of PCV on the pneumococcal population could be observed in reduced diversity, a smaller pangenome, and changing frequencies of accessory clusters of orthologous groups (COGs). Post-PCV7, diversity rebounded through clonal expansion of NVT lineages and inferred in-migration of two previously unobserved lineages. Accessory COGs frequencies trended toward pre-PCV7 values with increasing time since vaccine introduction. Contemporary frequencies of protein antigen variants are better predicted by pre-PCV7 values (1998–2000) than the preceding period (2006–2008), suggesting balancing selection may have acted in maintaining variant frequencies in this population. Overall, we present the largest genomic analysis of pneumococcal carriage in the United States to date, which includes a snapshot of a true vaccine-naïve community prior to the introduction of PCV7. These data improve our understanding of pneumococcal evolution and emphasize the need to consider pangenome composition when inferring the impact of vaccination and developing future protein-based pneumococcal vaccines.}}, 
+pages = {e1006966}, 
+number = {4}, 
+volume = {14}
+}
+
+@article{McNally2016, 
+year = {2016}, 
+keywords = {pangenome,bacterial-genomics,phylogenetics,evolution}, 
+title = {{Combined Analysis of Variation in Core, Accessory and Regulatory Genome Regions Provides a Super-Resolution View into the Evolution of Bacterial Populations}}, 
+author = {McNally, Alan and Oren, Yaara and Kelly, Darren and Pascoe, Ben and Dunn, Steven and Sreecharan, Tristan and Vehkala, Minna and Välimäki, Niko and Prentice, Michael B. and Ashour, Amgad and Avram, Oren and Pupko, Tal and Dobrindt, Ulrich and Literak, Ivan and Guenther, Sebastian and Schaufler, Katharina and Wieler, Lothar H. and Zhiyong, Zong and Sheppard, Samuel K. and McInerney, James O. and Corander, Jukka}, 
+journal = {PLOS Genetics}, 
+issn = {1553-7390}, 
+doi = {10.1371/journal.pgen.1006280}, 
+pmid = {27618184}, 
+pmcid = {PMC5019451}, 
+abstract = {{The use of whole-genome phylogenetic analysis has revolutionized our understanding of the evolution and spread of many important bacterial pathogens due to the high resolution view it provides. However, the majority of such analyses do not consider the potential role of accessory genes when inferring evolutionary trajectories. Moreover, the recently discovered importance of the switching of gene regulatory elements suggests that an exhaustive analysis, combining information from core and accessory genes with regulatory elements could provide unparalleled detail of the evolution of a bacterial population. Here we demonstrate this principle by applying it to a worldwide multi-host sample of the important pathogenic E. coli lineage ST131. Our approach reveals the existence of multiple circulating subtypes of the major drug–resistant clade of ST131 and provides the first ever population level evidence of core genome substitutions in gene regulatory regions associated with the acquisition and maintenance of different accessory genome elements.}}, 
+pages = {e1006280}, 
+number = {9}, 
+volume = {12}
+}
+
+@article{Boolchandani2019, 
+year = {2019}, 
+keywords = {review,amr,bacterial-genomics}, 
+title = {{Sequencing-based methods and resources to study antimicrobial resistance}}, 
+author = {Boolchandani, Manish and D’Souza, Alaric W. and Dantas, Gautam}, 
+journal = {Nature Reviews Genetics}, 
+issn = {1471-0056}, 
+doi = {10.1038/s41576-019-0108-4}, 
+pmid = {30886350}, 
+abstract = {{Antimicrobial resistance extracts high morbidity, mortality and economic costs yearly by rendering bacteria immune to antibiotics. Identifying and understanding antimicrobial resistance are imperative for clinical practice to treat resistant infections and for public health efforts to limit the spread of resistance. Technologies such as next-generation sequencing are expanding our abilities to detect and study antimicrobial resistance. This Review provides a detailed overview of antimicrobial resistance identification and characterization methods, from traditional antimicrobial susceptibility testing to recent deep-learning methods. We focus on sequencing-based resistance discovery and discuss tools and databases used in antimicrobial resistance studies. Next-generation sequencing has improved the identification and characterization of antimicrobial resistance. Focusing on sequence-based discovery of antibiotic resistance genes, this Review discusses computational strategies and resources for resistance gene identification in genomic and metagenomic samples, including recent deep-learning approaches.}}, 
+pages = {356--370}, 
+number = {6}, 
+volume = {20}
+}
+
+@article{Vasquez2019, 
+year = {2019}, 
+keywords = {bacterial-genomics,virulence,pangenome}, 
+title = {{The Pseudomonas aeruginosa accessory genome elements influence virulence towards Caenorhabditis elegans}}, 
+author = {Vasquez-Rifo, Alejandro and Veksler-Lublinsky, Isana and Cheng, Zhenyu and Ausubel, Frederick M. and Ambros, Victor}, 
+journal = {Genome Biology}, 
+doi = {10.1186/s13059-019-1890-1}, 
+pmid = {31823826}, 
+abstract = {{Multicellular animals and bacteria frequently engage in predator-prey and host-pathogen interactions, such as the well-studied relationship between Pseudomonas aeruginosa and the nematode Caenorhabditis elegans. This study investigates the genomic and genetic basis of bacterial-driven variability in P. aeruginosa virulence towards C. elegans to provide evolutionary insights into host-pathogen relationships. Natural isolates of P. aeruginosa that exhibit diverse genomes display a broad range of virulence towards C. elegans. Using gene association and genetic analysis, we identify accessory genome elements that correlate with virulence, including both known and novel virulence determinants. Among the novel genes, we find a viral-like mobile element, the teg block, that impairs virulence and whose acquisition is restricted by CRISPR-Cas systems. Further genetic and genomic evidence suggests that spacer-targeted elements preferentially associate with lower virulence while the presence of CRISPR-Cas associates with higher virulence. Our analysis demonstrates substantial strain variation in P. aeruginosa virulence, mediated by specific accessory genome elements that promote increased or decreased virulence. We exemplify that viral-like accessory genome elements that decrease virulence can be restricted by bacterial CRISPR-Cas immune defense systems, and suggest a positive, albeit indirect, role for host CRISPR-Cas systems in virulence maintenance.}}, 
+pages = {270}, 
+number = {1}, 
+volume = {20}
+}
+
+@article{Wyres2021, 
+year = {2021}, 
+keywords = {outbreak,amr,surveillance,bacterial-genomics}, 
+title = {{Genomic surveillance of antimicrobial resistant bacterial colonisation and infection in intensive care patients}}, 
+author = {Wyres, Kelly L. and Hawkey, Jane and Mirčeta, Mirianne and Judd, Louise M. and Wick, Ryan R. and Gorrie, Claire L. and Pratt, Nigel F. and Garlick, Jill S. and Watson, Kerrie M. and Pilcher, David V. and McGloughlin, Steve A. and Abbott, Iain J. and Macesic, Nenad and Spelman, Denis W. and Jenney, Adam W. J. and Holt, Kathryn E.}, 
+journal = {BMC Infectious Diseases}, 
+doi = {10.1186/s12879-021-06386-z}, 
+pmid = {34261450}, 
+abstract = {{Third-generation cephalosporin-resistant Gram-negatives (3GCR-GN) and vancomycin-resistant enterococci (VRE) are common causes of multi-drug resistant healthcare-associated infections, for which gut colonisation is considered a prerequisite. However, there remains a key knowledge gap about colonisation and infection dynamics in high-risk settings such as the intensive care unit (ICU), thus hampering infection prevention efforts. We performed a three-month prospective genomic survey of infecting and gut-colonising 3GCR-GN and VRE among patients admitted to an Australian ICU. Bacteria were isolated from rectal swabs (n = 287 and n = 103 patients ≤2 and > 2 days from admission, respectively) and diagnostic clinical specimens between Dec 2013 and March 2014. Isolates were subjected to Illumina whole-genome sequencing (n = 127 3GCR-GN, n = 41 VRE). Multi-locus sequence types (STs) and antimicrobial resistance determinants were identified from de novo assemblies. Twenty-three isolates were selected for sequencing on the Oxford Nanopore MinION device to generate completed reference genomes (one for each ST isolated from ≥2 patients). Single nucleotide variants (SNVs) were identified by read mapping and variant calling against these references. Among 287 patients screened on admission, 17.4 and 8.4\% were colonised by 3GCR-GN and VRE, respectively. Escherichia coli was the most common species (n = 36 episodes, 58.1\%) and the most common cause of 3GCR-GN infection. Only two VRE infections were identified. The rate of infection among patients colonised with E. coli was low, but higher than those who were not colonised on admission (n = 2/33, 6\% vs n = 4/254, 2\%, respectively, p = 0.3). While few patients were colonised with 3GCR- Klebsiella pneumoniae or Pseudomonas aeruginosa on admission (n = 4), all such patients developed infections with the colonising strain. Genomic analyses revealed 10 putative nosocomial transmission clusters (≤20 SNVs for 3GCR-GN, ≤3 SNVs for VRE): four VRE, six 3GCR-GN, with epidemiologically linked clusters accounting for 21 and 6\% of episodes, respectively (OR 4.3, p = 0.02). 3GCR-E. coli and VRE were the most common gut colonisers. E. coli was the most common cause of 3GCR-GN infection, but other 3GCR-GN species showed greater risk for infection in colonised patients. Larger studies are warranted to elucidate the relative risks of different colonisers and guide the use of screening in ICU infection control.}}, 
+pages = {683}, 
+number = {1}, 
+volume = {21}
+}
+
+@article{Taylor2015, 
+year = {2015}, 
+keywords = {outbreak,surveillance,variant-calling}, 
+title = {{Characterization of Foodborne Outbreaks of Salmonella enterica Serovar Enteritidis with Whole-Genome Sequencing Single Nucleotide Polymorphism-Based Analysis for Surveillance and Outbreak Detection}}, 
+author = {Taylor, Angela J. and Lappi, Victoria and Wolfgang, William J. and Lapierre, Pascal and Palumbo, Michael J. and Medus, Carlota and Boxrud, David}, 
+journal = {Journal of Clinical Microbiology}, 
+issn = {0095-1137}, 
+doi = {10.1128/jcm.01280-15}, 
+pmid = {26269623}, 
+pmcid = {PMC4572550}, 
+abstract = {{Salmonella enterica serovar Enteritidis is a significant cause of gastrointestinal illness in the United States; however, current molecular subtyping methods lack resolution for this highly clonal serovar. Advances in next-generation sequencing technologies have made it possible to examine whole-genome sequencing (WGS) as a potential molecular subtyping tool for outbreak detection and source trace back. Here, we conducted a retrospective analysis of S. Enteritidis isolates from seven epidemiologically confirmed foodborne outbreaks and sporadic isolates (not epidemiologically linked) to determine the utility of WGS to identify outbreaks. A collection of 55 epidemiologically characterized clinical and environmental S. Enteritidis isolates were sequenced. Single nucleotide polymorphism (SNP)-based cluster analysis of the S. Enteritidis genomes revealed well supported clades, with less than four-SNP pairwise diversity, that were concordant with epidemiologically defined outbreaks. Sporadic isolates were an average of 42.5 SNPs distant from the outbreak clusters. Isolates collected from the same patient over several weeks differed by only two SNPs. Our findings show that WGS provided greater resolution between outbreak, sporadic, and suspect isolates than the current gold standard subtyping method, pulsed-field gel electrophoresis (PFGE). Furthermore, results could be obtained in a time frame suitable for surveillance activities, supporting the use of WGS as an outbreak detection and characterization method for S. Enteritidis.}}, 
+pages = {3334--3340}, 
+number = {10}, 
+volume = {53}
+}
+
+@article{Cremers2020, 
+year = {2020}, 
+keywords = {kmer,outbreak,surveillance,bacterial-genomics,transmission-clustering}, 
+title = {{Surveillance-embedded genomic outbreak resolution of methicillin-susceptible Staphylococcus aureus in a neonatal intensive care unit}}, 
+author = {Cremers, A. J. H. and Coolen, J. P. M. and Bleeker-Rovers, C. P. and Geest-Blankert, A. D. J. van der and Haverkate, D. and Hendriks, H. and Henriet, S. S. V. and Huynen, M. A. and Kolwijck, E. and Liem, D. and Melchers, W. J. G. and Rossen, J. W. and Zoll, J. and Heijst, A. van and Hopman, J. and Wertheim, H. F. L.}, 
+journal = {Scientific Reports}, 
+doi = {10.1038/s41598-020-59015-1}, 
+pmid = {32060342}, 
+abstract = {{We observed an increase in methicillin-susceptible Staphylococcus aureus (MSSA) infections at a Dutch neonatal intensive care unit. Weekly neonatal MSSA carriage surveillance and cross-sectional screenings of health care workers (HCWs) were available for outbreak tracing. Traditional clustering of MSSA isolates by spa typing and Multiple-Locus Variable number tandem repeat Analysis (MLVA) suggested that nosocomial transmission had contributed to the infections. We investigated whether whole-genome sequencing (WGS) of MSSA surveillance would provide additional evidence for transmission. MSSA isolates from neonatal infections, carriage surveillance, and HCWs were subjected to WGS and bioinformatic analysis for identification and localization of high-quality single nucleotide polymorphisms, and in-depth analysis of subsets of isolates. By measuring the genetic diversity in background surveillance, we defined transmission-level relatedness and identified isolates that had been unjustly assigned to clusters based on MLVA, while spa typing was concordant but of insufficient resolution. Detailing particular subsets of isolates provided evidence that HCWs were involved in multiple outbreaks, yet it alleviated concerns about one particular HCW. The improved resolution and accuracy of genomic outbreak analyses substantially altered the view on outbreaks, along with apposite measures. Therefore, inclusion of the circulating background population has the potential to overcome current issues in genomic outbreak inference.}}, 
+pages = {2619}, 
+number = {1}, 
+volume = {10}
+}
+
+@article{bowtie2012, 
+year = {2012}, 
+keywords = {alignment,algorithms,software}, 
+title = {{Fast gapped-read alignment with Bowtie 2}}, 
+author = {Langmead, Ben and Salzberg, Steven L}, 
+journal = {Nature Methods}, 
+issn = {1548-7091}, 
+doi = {10.1038/nmeth.1923}, 
+pmid = {22388286}, 
+pmcid = {PMC3322381}, 
+abstract = {{The Bowtie 2 software achieves fast, sensitive, accurate and memory-efficient gapped alignment of sequencing reads using the full-text minute index and hardware-accelerated dynamic programming algorithms. As the rate of sequencing increases, greater throughput is demanded from read aligners. The full-text minute index is often used to make alignment very fast and memory-efficient, but the approach is ill-suited to finding longer, gapped alignments. Bowtie 2 combines the strengths of the full-text minute index with the flexibility and speed of hardware-accelerated dynamic programming algorithms to achieve a combination of high speed, sensitivity and accuracy.}}, 
+pages = {357--359}, 
+number = {4}, 
+volume = {9}
+}
+
+@article{Olson2015, 
+year = {2015}, 
+keywords = {variant-calling,review,bacterial-genomics,benchmark}, 
+title = {{Best practices for evaluating single nucleotide variant calling methods for microbial genomics}}, 
+author = {Olson, Nathan D. and Lund, Steven P. and Colman, Rebecca E. and Foster, Jeffrey T. and Sahl, Jason W. and Schupp, James M. and Keim, Paul and Morrow, Jayne B. and Salit, Marc L. and Zook, Justin M.}, 
+journal = {Frontiers in Genetics}, 
+doi = {10.3389/fgene.2015.00235}, 
+pmid = {26217378}, 
+pmcid = {PMC4493402}, 
+abstract = {{Innovations in sequencing technologies have allowed biologists to make incredible advances in understanding biological systems. As experience grows, researchers increasingly recognize that analyzing the wealth of data provided by these new sequencing platforms requires careful attention to detail for robust results. Thus far, much of the scientific Communit’s focus for use in bacterial genomics has been on evaluating genome assembly algorithms and rigorously validating assembly program performance. Missing, however, is a focus on critical evaluation of variant callers for these genomes. Variant calling is essential for comparative genomics as it yields insights into nucleotide-level organismal differences. Variant calling is a multistep process with a host of potential error sources that may lead to incorrect variant calls. Identifying and resolving these incorrect calls is critical for bacterial genomics to advance. The goal of this review is to provide guidance on validating algorithms and pipelines used in variant calling for bacterial genomics. First, we will provide an overview of the variant calling procedures and the potential sources of error associated with the methods. We will then identify appropriate datasets for use in evaluating algorithms and describe statistical methods for evaluating algorithm performance. As variant calling moves from basic research to the applied setting, standardized methods for performance evaluation and reporting are required; it is our hope that this review provides the groundwork for the development of these standards.}}, 
+pages = {235}, 
+volume = {6}
 }

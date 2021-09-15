@@ -81,8 +81,34 @@ These definitions of the pan-genome components (core and accessory) are somewhat
 
 \subsection{How are pan-genomes analysed?}
 
+Most pan-genomic analyses of bacterial collections follow a similar approach: align the genomes with a tool such as Parsnp \cite{Treangen2014} or Rory \cite{Page2015}, extract the core genome alignments and either ignore the accessory genome or just produce a presence-absence matrix of it \cite{Arnold2018,Azarian2018,McNally2016,thepangenome2020}. When the accessory genome is investigated at the nucleotide level, it is generally focused on a small subset of genes related to specific phenotypes such as antimicrobial resistance (AMR; \cite{Boolchandani2019}) or virulence \cite{Vasquez2019}. As we have seen, the pan-genome size varies significantly, so depending on the species, such approaches could be "ignoring" large portions of the full genomic repertoire. Despite this, we have learned an enormous amount about bacteria and their pan-genomes with these methods.
+
+\subsection{Variant calling of bacterial genomes}
+
+A common (pan-)genomic analysis requirement, and a major focus of this thesis, is variant calling. However, depending on the application, this can be done in a number of different ways. For example, when characterising an outbreak, common approaches are to use a reference genome of the same, or very close, strain to the outbreak \cite{Taylor2015}, or assemble each sample and select the closest reference to it based on some typing strategy \cite{Wyres2021}. Alternatively, a reference-free approach can alleviate some of the reference bias induced when selecting a genome to call variants against and provide better resolution of an outbreak \cite{Cremers2020}.
+
+Given the importance of bacterial variant calling to this thesis, we will briefly outline various approaches to calling variants in bacterial genomes and highlight their strengths and limitations.
+
+\subsubsection{Alignment-based methods}
+
+Alignment-based variant calling also assumes a reference genome is provided. In this mode of variant calling, raw sequencing reads are aligned to a given reference genome to generate a Sequence Alignment/Map (SAM) file. Common software programs used to perform these alignments for bacterial variant calling include BWA-MEM \cite{li2013}, Bowtie2 \cite{bowtie2012}, and Novoalign (\url{http://www.novocraft.com/products/novoalign}) for short (Illumina) read technology. (\ont{}-based variant calling will be detailed in \autoref{sec:ont-var-calling-intro}, for now we focus on Illumina-based sequencing reads). 
+
+Where variant calling programs distinguish themselves is in how they handle the alignment information. This includes, but is not limited to, the number of base calls disagreeing with the reference, the quality of the read alignment, the alignment location of a read pair, or the quality score of the mapping \cite{Olson2015}. Popular methods for calling variants generally employ either Bayesian, likelihood, or machine learning algorithms.
+
+Bayesian methods include....and work by....
+
+likelihood methods include...and work by...
+
+ML methods include...and work by...
+
+\subsubsection{Alignment-free methods}
+% kSNP - uses k-mers to find SNPs, cannot detect k-mers within k positions, cant do indels, requires extensive pre-QC filtering as it cant deal with sequencing errors - https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0081760
+\subsubsection{Assembly-based methods}
 
 
+% segway to graph genomes
+% strong reference showing a major determinant of SNP pipeline accuracy is reference choice - https://academic.oup.com/gigascience/article/9/2/giaa007/5728470?login=true
+% 
 % =============================================
 \section{Graph genomes}
 
@@ -143,6 +169,8 @@ Basecalling and historical progress in accuracy. %Make sure to mention some elem
 
 Discuss benefits over Illumina - i.e., portability, low startup requirements, real-time results etc.
 
+\subsection{Variant calling}
+\label{sec:ont-var-calling-intro}
 Variant calling - discuss history of nanopolish and recent works on variant calling such as Clair and others
 
 % =============================================
