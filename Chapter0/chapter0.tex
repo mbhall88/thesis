@@ -93,25 +93,32 @@ Given the importance of bacterial variant calling to this thesis, we will briefl
 
 Alignment-based variant calling also assumes a reference genome is provided. In this mode of variant calling, raw sequencing reads are aligned to a given reference genome to generate a Sequence Alignment/Map (SAM) file. Common software programs used to perform these alignments for bacterial variant calling include BWA-MEM \cite{li2013}, Bowtie2 \cite{bowtie2012}, and Novoalign (\url{http://www.novocraft.com/products/novoalign}) for short (Illumina) read technology. (\ont{}-based variant calling will be detailed in \autoref{sec:ont-var-calling-intro}, for now we focus on Illumina-based sequencing reads). 
 
-Where variant calling programs distinguish themselves is in how they handle the alignment information. This includes, but is not limited to, the number of base calls disagreeing with the reference, the quality of the read alignment, the alignment location of a read pair, or the quality score of the mapping \cite{Olson2015}. Popular methods for calling variants generally employ either Bayesian, likelihood, or machine learning algorithms.
-
-Bayesian methods include....and work by....
-
-likelihood methods include...and work by...
-
-ML methods include...and work by...
+Where variant calling programs distinguish themselves is in how they handle the alignment information. This includes, but is not limited to, the number of base calls disagreeing with the reference, the quality of the read alignment, the alignment location of a read pair, or the quality score of the mapping \cite{Olson2015}. Popular methods for calling variants generally employ either Bayesian, likelihood, or machine learning algorithms to infer candidate variants given this alignment data. While many of these models were designed with human variant calling in mind, a selection have shown themselves to be perfectly applicable to bacteria. The most frequently used Bayesian method for bacterial variant calling is Freebayes \cite{Garrison2012}, however, it is generally used via a wrapper, Snippy (\url{https://github.com/tseemann/snippy}), which handles the alignment (BWA-MEM), variant calling (Freebayes), and additionally applies filters to the resulting VCF file. Of the likelihood-based callers, Samtools/BCFtools \cite{bcftools2021,samtools2009} and GATK \cite{Poplin2018} tend to be most often employed. 
 
 \subsubsection{Alignment-free methods}
 % kSNP - uses k-mers to find SNPs, cannot detect k-mers within k positions, cant do indels, requires extensive pre-QC filtering as it cant deal with sequencing errors - https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0081760
+Methods that do not align reads to a reference genome typically use \kmer{}-based methods for variant inference. FastGT \cite{fastgt2017} and LAVA \cite{lava2016} are two such programs that require a database of known variants and use \kmer{} counts in a sample to determine the presence of any of these variants. The major limitation with these tools though is their inability to call variants not present in the database provided. Kestrel \cite{kestrel2017} is a \kmer{}-based variant caller that can discover \denovo{} variants and does this by detecting unique \kmer{}s in a sample with respect to a given reference genome. However, Kestrel is not strictly alignment-free, as it does use local alignment to place candidate variants in relation to the reference genome. Additionally, it was shown to have a much lower sensitivity than an alignment-based method. 
+
+Another popular alignment-free single nucleotide polymorphism (SNP) caller is kSNP, which finds SNPs \emph{between} samples by detecting \kmer{}s where the central base varies \cite{ksnp2015}. It is regularly used in outbreak settings where differences between samples are crucial \cite{Bazan2017,Raphael2016,Chochua2017}. However, kSNP cannot detect SNPs within $k$ positions (bases) of each other, is unable to detect indels, and cannot deal with sequencing errors - requiring extensive pre-filtering.
+
+A benchmark of many alignment-free methods for various sequence analysis applications can be found in \cite{Zielezinski2019}. 
+
 \subsubsection{Assembly-based methods}
 
+There are two forms of assembly-based variant calling. In the first, an assembled genome for a sample (or samples) is compared to a reference via whole genome alignment. Software such as MUMmer \cite{mummer2018} or Minimap2/paftools \cite{li2018} facilitate this assembly-to-assembly alignment and then identify positions where the two disagree. An assembly-based method that is prevalent in bacterial genomics is Parsnp \cite{Treangen2014}, which aligns the \emph{core} genome of assemblies and then calls SNPs (only) \emph{between} those genomes. A major limitation with these types of assembly-based approaches is there is no sense of the quality of calls. As an assembly naturally has a read depth of 1x at all positions, there is no information about variant support - all variants are considered equal in this scheme.
 
-% segway to graph genomes
-% strong reference showing a major determinant of SNP pipeline accuracy is reference choice - https://academic.oup.com/gigascience/article/9/2/giaa007/5728470?login=true
-% 
+The second form of assembly-based variant callings bundled assembly and genotyping. Cortex \cite{iqbal2012} \denovo{} assembles a sample from sequencing reads and genotypes variants at "bubble" sites in its de Bruijn graph. It can operate with or without a reference genome and has been used extensively in bacterial genomics \cite{bradley2015,hunt2019,Stasiewicz2015,Young2017,Lees2017}.
+
+\hspace{0.75cm}
+
+\noindent
+A comprehensive benchmark of alignment-based variant calling found that the choice of reference genome, rather than the choice of tools, has the most critical impact on accuracy \cite{Bush2020}. The best general-purpose pipeline was found to be Snippy, however, they note that species-specific filtering of the final VCF file can cause the performance of many tools to converge.
+
+Reference genome bias is perhaps the single biggest limitation with any of the aforemetioned variant calling approaches. The bacterial pan-genome highlights this impediment in a stark way. As an illustration of this, figue X shows that...
+
 % =============================================
 \section{Graph genomes}
-
+% https://www.nature.com/articles/s41576-020-0210-7
 Overview of current methods - gramtools, vg, graphtyper, minigraph
 
 Variant calling in genome graphs
