@@ -2322,3 +2322,184 @@ publisher = {eLife Sciences Publications, Ltd},
     eid = "mgen000103",
    abstract = "Recent studies have provided evidence for rapid pathogen genome diversification, some of which could potentially affect the course of disease. We have previously described such variation seen between isolates infecting the blood and cerebrospinal fluid (CSF) of a single patient during a case of bacterial meningitis. Here, we performed whole-genome sequencing of paired isolates from the blood and CSF of 869 meningitis patients to determine whether such variation frequently occurs between these two niches in cases of bacterial meningitis. Using a combination of reference-free variant calling approaches, we show that no genetic adaptation occurs in either invaded niche during bacterial meningitis for two major pathogen species, Streptococcus pneumoniae and Neisseria meningitidis. This study therefore shows that the bacteria capable of causing meningitis are already able to do this upon entering the blood, and no further sequence change is necessary to cross the blood–brain barrier. Our findings place the focus back on bacterial evolution between nasopharyngeal carriage and invasion, or diversity of the host, as likely mechanisms for determining invasiveness.",
   }
+  
+@article{Bertels2014, 
+year = {2014}, 
+keywords = {benchmark,phylogenetics,variant-calling,bacterial-genomics,reference-bias}, 
+title = {{Automated Reconstruction of Whole-Genome Phylogenies from Short-Sequence Reads}}, 
+author = {Bertels, Frederic and Silander, Olin K. and Pachkov, Mikhail and Rainey, Paul B. and Nimwegen, Erik van}, 
+journal = {Molecular Biology and Evolution}, 
+issn = {0737-4038}, 
+doi = {10.1093/molbev/msu088}, 
+pmid = {24600054}, 
+pmcid = {PMC3995342}, 
+abstract = {{Studies of microbial evolutionary dynamics are being transformed by the availability of affordable high-throughput sequencing technologies, which allow whole-genome sequencing of hundreds of related taxa in a single study. Reconstructing a phylogenetic tree of these taxa is generally a crucial step in any evolutionary analysis. Instead of constructing genome assemblies for all taxa, annotating these assemblies, and aligning orthologous genes, many recent studies 1) directly map raw sequencing reads to a single reference sequence, 2) extract single nucleotide polymorphisms (SNPs), and 3) infer the phylogenetic tree using maximum likelihood methods from the aligned SNP positions. However, here we show that, when using such methods to reconstruct phylogenies from sets of simulated sequences, both the exclusion of nonpolymorphic positions and the alignment to a single reference genome, introduce systematic biases and errors in phylogeny reconstruction. To address these problems, we developed a new method that combines alignments from mappings to multiple reference sequences and show that this successfully removes biases from the reconstructed phylogenies. We implemented this method as a web server named REALPHY (Reference sequence Alignment-based Phylogeny builder), which fully automates phylogenetic reconstruction from raw sequencing reads.}}, 
+pages = {1077--1088}, 
+number = {5}, 
+volume = {31}
+}
+
+@article{Price2017, 
+year = {2017}, 
+keywords = {bacterial-genomics,variant-calling,benchmark,reference-bias,alignment,rna}, 
+title = {{The quantitative impact of read mapping to non-native reference genomes in comparative RNA-Seq studies}}, 
+author = {Price, Adam and Gibas, Cynthia}, 
+journal = {PLOS ONE}, 
+doi = {10.1371/journal.pone.0180904}, 
+pmid = {28700635}, 
+abstract = {{Sequence read alignment to a reference genome is a fundamental step in many genomics studies. Accuracy in this fundamental step is crucial for correct interpretation of biological data. In cases where two or more closely related bacterial strains are being studied, a common approach is to simply map reads from all strains to a common reference genome, whether because there is no closed reference for some strains or for ease of comparison. The assumption is that the differences between bacterial strains are insignificant enough that the results of differential expression analysis will not be influenced by choice of reference. Genes that are common among the strains under study are used for differential expression analysis, while the remaining genes, which may fail to express in one sample or the other because they are simply absent, are analyzed separately. In this study, we investigate the practice of using a common reference in transcriptomic analysis. We analyze two multi-strain transcriptomic data sets that were initially presented in the literature as comparisons based on a common reference, but which have available closed genomic sequence for all strains, allowing a detailed examination of the impact of reference choice. We provide a method for identifying regions that are most affected by non-native alignments, leading to false positives in differential expression analysis, and perform an in depth analysis identifying the extent of expression loss. We also simulate several data sets to identify best practices for non-native reference use.}}, 
+pages = {e0180904}, 
+number = {7}, 
+volume = {12}
+}
+
+@article{Pightling2014, 
+year = {2014}, 
+keywords = {reference-bias,alignment,bacterial-genomics,variant-calling,benchmark}, 
+title = {{Choice of Reference Sequence and Assembler for Alignment of Listeria monocytogenes Short-Read Sequence Data Greatly Influences Rates of Error in SNP Analyses}}, 
+author = {Pightling, Arthur W. and Petronella, Nicholas and Pagotto, Franco}, 
+journal = {PLoS ONE}, 
+doi = {10.1371/journal.pone.0104579}, 
+pmid = {25144537}, 
+pmcid = {PMC4140716}, 
+abstract = {{The wide availability of whole-genome sequencing (WGS) and an abundance of open-source software have made detection of single-nucleotide polymorphisms (SNPs) in bacterial genomes an increasingly accessible and effective tool for comparative analyses. Thus, ensuring that real nucleotide differences between genomes (i.e., true SNPs) are detected at high rates and that the influences of errors (such as false positive SNPs, ambiguously called sites, and gaps) are mitigated is of utmost importance. The choices researchers make regarding the generation and analysis of WGS data can greatly influence the accuracy of short-read sequence alignments and, therefore, the efficacy of such experiments. We studied the effects of some of these choices, including: i) depth of sequencing coverage, ii) choice of reference-guided short-read sequence assembler, iii) choice of reference genome, and iv) whether to perform read-quality filtering and trimming, on our ability to detect true SNPs and on the frequencies of errors. We performed benchmarking experiments, during which we assembled simulated and real Listeria monocytogenes strain 08-5578 short-read sequence datasets of varying quality with four commonly used assemblers (BWA, MOSAIK, Novoalign, and SMALT), using reference genomes of varying genetic distances, and with or without read pre-processing (i.e., quality filtering and trimming). We found that assemblies of at least 50-fold coverage provided the most accurate results. In addition, MOSAIK yielded the fewest errors when reads were aligned to a nearly identical reference genome, while using SMALT to align reads against a reference sequence that is ∼0.82\% distant from 08-5578 at the nucleotide level resulted in the detection of the greatest numbers of true SNPs and the fewest errors. Finally, we show that whether read pre-processing improves SNP detection depends upon the choice of reference sequence and assembler. In total, this study demonstrates that researchers should test a variety of conditions to achieve optimal results.}}, 
+pages = {e104579}, 
+number = {8}, 
+volume = {9}
+}
+
+@article{Sherman2020, 
+year = {2020}, 
+keywords = {pangenome,review,genome-graphs}, 
+title = {{Pan-genomics in the human genome era}}, 
+author = {Sherman, Rachel M. and Salzberg, Steven L.}, 
+journal = {Nature Reviews Genetics}, 
+issn = {1471-0056}, 
+doi = {10.1038/s41576-020-0210-7}, 
+pmid = {32034321}, 
+abstract = {{Since the early days of the genome era, the scientific community has relied on a single ‘reference’ genome for each species, which is used as the basis for a wide range of genetic analyses, including studies of variation within and across species. As sequencing costs have dropped, thousands of new genomes have been sequenced, and scientists have come to realize that a single reference genome is inadequate for many purposes. By sampling a diverse set of individuals, one can begin to assemble a pan-genome: a collection of all the DNA sequences that occur in a species. Here we review efforts to create pan-genomes for a range of species, from bacteria to humans, and we further consider the computational methods that have been proposed in order to capture, interpret and compare pan-genome data. As scientists continue to survey and catalogue the genomic variation across human populations and begin to assemble a human pan-genome, these efforts will increase our power to connect variation to human diversity, disease and beyond. Although single reference genomes are valuable resources, they do not capture genetic diversity among individuals. Sherman and Salzberg discuss the concept of ‘pan-genomes’, which are reference genomes that encompass the genetic variation within a given species. Focusing particularly on large eukaryotic pan-genomes, they describe the latest progress, the varied methodological approaches and computational challenges, as well as applications in fields such as agriculture and human disease.}}, 
+pages = {243--254}, 
+number = {4}, 
+volume = {21}
+}
+
+@article{Eizenga2020, 
+year = {2020}, 
+keywords = {pangenome,genome-graphs,review}, 
+title = {{Pangenome Graphs}}, 
+author = {Eizenga, Jordan M. and Novak, Adam M. and Sibbesen, Jonas A. and Heumos, Simon and Ghaffaari, Ali and Hickey, Glenn and Chang, Xian and Seaman, Josiah D. and Rounthwaite, Robin and Ebler, Jana and Rautiainen, Mikko and Garg, Shilpa and Paten, Benedict and Marschall, Tobias and Sirén, Jouni and Garrison, Erik}, 
+journal = {Annual Review of Genomics and Human Genetics}, 
+issn = {1527-8204}, 
+doi = {10.1146/annurev-genom-120219-080406}, 
+pmid = {32453966}, 
+abstract = {{Low-cost whole-genome assembly has enabled the collection of haplotype-resolved pangenomes for numerous organisms. In turn, this technological change is encouraging the development of methods that can precisely address the sequence and variation described in large collections of related genomes. These approaches often use graphical models of the pangenome to support algorithms for sequence alignment, visualization, functional genomics, and association studies. The additional information provided to these methods by the pangenome allows them to achieve superior performance on a variety of bioinformatic tasks, including read alignment, variant calling, and genotyping. Pangenome graphs stand to become a ubiquitous tool in genomics. Although it is unclear whether they will replace linearreference genomes, their ability to harmoniously relate multiple sequence and coordinate systems will make them useful irrespective of which pangenomic models become most common in the future.}}, 
+pages = {139--162}, 
+number = {1}, 
+volume = {21}
+}
+
+@article{comp-pan-genomics, 
+year = {2016}, 
+keywords = {pangenome,genome-graphs,review}, 
+title = {{Computational pan-genomics: status, promises and challenges}}, 
+journal = {Briefings in Bioinformatics}, 
+issn = {1477-4054}, 
+doi = {10.1093/bib/bbw089}, 
+pmid = {27769991}, 
+abstract = {{Many disciplines, from human genetics and oncology to plant breeding, microbiology and virology, commonly face the challenge of analyzing rapidly increasing numbers of genomes. In case of Homo sapiens , the number of sequenced genomes will approach hundreds of thousands in the next few years. Simply scaling up established bioinformatics pipelines will not be sufficient for leveraging the full potential of such rich genomic data sets. Instead, novel, qualitatively different computational methods and paradigms are needed. We will witness the rapid extension of computational pan-genomics, a new sub-area of research in computational biology. In this article, we generalize existing definitions and understand a pan-genome as any collection of genomic sequences to be analyzed jointly or to be used as a reference. We examine already available approaches to construct and use pan-genomes, discuss the potential benefits of future technologies and methodologies and review open challenges from the vantage point of the above-mentioned biological disciplines. As a prominent example for a computational paradigm shift, we particularly highlight the transition from the representation of reference genomes as strings to representations as graphs. We outline how this and other challenges from different application domains translate into common computational problems, point out relevant bioinformatics techniques and identify open problems in computer science. With this review, we aim to increase awareness that a joint approach to computational pan-genomics can help address many of the problems currently faced in various domains.}}, 
+pages = {bbw089}
+}
+
+@article{graphtyper, 
+year = {2017}, 
+keywords = {genome-graphs,pangenome,software,algorithms}, 
+title = {{Graphtyper enables population-scale genotyping using pangenome graphs}}, 
+author = {Eggertsson, Hannes P and Jonsson, Hakon and Kristmundsdottir, Snaedis and Hjartarson, Eirikur and Kehr, Birte and Masson, Gisli and Zink, Florian and Hjorleifsson, Kristjan E and Jonasdottir, Aslaug and Jonasdottir, Adalbjorg and Jonsdottir, Ingileif and Gudbjartsson, Daniel F and Melsted, Pall and Stefansson, Kari and Halldorsson, Bjarni V}, 
+journal = {Nature Genetics}, 
+issn = {1061-4036}, 
+doi = {10.1038/ng.3964}, 
+pmid = {28945251}, 
+abstract = {{Graphtyper is a fast and scalable method for variant genotyping that aligns short-read sequence data to a pangenome. Graphtyper was able to accurately genotype ∼90 million sequence variants in the whole genomes of ∼28,000 Icelanders, including those in six HLA genes. A fundamental requirement for genetic studies is an accurate determination of sequence variation. While human genome sequence diversity is increasingly well characterized, there is a need for efficient ways to use this knowledge in sequence analysis. Here we present Graphtyper, a publicly available novel algorithm and software for discovering and genotyping sequence variants. Graphtyper realigns short-read sequence data to a pangenome, a variation-aware graph structure that encodes sequence variation within a population by representing possible haplotypes as graph paths. Our results show that Graphtyper is fast, highly scalable, and provides sensitive and accurate genotype calls. Graphtyper genotyped 89.4 million sequence variants in the whole genomes of 28,075 Icelanders using less than 100,000 CPU days, including detailed genotyping of six human leukocyte antigen (HLA) genes. We show that Graphtyper is a valuable tool in characterizing sequence variation in both small and population-scale sequencing studies.}}, 
+pages = {1654--1660}, 
+number = {11}, 
+volume = {49}
+}
+
+@article{graphtyper2, 
+year = {2019}, 
+keywords = {genome-graphs,pangenome,algorithms,structural-variants}, 
+title = {{GraphTyper2 enables population-scale genotyping of structural variation using pangenome graphs}}, 
+author = {Eggertsson, Hannes P. and Kristmundsdottir, Snaedis and Beyter, Doruk and Jonsson, Hakon and Skuladottir, Astros and Hardarson, Marteinn T. and Gudbjartsson, Daniel F. and Stefansson, Kari and Halldorsson, Bjarni V. and Melsted, Pall}, 
+journal = {Nature Communications}, 
+doi = {10.1038/s41467-019-13341-9}, 
+pmid = {31776332}, 
+abstract = {{Analysis of sequence diversity in the human genome is fundamental for genetic studies. Structural variants (SVs) are frequently omitted in sequence analysis studies, although each has a relatively large impact on the genome. Here, we present GraphTyper2, which uses pangenome graphs to genotype SVs and small variants using short-reads. Comparison to the syndip benchmark dataset shows that our SV genotyping is sensitive and variant segregation in families demonstrates the accuracy of our approach. We demonstrate that incorporating public assembly data into our pipeline greatly improves sensitivity, particularly for large insertions. We validate 6,812 SVs on average per genome using long-read data of 41 Icelanders. We show that GraphTyper2 can simultaneously genotype tens of thousands of whole-genomes by characterizing 60 million small variants and half a million SVs in 49,962 Icelanders, including 80 thousand SVs with high-confidence. Structural variants may be omitted in sequence analysis despite their importance in genome variation and phenotypic impact. Here the authors present GraphTyper2, which uses pangenome graphs to genotype structural variants using short-reads and can be applied in large-scale sequencing studies.}}, 
+pages = {5402}, 
+number = {1}, 
+volume = {10}
+}
+
+@article{vg2018, 
+year = {2018}, 
+keywords = {genome-graphs,algorithms,alignment}, 
+title = {{Variation graph toolkit improves read mapping by representing genetic variation in the reference}}, 
+author = {Garrison, Erik and Sirén, Jouni and Novak, Adam M and Hickey, Glenn and Eizenga, Jordan M and Dawson, Eric T and Jones, William and Garg, Shilpa and Markello, Charles and Lin, Michael F and Paten, Benedict and Durbin, Richard}, 
+journal = {Nature Biotechnology}, 
+issn = {1087-0156}, 
+doi = {10.1038/nbt.4227}, 
+pmid = {30125266}, 
+abstract = {{Reducing read mapping bias and improving complex variant detection with a highly scalable computational toolkit that implements variation graphs. Reference genomes guide our interpretation of DNA sequence data. However, conventional linear references represent only one version of each locus, ignoring variation in the population. Poor representation of an individual′s genome sequence impacts read mapping and introduces bias. Variation graphs are bidirected DNA sequence graphs that compactly represent genetic variation across a population, including large-scale structural variation such as inversions and duplications1. Previous graph genome software implementations2,3,4 have been limited by scalability or topological constraints. Here we present vg, a toolkit of computational methods for creating, manipulating, and using these structures as references at the scale of the human genome. vg provides an efficient approach to mapping reads onto arbitrary variation graphs using generalized compressed suffix arrays5, with improved accuracy over alignment to a linear reference, and effectively removing reference bias. These capabilities make using variation graphs as references for DNA sequencing practical at a gigabase scale, or at the topological complexity of de novo assemblies.}}, 
+pages = {875--879}, 
+number = {9}, 
+volume = {36}
+}
+
+@article{Novak2017, 
+year = {2017}, 
+keywords = {genome-graphs,pangenome,variant-calling,algorithms}, 
+title = {{Genome Graphs}}, 
+author = {Novak, Adam M. and Hickey, Glenn and Garrison, Erik and Blum, Sean and Connelly, Abram and Dilthey, Alexander and Eizenga, Jordan and Elmohamed, M. A. Saleh and Guthrie, Sally and Kahles, André and Keenan, Stephen and Kelleher, Jerome and Kural, Deniz and Li, Heng and Lin, Michael F. and Miga, Karen and Ouyang, Nancy and Rakocevic, Goran and Smuga-Otto, Maciek and Zaranek, Alexander Wait and Durbin, Richard and McVean, Gil and Haussler, David and Paten, Benedict}, 
+journal = {bioRxiv}, 
+doi = {10.1101/101378}, 
+abstract = {{There is increasing recognition that a single, monoploid reference genome is a poor universal reference structure for human genetics, because it represents only a tiny fraction of human variation. Adding this missing variation results in a structure that can be described as a mathematical graph: a genome graph. We demonstrate that, in comparison to the existing reference genome (GRCh38), genome graphs can substantially improve the fractions of reads that map uniquely and perfectly. Furthermore, we show that this fundamental simplification of read mapping transforms the variant calling problem from one in which many non-reference variants must be discovered de-novo to one in which the vast majority of variants are simply re-identified within the graph. Using standard benchmarks as well as a novel reference-free evaluation, we show that a simplistic variant calling procedure on a genome graph can already call variants at least as well as, and in many cases better than, a state-of-the-art method on the linear human reference genome. We anticipate that graph-based references will supplant linear references in humans and in other applications where cohorts of sequenced individuals are available.}}, 
+pages = {101378}, 
+note = {This preprint describes the vg variant calling component (as referenced in the vg nature biotech paper)}
+}
+
+@article{strainflair2021,
+year = {2021},
+journal = {bioRxiv},
+keywords = {metagenomics,genome-graphs,strain-identification}, 
+title = {{StrainFLAIR: Strain-level profiling of metagenomic samples using variation graphs}}, 
+author = {Silva, Kévin Da and Pons, Nicolas and Berland, Magali and Oñate, Florian Plaza and Almeida, Mathieu and Peterlongo, Pierre}, 
+doi = {10.1101/2021.02.12.430979}, 
+abstract = {{ABSTRACT Current studies are shifting from the use of single linear references to representation of multiple genomes organised in pangenome graphs or variation graphs. Meanwhile, in metagenomic samples, resolving strain-level abundances is a major step in microbiome studies, as associations between strain variants and phenotype are of great interest for diagnostic and therapeutic purposes. We developed StrainFLAIR with the aim of showing the feasibility of using variation graphs for indexing highly similar genomic sequences up to the strain level, and for characterizing a set of unknown sequenced genomes by querying this graph. On simulated data composed of mixtures of strains from the same bacterial species Escherichia coli , results show that StrainFLAIR was able to distinguish and estimate the abundances of close strains, as well as to highlight the presence of a new strain close to a referenced one and to estimate its abundance. On a real dataset composed of a mix of several bacterial species and several strains for the same species, results show that in a more complex configuration StrainFLAIR correctly estimates the abundance of each strain. Hence, results demonstrated how graph representation of multiple close genomes can be used as a reference to characterize a sample at the strain level. Availability http://github.com/kevsilva/StrainFLAIR}}
+}
+
+@article{gramtools2021, 
+year = {2021}, 
+keywords = {genome-graphs,algorithms,bwt,software}, 
+title = {{Gramtools enables multiscale variation analysis with genome graphs}}, 
+author = {Letcher, Brice and Hunt, Martin and Iqbal, Zamin}, 
+journal = {Genome Biology}, 
+doi = {10.1186/s13059-021-02474-0}, 
+pmid = {34488837}, 
+abstract = {{Genome graphs allow very general representations of genetic variation; depending on the model and implementation, variation at different length-scales (single nucleotide polymorphisms (SNPs), structural variants) and on different sequence backgrounds can be incorporated with different levels of transparency. We implement a model which handles this multiscale variation and develop a JSON extension of VCF (jVCF) allowing for variant calls on multiple references, both implemented in our software gramtools. We find gramtools outperforms existing methods for genotyping SNPs overlapping large deletions in M. tuberculosis and is able to genotype on multiple alternate backgrounds in P. falciparum, revealing previously hidden recombination.}}, 
+pages = {259}, 
+number = {1}, 
+volume = {22}
+}
+
+@article{minigraph2020, 
+year = {2020}, 
+keywords = {genome-graphs,algorithms,pangenome}, 
+title = {{The design and construction of reference pangenome graphs with minigraph}}, 
+author = {Li, Heng and Feng, Xiaowen and Chu, Chong}, 
+journal = {Genome Biology}, 
+doi = {10.1186/s13059-020-02168-z}, 
+pmid = {33066802}, 
+abstract = {{The recent advances in sequencing technologies enable the assembly of individual genomes to the quality of the reference genome. How to integrate multiple genomes from the same species and make the integrated representation accessible to biologists remains an open challenge. Here, we propose a graph-based data model and associated formats to represent multiple genomes while preserving the coordinate of the linear reference genome. We implement our ideas in the minigraph toolkit and demonstrate that we can efficiently construct a pangenome graph and compactly encode tens of thousands of structural variants missing from the current reference genome.}}, 
+pages = {265}, 
+number = {1}, 
+volume = {21}
+}

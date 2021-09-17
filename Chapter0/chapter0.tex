@@ -84,6 +84,7 @@ These definitions of the pan-genome components (core and accessory) are somewhat
 Most pan-genomic analyses of bacterial collections follow a similar approach: align the genomes with a tool such as Parsnp \cite{Treangen2014} or Rory \cite{Page2015}, extract the core genome alignments and either ignore the accessory genome or just produce a presence-absence matrix of it \cite{Arnold2018,Azarian2018,McNally2016,thepangenome2020}. When the accessory genome is investigated at the nucleotide level, it is generally focused on a small subset of genes related to specific phenotypes such as antimicrobial resistance (AMR; \cite{Boolchandani2019}) or virulence \cite{Vasquez2019}. As we have seen, the pan-genome size varies significantly, so depending on the species, such approaches could be "ignoring" large portions of the full genomic repertoire. Despite this, we have learned an enormous amount about bacteria and their pan-genomes with these methods.
 
 \subsection{Variant calling of bacterial genomes}
+\label{sec:intro-bacteria-var-call}
 
 A common (pan-)genomic analysis requirement, and a major focus of this thesis, is variant calling. However, depending on the application, this can be done in a number of different ways. For example, when characterising an outbreak, common approaches are to use a reference genome of the same, or very close, strain to the outbreak \cite{Taylor2015}, or assemble each sample and select the closest reference to it based on some typing strategy \cite{Wyres2021}. Alternatively, a reference-free approach can alleviate some of the reference bias induced when selecting a genome to call variants against and provide better resolution of an outbreak \cite{Cremers2020}.
 
@@ -107,23 +108,67 @@ A benchmark of many alignment-free methods for various sequence analysis applica
 
 There are two forms of assembly-based variant calling. In the first, an assembled genome for a sample (or samples) is compared to a reference via whole genome alignment. Software such as MUMmer \cite{mummer2018} or Minimap2/paftools \cite{li2018} facilitate this assembly-to-assembly alignment and then identify positions where the two disagree. An assembly-based method that is prevalent in bacterial genomics is Parsnp \cite{Treangen2014}, which aligns the \emph{core} genome of assemblies and then calls SNPs (only) \emph{between} those genomes. A major limitation with these types of assembly-based approaches is there is no sense of the quality of calls. As an assembly naturally has a read depth of 1x at all positions, there is no information about variant support - all variants are considered equal in this scheme.
 
-The second form of assembly-based variant callings bundled assembly and genotyping. Cortex \cite{iqbal2012} \denovo{} assembles a sample from sequencing reads and genotypes variants at "bubble" sites in its de Bruijn graph. It can operate with or without a reference genome and has been used extensively in bacterial genomics \cite{bradley2015,hunt2019,Stasiewicz2015,Young2017,Lees2017}.
+The second form of assembly-based variant callings bundled assembly and genotyping. Cortex \cite{iqbal2012} \denovo{} assembles a sample from sequencing reads and genotypes variants at "bubble" sites in its de Bruijn graph. It produces variant calls with respect to a provided reference genome and has been used extensively in bacterial genomics \cite{bradley2015,hunt2019,Stasiewicz2015,Young2017,Lees2017}.
 
 \hspace{0.75cm}
 
 \noindent
 A comprehensive benchmark of alignment-based variant calling found that the choice of reference genome, rather than the choice of tools, has the most critical impact on accuracy \cite{Bush2020}. The best general-purpose pipeline was found to be Snippy, however, they note that species-specific filtering of the final VCF file can cause the performance of many tools to converge.
 
-Reference genome bias is perhaps the single biggest limitation with any of the aforemetioned variant calling approaches. The bacterial pan-genome highlights this impediment in a stark way. As an illustration of this, figue X shows that...
+Reference genome bias is perhaps the single biggest limitation of most aforementioned variant calling approaches \cite{Bertels2014,Bush2020,Olson2015}. The bacterial pan-genome highlights this impediment in a stark way. As an illustration of this, \autoref{fig:reference-bias} shows a cartoon depiction of the "single-reference problem". In this figure, we see that no two genomes contain the same full set of loci - exactly what we expect from nearly any pan-genome \cite{McInerney2017}. As such, the use of any of these genomes as a reference to call variant against will inevitably mean we are unable to describe variants in loci not found in both the reference and query genomes. This type of bias is termed \emph{hard} reference bias. Another, more subtle, form is \emph{soft} reference bias, which results difficulties aligning to the reference due to divergence in shared loci between the reference and query, especially around structural variants \cite{Price2017,Olson2015,Pightling2014}. However, these biases tend to impact clonal species, such as \mtb{}, much less than those with open pan-genomes \cite{Bush2020}.
+
+\begin{figure}
+\centering
+\includegraphics[height=0.35\textheight]{Chapter0/Figs/single_ref_problem.png}
+\caption{An illustration of the single-reference problem. Each vertical column depicts a genome, with the coloured blocks representing loci (genes). The numbers next to each locus indicate a variant with respect to other loci of the same colour. The percentage figures at the bottom of each genome indicate what percentage of variants in the other genomes could be found by a perfect variant caller if that genome was used as a reference. Note, not all genomes contain the same loci, hence no genome can capture all of the variants.}
+\label{fig:reference-bias}
+\source{\cite{rachelthesis,pandora}}
+\end{figure}
+
+Given these biases resulting from the use of a single reference genome, an alternative solution is needed. One solution that is rapidly maturing is the use of a \emph{genome graph} to replace a single reference.
 
 % =============================================
-\section{Graph genomes}
-% https://www.nature.com/articles/s41576-020-0210-7
-Overview of current methods - gramtools, vg, graphtyper, minigraph
+\section{Genome graphs}
 
-Variant calling in genome graphs
+Genome graphs are a way of representing variation within a population; be it a bacterial species, a human gene, or a viral quasi-species \cite{comp-pan-genomics}. \autoref{fig:graph-representation} illustrates a generic representation of a genome graph, where redundant information (consensus) is collapsed into a linear sequence and variation is represented as divergent paths leading in and out of these linear segments. A walk through such a graph represents a mosaic of the population variation used to construct the graph. 
 
-Limitations of the above methods in the context of bacterial genomes
+A rich array of algorithms and methods have been proposed for representing and operating on genome graphs across all kingdoms of life \cite{Sherman2020,Eizenga2020,comp-pan-genomics}. In this section, we will highlight some mature genome graph frameworks, along with their limitations. In the context of this thesis, these limitations will focus on the applicability of a method to the bacterial pan-genome. We follow these existing methods by introducing a new genome graph approach relevant to this thesis.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.75\columnwidth]{Chapter0/Figs/graph-representation.png}
+\caption{Conceptual representation of a genome graph. \textbf{a}) Variants lead to a "bubble", or divergent path. Note, the second bubble represents an insertion/deletion. \textbf{b}) Variation can be arbitrarily nested. In this example, there are is a SNP within an insertion.}
+\label{fig:graph-representation}
+\source{\cite{Sherman2020}}
+\end{figure}
+
+\subsection{Existing methods}
+% minigraph
+% gramtools
+\subsubsection{GraphTyper}
+GraphTyper \cite{graphtyper,graphtyper2} represents a genome graph as a directed acyclic graph (DAG) based on a reference sequence plus known variants (similar to \autoref{fig:graph-representation}, but with directional). Sequencing reads are mapped to the reference genome with BWA-MEM. The reference sequence is then broken into 50kbp regions and reads are realigned to the graph in the respective region they map to. A path through the graph for the read is detected using a seed-and-extend approach and variants are genotyped based on the read support from this alignment. Impressively, GraphTyper can genotype SNPs, indels, and complex and structural variants.
+
+In the context of bacterial genomes, there are a number of limitations with GraphTyper. First, a single reference genome is used as the backbone of the graph; a feasible solution for humans, but not for bacteria, where, as we have seen, two genomes likely do not have an identical gene repertoire. Second, the initial alignment of reads to the single reference genome suffers the same soft and hard reference bias discussed in \autoref{sec:intro-bacteria-var-call}. The realignment of reads reduces the soft reference bias compared to linear genome methods, however the hard bias remains. Third, no long-read sequencing technology support is available, and is unlikely to be possible with the current seed-and-extend approach used for alignment \cite{li2018}. 
+
+\subsubsection{Variation graph toolkit}
+The Variation Graph Toolkit (VG) \cite{vg2018} is a suite of tools for constructing, mapping, and calling variant from genome graphs. The representation used by VG is an \emph{un}directed, potentially cyclic, graph. Variation graphs can be constructed from a single reference and associated VCF file, or from multiple genome assemblies. Read alignment to the graph uses a seed-and-extend approach. Variant calls are made via a basic read pileup on the graph and then augmenting the original graph with novel candidates, followed by genotyping \cite{Novak2017}.
+
+As with GraphTyper, the use of seed-and-extend alignment makes the support of long reads unlikely. (We note there has discussions within the VG GitHub repository for 4 years about supporting long reads, however, as yet, no support has been announced). Another limitation of VG is that in order to produce variant calls, the user must provide a reference genome, again, either inheriting reference bias or requiring a verbose description of simple variants (see \autoref{sec:pandora-compare} for an elaboration of this point).
+
+A major limitation of VG is its computational resource requirements. As VG attempts to be a "general" method - i.e., it is undirected and allows cycles so as to naturally allow events such as inversions and repeats - it is CPU and disk intensive \cite{strainflair2021,gramtools2021,minigraph2020} to the point of requiring over 1 terabyte of temporary disk space to construct a graph \cite{gramtools2021}, or not being useable \cite{minigraph2020}.
+
+\subsubsection{Minigraph}
+Minigraph \cite{minigraph2020} represents a genome graph as a bidirectional graph, which allows cycles. The construction process starts with a single genome and iteratively adds structural variants (SVs; regions of divergence $\ge 100$bp and $\le 100$kbp). In each round, a genome is aligned to the existing graph (a linear sequence in the beginning) and the graph is augmented with sequence from poorly mapped regions (SVs). Minigraph aligns sequencing reads or assemblies to this graph using a modified version of minimap2's minimizer \kmer{}-based seed-and-chain approach \cite{li2018}. As such, Minigraph should be easily adaptable to longs.
+
+As Minigraph only incorporates SVs of 100bp or longer, it does not variant-call in the typical sense. It instead produces a BED-like file that calls SVs from the alignment. This is the main limitation of Minigraph: it cannot call variants smaller than 100bp, which are especially important in bacterial genomes. The authors ackowledge this limitation and state that the reason for this exclusion is that smaller variants can be easily identified with standard approaches. 
+
+\subsubsection{Gramtools}
+
+% Variant calling in genome graphs
+
+% Limitations of the above methods in the context of bacterial genomes
+\noindent
+All of the exisiting methods require an enfored structure - i.e., loci are not unlinked and order is assumed. VG has been applied to bacterial for strain-typing and abundance estimates in \ecoli{}, however, individual graphs had to be concatenated together for each gene, enforcing an order \cite{strainflair2021}.
 
 \subsection{Pandora}
 \label{sec:pandora-intro}
@@ -160,12 +205,7 @@ pandora concepts I need to cover
 \end{center}
 \end{figure}
 
-\begin{figure}
-\centering
-\missingfigure{reference bias figure 1b in pandora paper}
-\caption{A missing figure}
-\label{fig:reference-bias}
-\end{figure}
+
 
 
 % =============================================
