@@ -2545,3 +2545,35 @@ pages = {research0020.1},
 number = {6}, 
 volume = {2}
 }
+
+@article{Roberts2004, 
+year = {2004}, 
+keywords = {kmer,minimizers,algorithms}, 
+title = {{Reducing storage requirements for biological sequence comparison}}, 
+author = {Roberts, Michael and Hayes, Wayne and Hunt, Brian R. and Mount, Stephen M. and Yorke, James A.}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/bth408}, 
+pmid = {15256412}, 
+abstract = {{Motivation: Comparison of nucleic acid and protein sequences is a fundamental tool of modern bioinformatics. A dominant method of such string matching is the ‘seed-and-extend’ approach, in which occurrences of short subsequences called ‘seeds’ are used to search for potentially longer matches in a large database of sequences. Each such potential match is then checked to see if it extends beyond the seed. To be effective, the seed-and-extend approach needs to catalogue seeds from virtually every substring in the database of search strings. Projects such as mammalian genome assemblies and large-scale protein matching, however, have such large sequence databases that the resulting list of seeds cannot be stored in RAM on a single computer. This significantly slows the matching process. Results: We present a simple and elegant method in which only a small fraction of seeds, called ‘minimizers’, needs to be stored. Using minimizers can speed up string-matching computations by a large factor while missing only a small fraction of the matches found using all seeds.}}, 
+pages = {3363--3369}, 
+number = {18}, 
+volume = {20}
+}
+
+@article{minimap2016, 
+year = {2016}, 
+keywords = {minimizers,kmer,alignment,software,algorithms}, 
+title = {{Minimap and miniasm: fast mapping and de novo assembly for noisy long sequences}}, 
+author = {Li, Heng}, 
+journal = {Bioinformatics}, 
+issn = {1367-4803}, 
+doi = {10.1093/bioinformatics/btw152}, 
+pmid = {27153593}, 
+pmcid = {PMC4937194}, 
+eprint = {1512.01801}, 
+abstract = {{Motivation: Single Molecule Real-Time (SMRT) sequencing technology and Oxford Nanopore technologies (ONT) produce reads over 10 kb in length, which have enabled high-quality genome assembly at an affordable cost. However, at present, long reads have an error rate as high as 10–15\%. Complex and computationally intensive pipelines are required to assemble such reads. Results: We present a new mapper, minimap and a de novo assembler, miniasm, for efficiently mapping and assembling SMRT and ONT reads without an error correction stage. They can often assemble a sequencing run of bacterial data into a single contig in a few minutes, and assemble 45-fold Caenorhabditis elegans data in 9 min, orders of magnitude faster than the existing pipelines, though the consensus sequence error rate is as high as raw reads. We also introduce a pairwise read mapping format and a graphical fragment assembly format, and demonstrate the interoperability between ours and current tools. Availability and implementation:https://github.com/lh3/minimap and https://github.com/lh3/miniasm Contact:hengli@broadinstitute.org Supplementary information:Supplementary data are available at Bioinformatics online.}}, 
+pages = {2103--2110}, 
+number = {14}, 
+volume = {32}
+}
