@@ -163,12 +163,13 @@ Minigraph \cite{minigraph2020} represents a genome graph as a bidirectional grap
 As Minigraph only incorporates SVs of 100bp or longer, it does not variant-call in the typical sense. It instead produces a BED-like file that calls SVs from the alignment. This is the main limitation of Minigraph: it cannot call variants smaller than 100bp, which are especially important in bacterial genomes. The authors ackowledge this limitation and state that the reason for this exclusion is that smaller variants can be easily identified with standard approaches. 
 
 \subsubsection{Gramtools}
-
-% Variant calling in genome graphs
+Gramtools \cite{gramtools2016,gramtools2021} depicts a genome graph as a DAG that can be constructed from either a single reference and associated VCF file, or from a multiple sequence alignment (MSA) - in fact it uses the same model outlined below in \autoref{sec:make_prg}. Alignment of sequencing reads is facilitated by the variation-aware Burrows-Wheeler Transform (vBWT) \cite{gramtools2016}, which is an extension of the original linear BWT to graphs. It genotypes variants under a haploid or diploid likelihood-based model and produces the variant calls in the standard VCF or a new JSON-like VCF (jVCF) file, which stores the standard VCF information, with the addition of graph-relevant details the nesting of sites \cite{gramtools2021}. As with the other genome graph methods though, Gramtools only support short Illumina sequencing data, and is unlikely to be able to support long reads with a higher error rate than Illumina.
 
 % Limitations of the above methods in the context of bacterial genomes
 \noindent
-All of the exisiting methods require an enfored structure - i.e., loci are not unlinked and order is assumed. VG has been applied to bacterial for strain-typing and abundance estimates in \ecoli{}, however, individual graphs had to be concatenated together for each gene, enforcing an order \cite{strainflair2021}.
+All of the existing methods require an enforced ordering - i.e., loci are not considered independently. Despite the fluidity of bacterial genomes, there is surprisingly conserved gene ordering \cite{Tamames2001,Rocha2008}, however, the enforced order of these genome graphs cannot account for variations in gene repertoire - i.e., the pan-genome. VG has been applied to bacteria for strain-typing and abundance estimates in \ecoli{}, however, individual graphs had to be concatenated together for each gene, enforcing an order \cite{strainflair2021}. None of the methods to our knowledge natively allows independence of loci and require custom pipeline such as \cite{strainflair2021} to approximate this behaviour. Additionally, no existing genome graph method supports long read sequencing reads such as \ont{}.
+
+These limitations are the driving motivation for the development of the genome graph method Pandora.
 
 \subsection{Pandora}
 \label{sec:pandora-intro}
