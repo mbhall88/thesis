@@ -2577,3 +2577,99 @@ pages = {2103--2110},
 number = {14}, 
 volume = {32}
 }
+
+@article{Deamer2016, 
+year = {2016}, 
+keywords = {review,nanopore,history}, 
+title = {{Three decades of nanopore sequencing}}, 
+author = {Deamer, David and Akeson, Mark and Branton, Daniel}, 
+journal = {Nature Biotechnology}, 
+issn = {1087-0156}, 
+doi = {10.1038/nbt.3423}, 
+pmid = {27153285}, 
+abstract = {{A long-held goal in sequencing has been to use a voltage-biased nanoscale pore in a membrane to measure the passage of a linear, single-stranded (ss) DNA or RNA molecule through that pore. With the development of enzyme-based methods that ratchet polynucleotides through the nanopore, nucleobase-by-nucleobase, measurements of changes in the current through the pore can now be decoded into a DNA sequence using an algorithm. In this Historical Perspective, we describe the key steps in nanopore strand-sequencing, from its earliest conceptualization more than 25 years ago to its recent commercialization and application.}}, 
+pages = {518--524}, 
+number = {5}, 
+volume = {34}
+}
+
+@article{Quick2014, 
+year = {2014}, 
+keywords = {nanopore,assembly,bacterial-genomics}, 
+title = {{A reference bacterial genome dataset generated on the MinION™ portable single-molecule nanopore sequencer}}, 
+author = {Quick, Joshua and Quinlan, Aaron R and Loman, Nicholas J}, 
+journal = {GigaScience}, 
+doi = {10.1186/2047-217x-3-22}, 
+pmid = {25386338}, 
+pmcid = {PMC4226419}, 
+abstract = {{The MinION™ is a new, portable single-molecule sequencer developed by Oxford Nanopore Technologies. It measures four inches in length and is powered from the USB 3.0 port of a laptop computer. The MinION™ measures the change in current resulting from DNA strands interacting with a charged protein nanopore. These measurements can then be used to deduce the underlying nucleotide sequence. We present a read dataset from whole-genome shotgun sequencing of the model organism Escherichia coli K-12 substr. MG1655 generated on a MinION™ device during the early-access MinION™ Access Program (MAP). Sequencing runs of the MinION™ are presented, one generated using R7 chemistry (released in July 2014) and one using R7.3 (released in September 2014). Base-called sequence data are provided to demonstrate the nature of data produced by the MinION™ platform and to encourage the development of customised methods for alignment, consensus and variant calling, de novo assembly and scaffolding. FAST5 files containing event data within the HDF5 container format are provided to assist with the development of improved base-calling methods.}}, 
+pages = {22}, 
+number = {1}, 
+volume = {3}
+}
+
+@online{hdf5,
+    author = {{The HDF Group}},
+    title = "{Hierarchical Data Format, version 5}",
+    year = {1997-2021},
+    note = {https://www.hdfgroup.org/HDF5/}
+}
+
+@article{Rang2018, 
+year = {2018}, 
+keywords = {nanopore,basecalling,review}, 
+title = {{From squiggle to basepair: computational approaches for improving nanopore sequencing read accuracy}}, 
+author = {Rang, Franka J. and Kloosterman, Wigard P. and Ridder, Jeroen de}, 
+journal = {Genome Biology}, 
+doi = {10.1186/s13059-018-1462-9}, 
+pmid = {30005597}, 
+abstract = {{Nanopore sequencing is a rapidly maturing technology delivering long reads in real time on a portable instrument at low cost. Not surprisingly, the community has rapidly taken up this new way of sequencing and has used it successfully for a variety of research applications. A major limitation of nanopore sequencing is its high error rate, which despite recent improvements to the nanopore chemistry and computational tools still ranges between 5\% and 15\%. Here, we review computational approaches determining the nanopore sequencing error rate. Furthermore, we outline strategies for translation of raw sequencing data into base calls for detection of base modifications and for obtaining consensus sequences.}}, 
+pages = {90}, 
+number = {1}, 
+volume = {19}
+}
+
+@article{Goodwin2015, 
+year = {2015}, 
+keywords = {nanopore,hybrid-assembly,assembly}, 
+title = {{Oxford Nanopore sequencing, hybrid error correction, and de novo assembly of a eukaryotic genome}}, 
+author = {Goodwin, Sara and Gurtowski, James and Ethe-Sayers, Scott and Deshpande, Panchajanya and Schatz, Michael C. and McCombie, W. Richard}, 
+journal = {Genome Research}, 
+issn = {1088-9051}, 
+doi = {10.1101/gr.191395.115}, 
+pmid = {26447147}, 
+pmcid = {PMC4617970}, 
+abstract = {{Monitoring the progress of DNA molecules through a membrane pore has been postulated as a method for sequencing DNA for several decades. Recently, a nanopore-based sequencing instrument, the Oxford Nanopore MinION, has become available, and we used this for sequencing the Saccharomyces cerevisiae genome. To make use of these data, we developed a novel open-source hybrid error correction algorithm Nanocorr specifically for Oxford Nanopore reads, because existing packages were incapable of assembling the long read lengths (5–50 kbp) at such high error rates (between ∼5\% and 40\% error). With this new method, we were able to perform a hybrid error correction of the nanopore reads using complementary MiSeq data and produce a de novo assembly that is highly contiguous and accurate: The contig N50 length is more than ten times greater than an Illumina-only assembly (678 kb versus 59.9 kbp) and has >99.88\% consensus identity when compared to the reference. Furthermore, the assembly with the long nanopore reads presents a much more complete representation of the features of the genome and correctly assembles gene cassettes, rRNAs, transposable elements, and other genomic features that were almost entirely absent in the Illumina-only assembly.}}, 
+pages = {1750--1756}, 
+number = {11}, 
+volume = {25}
+}
+
+@article{Silvestre2021, 
+year = {2021}, 
+keywords = {nanopore,basecalling,long-reads}, 
+title = {{Pair consensus decoding improves accuracy of neural network basecallers for nanopore sequencing}}, 
+author = {Silvestre-Ryan, Jordi and Holmes, Ian}, 
+journal = {Genome Biology}, 
+doi = {10.1186/s13059-020-02255-1}, 
+pmid = {33468205}, 
+abstract = {{We develop a general computational approach for improving the accuracy of basecalling with Oxford Nanopore’s 1D2 and related sequencing protocols. Our software PoreOver (https://github.com/jordisr/poreover) finds the consensus of two neural networks by aligning their probability profiles, and is compatible with multiple nanopore basecallers. When applied to the recently-released Bonito basecaller, our method reduces the median sequencing error by more than half.}}, 
+pages = {38}, 
+number = {1}, 
+volume = {22}
+}
+
+@article{deepnano, 
+year = {2017}, 
+keywords = {basecalling,nanopore,neural-network}, 
+title = {{DeepNano: Deep recurrent neural networks for base calling in MinION nanopore reads}}, 
+author = {Boža, Vladimír and Brejová, Broňa and Vinař, Tomáš}, 
+journal = {PLOS ONE}, 
+doi = {10.1371/journal.pone.0178751}, 
+pmid = {28582401}, 
+eprint = {1603.09195}, 
+abstract = {{The MinION device by Oxford Nanopore produces very long reads (reads over 100 kBp were reported); however it suffers from high sequencing error rate. We present an open-source DNA base caller based on deep recurrent neural networks and show that the accuracy of base calling is much dependent on the underlying software and can be improved by considering modern machine learning methods. By employing carefully crafted recurrent neural networks, our tool significantly improves base calling accuracy on data from R7.3 version of the platform compared to the default base caller supplied by the manufacturer. On R9 version, we achieve results comparable to Nanonet base caller provided by Oxford Nanopore. Availability of an open source tool with high base calling accuracy will be useful for development of new applications of the MinION device, including infectious disease detection and custom target enrichment during sequencing.}}, 
+pages = {e0178751}, 
+number = {6}, 
+volume = {12}
+}

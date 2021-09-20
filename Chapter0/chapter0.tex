@@ -249,17 +249,55 @@ The \pandora{} method addresses the main limitations of existing genome graph ap
 Despite these advantages, there is a key limitation to the method: an inability to detect novel variants. As variation inference is done by genotyping all sites in a \prg{}, it follows that if a variant does not exist in a \prg{}, it cannot be detected by \pandora{}. The first chapter of this thesis (\autoref{chap:denovo}) will remove this limitation. 
 
 % =============================================
-\section{\ont{} DNA sequencing}
+\section{\ont{} sequencing}
 \label{sec:intro-ont}
-A description of how this sequencing technology works.
+The idea of sequencing DNA and RNA with a nanopore was conceived of by multiple parties in the 1980s \cite{Deamer2016}. However, it wasn't commercially available until the release of the Oxford Nanopore Technologies (ONT) MinION\textsuperscript{\texttrademark} device in 2014 \cite{Quick2014,Deamer2016}. (We use \emph{\ont{}} sequencing to mean sequencing with an ONT device throughout this thesis). The MinION device is smaller than a smartphone and plugs into a computer via a USB port.
 
-Basecalling and historical progress in accuracy. %Make sure to mention some elements like NNs that are relevant to tubby
+\ont{} sequencing works by passing a strand of DNA or RNA through a nanopore. The nanopore is embedded in an electro-resistant membrane, with a flow cell containing an array of such pores. A sensor attached to each nanopore records the electrical current passing through it; as the DNA or RNA strand moves through the nanopore, this current signal changes. There is approximately five nucleotides present in the nanopore at a time. As such, the identity of each nucleotide (base) can be inferred by a characteristic signal alteration (see \autoref{fig:nanopore}). Because the sensor takes measurements at a faster speed than the DNA moves through the nanopore, multiple recordings are obtained for each base transition - see the distinctive "steps" in \autoref{fig:nanopore}b. The process of inferring a DNA or RNA sequence from this raw signal is called basecalling.
 
-Discuss benefits over Illumina - i.e., portability, low startup requirements, real-time results etc.
+\begin{figure}
+\centering
+\includegraphics[width=0.9\columnwidth]{Chapter0/Figs/nanopore.png}
+\caption{Nanopore sequencing. \textbf{a}) A single strand of DNA or RNA (black) is passed through a nanopore (green) by an enzyme (red). A sensor records the electric current flowing through the nanopore. \textbf{b}) The raw signal recorded by the nanopore sensor. The electrical current (y-axis) changes as nucleotides move through the nanopore. Each nucleotide can be inferred by a characteristic alteration in the signal, indicated by the black arrows.}
+\label{fig:nanopore}
+\source{\cite{Deamer2016}}
+\end{figure}
+
+\subsection{Basecalling}
+
+Basecalling algorithms have seen a rich evolution since the release of ONT's first device. The raw signal and metadata for each molecule that is read by each nanopore in a flow cell is deposited into a hierarchical data format (HDF5; \cite{hdf5}) file (referred to as a fast5 file). These fast5 files are produced in real-time. That is, the user has immediate access to the sequencing data as soon as it is produced; a major benefit over existing sequencing technologies.
+
+The progression of basecalling algorithms, along with nanopore structure and chemistry, has lead to a steady increase in the accuracy of genomic sequences inferred from \ont{} sequencing (as shown in \autoref{fig:nanopore-timeline}) \cite{Rang2018}. From initial read-level accuracy of approximately 60\% \cite{Goodwin2015}, recent studies have reported an accuracy of 93.2\% \cite{Silvestre2021}.
+
+Traditionally, there were two key components to basecalling. The first was segmentation of the raw signal into "events" (the plateaus in \autoref{fig:nanopore}). These events represent a 5-mer within the nanopore, so consecutive events describe a sequence of nucleotides entering and leaving the nanopore. The second component to traditional basecalling is applying an algorithm to these events to infer the genomic sequence. These basecalling algorithms require an \textit{a priori} model that has been trained on molecules for which the sequence is known. Metrichor was the original software provided by ONT for basecalling and it used a hidden Markov model (HMM) to turn events into sequence. In 2017, Boža \etal{} developed the first basecalling algorithm to use a recurrent neural network (RNN), instead of a HMM, to turn events into sequence with increased accuracy \cite{deepnano}. RNN basecalling was provided soon after this with ONT's new Albacore algorithm. The next major algorithmic development was the removal of the segmentation step (the most error-prone stage of basecalling), using a Connectionist temporal classication (CTC) decoder to label unsegmented raw signal and subsequent basecalling with an RNN and convolutional neural network \cite{chiron2018,Stoiber2017}. Again, very soon after this, ONT released a new basecalling software, Guppy, which incorporated these new ideas. Guppy is still the gold-standard basecalling algorithm and all algorithmic development since its release has been related to the labelling of the raw signal data.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.9\columnwidth]{Chapter0/Figs/nanopore_timeline.png}
+\caption{Timeline of ONT nanopore chemistry and the accuracy of \ont{} sequencing data. The numbers attached to each point in the accuracy plot relate to published work reporting the accuracy measurement. A list of those publications can be found in the original article this figure was taken from \cite{Rang2018}. HMM=hidden Markov model; RNN=recurrent neural network; 2D=a form of \ont{} sequencing where both strands are sequenced.}
+\label{fig:nanopore-timeline}
+\source{\cite{Rang2018}}
+\end{figure}
+
+\noindent
+The pre-trained models distributed with \guppy{} aim to be general. That is, they can be used on \ont{} data from any organism. It is not known what species these models were trained with, however, it is fair to assume a diverse range were used given \guppy{}'s consistent performance across kingdoms and species. In 2019, Wick \etal{} showed that training a taxon-specific (Enterobacteriaceae) basecalling model can provide increased accuracy when used to basecall a sample from that taxon \cite{wick2019}. Their analysis also revealed that - at least in Enterobacteriaceae - Dcm-methylation sites were the primary source of \guppy{} basecalling errors, and that the taxon-specific model removes nearly all of the errors of this type. In addition, as has also been described elsewhere \cite{watson2019}, homopolymer deletions were found to be the next most common source of systematic errors and were also reduced with the use of a taxon-specific model.
+
+The current state of \ont{} basecalling suggests that improvements in accuracy will come from three areas: chemistry, basecalling algorithm, and training data improvements. In \autoref{chap:tubby} we will look to improve \ont{} accuracy by focusing on the latter of those areas and training a \emph{species}-specific basecalling model.
 
 \subsection{Variant calling}
 \label{sec:ont-var-calling-intro}
-Variant calling - discuss history of nanopolish and recent works on variant calling such as Clair and others
+% Variant calling - discuss history of nanopolish and recent works on variant calling such as Clair and others
+Calling variation between \ont{} sequencing data and a reference genome is slowly maturing, but is yet to reach the standards set by other sequencing technologies. Much of the problems relate to the lower read accuracy of \ont{} data compared to Illumina and PacBio. A higher error rate means it is much harder for genotyping models to distinguish genuine variants from technology-derived errors.
+
+The first method specifically designed to call variation from \ont{} data was Nanopolish (CITE)...
+
+% refer to use of GATK by Arnold and David Greig
+% Clair and Clairvoyant
+% Medaka
+%  Lots of crazy pipelines like deepvariant and PEPPER
+
+
+% Discuss benefits over Illumina - i.e., portability, low startup requirements, real-time results etc.
 
 % =============================================
 \section{Tuberculosis and its causative agent}
