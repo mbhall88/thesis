@@ -286,18 +286,32 @@ The current state of \ont{} basecalling suggests that improvements in accuracy w
 
 \subsection{Variant calling}
 \label{sec:ont-var-calling-intro}
-% Variant calling - discuss history of nanopolish and recent works on variant calling such as Clair and others
+
 Calling variation between \ont{} sequencing data and a reference genome is slowly maturing, but is yet to reach the standards set by other sequencing technologies. Much of the problems relate to the lower read accuracy of \ont{} data compared to Illumina and PacBio. A higher error rate means it is much harder for genotyping models to distinguish genuine variants from technology-derived errors.
 
-The first method specifically designed to call variation from \ont{} data was Nanopolish (CITE)...
+The first method specifically designed to call variation from \ont{} data was Nanopolish \cite{nanopolish2015,nanopolish2017} - developed in 2015. It maps the raw signal for each read to the reference genome variants are to be called against, and uses a HMM to determine if the reads show support for a variant. However, Nanopolish requires access to the fast5 files in order to call variants, and this contributes to observed runtimes in the order of days and peak memory in the 100's of gigabytes \cite{clairvoyant2019}. More recent variant callers designed to support \ont{} data such as DeepVariant \cite{deepvariant}, Clairvoyent \cite{clairvoyant2019} and Clair \cite{clair2020} all use multi-layer neural networks and require significant effort on behalf of the user to operate \cite{sanderson2020}. An ONT-developed variant caller (and sequence correction) tool, Medaka (\url{https://github.com/nanoporetech/medaka}), also uses neural networks, but is much simpler to use. In addition to these newer, complex methods, some researchers have found more traditional short-read approaches such as GATK \cite{Poplin2018} can be tuned to work well with \ont{} data \cite{greig2021,bainomugisa2018,Greig2019}.
 
-% refer to use of GATK by Arnold and David Greig
-% Clair and Clairvoyant
-% Medaka
-%  Lots of crazy pipelines like deepvariant and PEPPER
+Despite the wealth of \ont{} basecalling \cite{wick2019} and assembly \cite{wick2020} benchmarking studies, there is relatively few independent variant calling assessments. A recent analysis by Sanderson \etal{} evaluated Clair, Nanopolish, and Medaka for variant calling in \textit{Neisseria gonorrhoeae} \cite{sanderson2020}. However, this study used Illumina as the "truth" and only assessed SNP calls. They found Clair was the best performing method and was able to detect 94-98\% of Illumina SNP calls, however, it required training a random forest classifier to achieve this result. In addition, in order to reduce false positive SNPs from 49-289/genome to 4-19/genome, SNP detection dropped to 76-94\%. Therefore, it remains to be seen what the true precision and recall of \ont{} variant calling is - for both SNPs and indels.
 
+\subsection{Benefits and limitations}
 
-% Discuss benefits over Illumina - i.e., portability, low startup requirements, real-time results etc.
+\ont{} sequencing offers many unique benefits over the gold-standard Illumina as a result of its vastly different approach to sequencing. However, there are limitations and \ont{} will unlikely ever be a solution for all problems. We will briefly summarise some of these pros and cons in the context of pathogen genomics and its application to real-world settings with respect to Illumina.
+
+\subsubsection{Cost}
+Depending on the context of the application, \ont{} sequencing is both more and less expensive than Illumina sequencing. At a purely device and peripherals level, there are a few layers of cost that need to be understood. The upfront price of an ONT MinION device is \euro900, while an Illumina MiSeq costs \euro100,000 - 111 times more than the MinION \cite{Tedersoo2021}. The cost per lane/flow cell and library prep is \euro600 and \euro90-130 for the MinION, while for the MiSeq these two items are \euro2,000 and \euro50-100 respectively. Taking all of these prices into account, the cost of generating one billion bases (1gbp) of sequencing data is \euro12 on a MinION device and \euro175 for a MiSeq. However, the caveat here is that, currently, the 1gbp of Illumina data will be of much higher quality. Other costs that are harder to quantify are the need for longer library prep for Illumina sequencing, thus there are additional costs associated with this \cite{Tedersoo2021}.
+
+\subsubsection{Portability}
+The ONT MinION weighs just 87g and has a volume of 80cm\textsuperscript{3}, while the Illumina MiSeq respective weight and volume are 57.2kg and 202,709cm\textsuperscript{3}. The MinION can also be powered through the USB port of a computer, while the MiSeq requires significantly more power resources \cite{Tedersoo2021}. These two aspects combine to make the MinION extremely portable and the MiSeq completely stationary.
+
+\subsubsection{Diagnostics}
+Another benefit of \ont{} sequencing is that the data is made available in real-time. A standard MiSeq runtime is approximately 55 hours \cite{Tedersoo2021} and therefore it takes at least 55 hours to have access to the sequencing information. As such MinION diagnostics can operate as rapidly as the sequencing. Indeed, \ont{} sequencing has been applied to same-day \mtb{} diagnostics, with phylogenetic placement and full drug susceptibility profiles in 12.5 hours \cite{Votintseva2017}. Other real-time diagnostic applications have included detection of surgical device infections \cite{Sanderson2018}, Ebola \cite{Hoenen2016,quick2016} and Zika \cite{faria2016} virus outbreak surveillance, and Enterobacteriaceae strain and drug resistance identification \cite{Cao2016}. Even conventional genomics for bacterial diagnostics stand to gain from the use of \ont{} sequencing. For example, Greig \etal{} from Public Health England found that the better resolution of the Shiga toxin-producing \ecoli{} accessory genome from \ont{} sequencing lead to improved resolution during outbreak investigation \cite{greig2021}.
+
+Another emerging benefit of \ont{} sequencing is the artificial enrichment of samples \cite{Payne2021,Kovaka2021}. This enrichment is facilitated by an API within the MinION device that allows for ejecting (rejecting) molecules from the nanopore. The sequencing data is mapped to a reference database and rules can be provided that reject a molecule if it originates from a specified reference, or once a certain read depth has been reached. One application by Kovaka \etal{} was to deplete bacterial DNA, thus enriching yeast genetic material \cite{Kovaka2021}, however, this could easily be employed in the reverse, depleting human DNA and enriching bacterial or viral material in a patient-derived sample.  
+
+\hspace{0.75cm}
+
+\noindent
+While there are many benefits to \ont{} sequencing, the accuracy of data provided is still well behind Illumina. However, as we have seen, increased algorithm and method development is helping to reduce the difference. A major focus of this thesis is the improvement of \ont{}-derived sequencing information. In particular, after adding the ability for \pandora{} to discover novel variants, we will turn our attention to genome graph and \ont{} sequencing applications for the pathogen \textit{Mycobacterium tuberculosis}.
 
 % =============================================
 \section{Tuberculosis and its causative agent}
