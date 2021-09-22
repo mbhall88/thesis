@@ -148,8 +148,8 @@
 %     style=nature,
 %   ]{biblatex}
 
-
-\usepackage[backend=biber,style=numeric]{biblatex}
+% numeric-comp compressed and sorts in-text citation numbers. sorting=none sorts the bibliograph based on when the citation first appears in the text
+\usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex}
  \addbibresource{References/references.bib}
 \bibliography{References/references} %Location of references.bib only for biblatex
 
@@ -211,7 +211,7 @@
 
 % To change the name of the Nomenclature section, uncomment the following line
 
-%\renewcommand{\nomname}{Symbols}
+\renewcommand{\nomname}{Abbreviations}
 
 \nomenclature[z-Mtb]{Mtb}{\textit{Mycobacterium tuberculosis}}
 \nomenclature[z-ONT]{ONT}{Oxford Nanopore Technologies}
