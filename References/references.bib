@@ -3196,3 +3196,40 @@ eprint = {https://journals.asm.org/doi/pdf/10.1128/jcm.31.2.406-409.1993}
 	Abstract = {Concern has been raised about the efficacy of the heat killing of mycobacteria during the isolation of DNA. We demonstrate a method that allows for the efficient killing of Mycobacterium tuberculosis without compromising DNA integrity for subsequent molecular investigation. This method reduces the risk of infection to the research scientist.},
 	URL = {https://europepmc.org/articles/PMC1351970},
 }
+
+@article{cryptic2021data, 
+year = {2021}, 
+keywords = {MTBC,cryptic,amr,database}, 
+title = {{A data compendium of Mycobacterium tuberculosis antibiotic resistance}}, 
+author = {Brankin, Alice and Malone, Kerri M and Barilar, Ivan and Battaglia, Simone and Borroni, Emanuele and Brandao, Angela Pires and Cabibbe, Andrea Maurizio and Carter, Joshua and Cirillo, Daniela Maria and Claxton, Pauline and Clifton, David A and Cohen, Ted and Coronel, Jorge and Crook, Derrick W and Dreyer, Viola and Earle, Sarah G and Escuyer, Vincent and Ferrazoli, Lucilaine and Fowler, Philip W and Gao, George Fu and Gardy, Jennifer and Gharbia, Saheer and Ghisi, Kelen Teixeira and Ghodousi, Arash and Cruz, Ana Luíza Gibertoni and Grandjean, Louis and Grazian, Clara and Groenheit, Ramona and Guthrie, Jennifer L and He, Wencong and Hoffmann, Harald and Hoosdally, Sarah J and Hunt, Martin and Iqbal, Zamin and Ismail, Nazir Ahmed and Jarrett, Lisa and Joseph, Lavania and Jou, Ruwen and Kambli, Priti and Khot, Rukhsar and Knaggs, Jeff and Koch, Anastasia and Kohlerschmidt, Donna and Kouchaki, Samaneh and Lachapelle, Alexander S and Lalvani, Ajit and Lapierre, Simon Grandjean and Laurenson, Ian F and Letcher, Brice and Lin, Wan-Hsuan and Liu, Chunfa and Liu, Dongxin and Mandal, Ayan and Mansjö, Mikael and Matias, Daniela and Meintjes, Graeme and Mendes, Flávia de Freitas and Merker, Matthias and Mihalic, Marina and Millard, James and Miotto, Paolo and Mistry, Nerges and Moore, David and Musser, Kimberlee A and Ngcamu, Dumisani and Nhung, Hoang Ngoc and Niemann, Stefan and Nilgiriwala, Kayzad Soli and Nimmo, Camus and Okozi, Nana and Oliveira, Rosangela Siqueira and Omar, Shaheed Vally and Paton, Nicholas and Peto, Timothy EA and Pinhata, Juliana Maira Watanabe and Plesnik, Sara and Puyen, Zully M and Rabodoarivelo, Marie Sylvianne and Rakotosamimanana, Niaina and Rancoita, Paola MV and Rathod, Priti and Robinson, Esther and Rodger, Gillian and Rodrigues, Camilla and Rodwell, Timothy C and Roohi, Aysha and Santos-Lazaro, David and Shah, Sanchi and Kohl, Thomas Andreas and Smith, Grace and Solano, Walter and Spitaleri, Andrea and Supply, Philip and Surve, Utkarsha and Tahseen, Sabira and Thuong, Nguyen Thuy Thuong and Thwaites, Guy and Todt, Katharina and Trovato, Alberto and Utpatel, Christian and Rie, Annelies Van and Vijay, Srinivasan and Walker, Timothy M and Walker, A Sarah and Warren, Robin and Werngren, Jim and Wijkander, Maria and Wilkinson, Robert J and Wilson, Daniel J and Wintringer, Penelope and Xiao, Yu-Xin and Yang, Yang and Yanlin, Zhao and Yao, Shen-Yuan and Zhu, Baoli}, 
+journal = {bioRxiv}, 
+doi = {10.1101/2021.09.14.460274}, 
+abstract = {{The Comprehensive Resistance Prediction for Tuberculosis: an International Consortium (CRyPTIC) presents here a global collection of 15,211 Mycobacterium tuberculosis clinical isolates, all of which have undergone whole genome sequencing and have had their minimum inhibitory concentrations to 13 antitubercular drugs measured. The isolates represent five major M. tuberculosis lineages originating from 23 countries across four continents. 6,814 isolates were found resistant to at least one drug, including 2,129 samples fully satisfy the clinical definitions of RR/MDR, pre-XDR or XDR. Resistance status to eight antitubercular drugs can be accurately predicted using a genetic mutation catalogue for over 90\% of the isolates. Furthermore, we show the presence of suspected resistance conferring mutations for isolates resistant to the newly introduced drugs bedaquiline, clofazimine, delamanid and linezolid. Finally, a case study of rifampicin mono-resistance is presented to showcase how this compendium could be used to advance our genetic understanding of rare resistance phenotypes and evaluate the likely performance of a widely used molecular diagnostic tool. It is hoped that this compendium, the largest M. tuberculosis matched phenotypic and genotypic dataset to date, will facilitate and inspire new research projects for years to come.}}, 
+pages = {2021.09.14.460274}
+}
+
+@article{minos, 
+year = {2021}, 
+keywords = {variant-calling,genome-graphs,benchmark,bacterial-genomics}, 
+title = {{Minos: variant adjudication and joint genotyping of cohorts of bacterial genomes}}, 
+author = {Hunt, Martin and Letcher, Brice and Malone, Kerri M and Nguyen, Giang and Hall, Michael B and Colquhoun, Rachel M and Lima, Leandro and Schatz, Michael and Ramakrishnan, Srividya and Consortium, The CRyPTIC and Iqbal, Zamin}, 
+journal = {bioRxiv}, 
+doi = {10.1101/2021.09.15.460475}, 
+abstract = {{Short-read variant calling for bacterial genomics is a mature field, and there are many widely-used software tools. Different underlying approaches (eg pileup, local or global assembly, paired-read use, haplotype use) lend each tool different strengths, especially when considering non-SNP (single nucleotide polymorphism) variation or potentially distant reference genomes. It would therefore be valuable to be able to integrate the results from multiple variant callers, using a robust statistical approach to “adjudicate” at loci where there is disagreement between callers. To this end, we present a tool, Minos, for variant adjudication by mapping reads to a genome graph of variant calls. Minos allows users to combine output from multiple variant callers without loss of precision. Minos also addresses a second problem of joint genotyping SNPs and indels in bacterial cohorts, which can also be framed as an adjudication problem. We benchmark on 62 samples from 3 species (Mycobacterium tuberculosis, Staphylococcus aureus, Klebsiella pneumoniae) and an outbreak of 385 M. tuberculosis samples. Finally, we joint genotype a large M. tuberculosis cohort (N≈15k) for which the rifampicin phenotype is known. We build a map of non-synonymous variants in the RRDR (rifampicin resistance determining region) of the rpoB gene and extend current knowledge relating RRDR SNPs to heterogeneity in rifampicin resistance levels. We replicate this finding in a second M. tuberculosis cohort (N≈13k). Minos is released under the MIT license, available at https://github.com/iqbal-lab-org/minos.}}, 
+pages = {2021.09.15.460475}
+}
+
+@article{Wang1994, 
+year = {1994}, 
+keywords = {msa,algorithms}, 
+title = {{On the Complexity of Multiple Sequence Alignment}}, 
+author = {WANG, LUSHENG and JIANG, TAO}, 
+journal = {Journal of Computational Biology}, 
+issn = {1066-5277}, 
+doi = {10.1089/cmb.1994.1.337}, 
+pmid = {8790475}, 
+abstract = {{We study the computational complexity of two popular problems in multiple sequence alignment: multiple alignment with SP-score and multiple tree alignment. It is shown that the first problem is NP-complete and the second is MAX SNP-hard. The complexity of tree alignment with a given phylogeny is also considered.}}, 
+pages = {337--348}, 
+number = {4}, 
+volume = {1}
+}
