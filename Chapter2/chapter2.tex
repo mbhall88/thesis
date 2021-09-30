@@ -24,7 +24,7 @@ A manuscript comprising the work in this chapter and \autoref{chap:dst} is curre
 %=========================================================================
 
 \section{Introduction}
-\mtb{} is a contagious bacterial pathogen that causes the disease Tuberculosis (TB). It accounts for more deaths than any other pathogen each year \cite{who2020} — as such, detecting chains of \mtb{} transmission is of the utmost importance. Whole-genome sequencing (WGS) has established itself as a vital tool for identifying possible transmission clusters and is being used by some leading public health agencies to aid contact tracing \cite{phe-tb-england,brooks2020}. Illumina is considered the gold standard for this type of WGS work. However, Illumina is not readily available in many high-burden TB settings and requires considerable time and resources to start and maintain. \ont{} has shown itself to be adept in these types of settings, having been used to notable effect during recent Zika \cite{faria2016} and Ebola \cite{quick2016,Hoenen2016} outbreaks. Even in environments where resource availability is not an obstacle, \ont{}'s rapid turnaround time has been used for monitoring COVID-19 and informing infection control measures \cite{meredith2020}. The time and resources required to set up \ont{} sequencing are far lower than Illumina, but despite this, there has been little work done to assess its suitability for \mtb{} WGS-based transmission clustering. The lack of work in this space likely stems from the long-held belief that due to its higher sequencing error rate, \ont{} is not capable of such fine-grained analyses. However, \ont{} has seen considerable improvements in its accuracy in recent years \cite{wick2019}, and studies using variant calls from the technology are becoming increasingly common \cite{sanderson2020,watson2020}. In particular, Public Health England (PHE) has investigated the use of \ont{} for the analysis of Shiga toxin-producing \ecoli{} and found it to be well-suited to the application \cite{greig2021}. 
+\mtb{} is a contagious bacterial pathogen that causes the disease Tuberculosis (TB). It accounts for more deaths than any other pathogen each year \cite{who2020} — as such, the epidemiology of \mtb{} transmission is of the utmost importance. Whole-genome sequencing (WGS) has established itself as a vital tool for identifying possible transmission clusters and is being used by some leading public health agencies to aid contact tracing \cite{phe-tb-england,brooks2020}. Illumina is considered the gold standard for this type of WGS work. However, Illumina is not readily available in many high-burden TB settings and requires considerable time and resources to start and maintain. \ont{} has shown itself to be adept in these types of settings, having been used to notable effect during recent Zika \cite{faria2016} and Ebola \cite{quick2016,Hoenen2016} outbreaks. Even in environments where resource availability is not an obstacle, \ont{}'s rapid turnaround time has been used for monitoring COVID-19 and informing infection control measures \cite{meredith2020}. The time and resources required to set up \ont{} sequencing are far lower than Illumina, but despite this, there has been little work done to assess its suitability for \mtb{} WGS-based transmission clustering. The lack of work in this space likely stems from the long-held belief that due to its higher sequencing error rate, \ont{} is not capable of such fine-grained analyses. However, \ont{} has seen considerable improvements in its accuracy in recent years \cite{wick2019}, and studies using variant calls from the technology are becoming increasingly common \cite{sanderson2020,watson2020}. In particular, Public Health England (PHE) has investigated the use of \ont{} for the analysis of Shiga toxin-producing \ecoli{} and found it to be well-suited to the application \cite{greig2021}. 
 
 In this chapter, we evaluate whether \ont{} sequencing can provide \mtb{} transmission clusters consistent with Illumina. To facilitate this investigation, we collect a new dataset of 150 samples - from Madagascar, South Africa, and England - sequenced on both Illumina and \ont{} platforms. We first assess \ont{} variant calls and outline a filtering strategy to provide Illumina-level precision. Next, we use these variant calls to cluster samples based on SNP (single nucleotide polymorphism) distance thresholds and find \ont{} does not miss any samples from their expected cluster. Finally, we confirm that reliable clustering of samples from a mixture of Illumina and \ont{} modalities is achievable.
 
@@ -41,29 +41,16 @@ As these samples are not reference isolates, and we want to be able to compare b
 
 \subsection{Illumina sequencing}
 
+An extended description of isolate selection, DNA extraction, and sequencing methods is provided in \autoref{app:dna-sequencing}.
+
 \subsubsection{Madagascar}
-
-\todo[inline]{waiting to see if Simon or Niaina have changes or additions to this}
-
 Illumina sequencing was carried out on the HiSeq 2500 platform at the Wellcome Trust Centre for Human Genetics, Oxford, and paired-end libraries were prepared according to the manufacturer’s instruction. 
 
-\subsubsection{Birmingham}
+\subsubsection{England}
 
-\todo[inline]{assigned to zam}
+\todo[inline]{waiting to get this info from zam}
 
 \subsubsection{South Africa}
-
-\improvement[inline]{tidy up as this is just copy-pasted from email from Anzaan}
-
-Isolate selection \\
-Clinical Mycobacterium tuberculosis (Mtb) isolates routinely collected in the Western Cape Province of South Africa, processed by the National Health Laboratory Service (NHLS) and diagnosed as rifampicin resistant tuberculosis, are biobanked at the South African Medical Research Council Centre for Tuberculosis Research (SAMRC-CTR) housed at the Division of Molecular Biology and Human Genetics at Stellenbosch University, South Africa. A convenience data set of 82 clinical Mtb isolates for which Illumina whole genome sequencing data was available were selected for Nanopore Sequencing.  
-
-DNA extraction \\
-% citation for this subsubsection
-% Warren, R. et al. Safe Mycobacterium tuberculosis DNA extraction method that does not compromise integrity. J Clin Microbiol 44, 254-256, doi:10.1128/JCM.44.1.254-256.2006 (2006).
-Clinical Mtb isolates were cultured on supplemented 7H10 solid media under BSL3 conditions. Phenol-chloroform DNA extraction was performed on heat inactivated cultured isolates as previously described(CITE). 
-
-WGS (Illumina) \\
 % note from anzaan
 % Many of these WGS will be published soon. I am waiting for the final list and then I’ll include their accession numbers so that we can refer to them here. If all were published, we also don’t have to upload them to ENA (or which ever data repository)
 Paired-end genomic libraries were prepared using the Illumina Nextera XT library or NEBNext Ultra TM II FS DNA Library Preparation Kits (Illumina Inc, San Diego, CA, USA) according to the manufacturers’ instructions. Pooled samples were sequenced on an Illumina HiSeq2500 or NextSeq500 instrument.
@@ -71,27 +58,21 @@ Paired-end genomic libraries were prepared using the Illumina Nextera XT library
 \subsection{\ont{} sequencing}
 
 \subsubsection{Madagascar}
+\ont{} library preparation was carried out using the Oxford Nanopore Technology (ONT) Ligation Sequencing Kit 1D (SQK-LSK108) and the Native Barcoding Kit 1D (EXP-NBD103) according to the ONT standard protocols. One microgram of DNA was used as input for each library. Multiplexed sequencing was performed by pooling 6-8 barcoded DNA samples. Prepared libraries were loaded onto an R9.4 flow cell and sequenced on a Minion device with ONT MinKNOW software.
 
-\todo[inline]{waiting to see if Simon or Niaina have changes or additions to this}
-
-Nanopore libraries preparation were carried out using the Oxford Nanopore Technology (ONT) Ligation Sequencing Kit 1D (SQK-LSK108) and the Native Barcoding Kit 1D (EXP-NBD103) according to the ONT standard protocols. One microgram of DNA was used as input for each library. Multiplexed sequencing library was performed by pooling 6-8 barcoded DNA samples. Prepared libraries were loaded onto a R9.4 flow cells and sequenced on a Minion device through ONT MinKNOW software.
-
-\subsubsection{Birmingham}
+\subsubsection{England}
 
 \todo[inline]{assigned to zam}
 
 \subsubsection{South Africa}
-
-\improvement[inline]{tidy up as this is just copy-pasted from email from Anzaan}
-
-Remnant stored DNA used for Illumina WGS from each isolate was retrieved from storage and used for Nanopore library preparation. Per isolate, one microgram of undigested DNA was prepared for Nanopore Sequencing using the ligation sequencing kit (SQK-LSK109). The native barcoding expansion kit (EXP-NBD104) was used for multiplexing. The protocols for sequencing genomic DNA by ligation and native barcoding were carried out according to the manufacturers’ instructions. Multiplexed sequencing libraries consisted of 6-12 barcoded DNA samples, and all libraries were sequenced using SpotON R9.4.1 flow cells on a MinION device. 
-
-\subsubsection{Preprocessing}
-
-All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool \guppy{} (version 3.4.5). We used default parameters for basecalling, and the only non-default parameter used for de-multiplexing was to trim barcodes from the resulting sequences.  
+Remnant stored DNA used for Illumina WGS from each isolate was retrieved from storage and used for Nanopore library preparation. Per isolate, one microgram of undigested DNA was prepared for Nanopore sequencing using the ligation sequencing kit (SQK-LSK109). In addition, the native barcoding expansion kit (EXP-NBD104) was used for multiplexing. The protocols for sequencing genomic DNA by ligation and native barcoding were carried out according to the manufacturers’ instructions. Multiplexed sequencing libraries consisted of 6-12 barcoded DNA samples, and all libraries were sequenced using SpotON R9.4.1 flow cells on a MinION device.
 
 \subsection{PacBio sequencing}
 Thirty-five of the Malagasy samples were sequenced and processed at the Next Generation Genomics Core within Cold Spring Harbor Laboratory with PacBio Sequel 1M V2 SMRT cells. The circular consensus was generated via the SMRTlink graphical user interface version 6.0.0.47841. \autoref{app:pacbio-seq} outlines the full details of the sequencing protocol.
+
+\subsection{Data preprocessing}
+
+All \ont{} data for this project was basecalled and de-multiplexed using the \ont{} proprietary software tool \guppy{} (version 3.4.5). We used default parameters for basecalling, and the only non-default parameter used for de-multiplexing was to trim barcodes from the resulting sequences.  
 
 %=========================================================================
 

@@ -5,31 +5,23 @@
 % ===========================================================
 
 \section{DNA sequencing methods}
-
-\subsection{DNA extraction}
+\label{app:dna-sequencing}
+\subsection{Isolate selection and DNA extraction}
 
 \subsubsection{Madagascar}
+The Institut Pasteur de Madagascar hosts the Madagascar Programme National de Lutte Contre la Tuberculose (National TB Program), which provides reference DST for TB patients suspected of facing infection relapse or treatment failure. Culture-confirmed multi-drug resistant (MDR) isolates were included. All MDR isolates were matched with culture-confirmed drug-susceptible isolates referred during the same period and from the same region of the country. All available isolates were included for patients undergoing TB treatment and for which a follow-up culture was positive. 
 
-\improvement[inline]{tidy all of this}
-Isolate selection \\
-The Institut Pasteur de Madagascar hosts the Madagascar Programme National de Lutte contre la Tuberculose [National TB Program] which provides reference DST for TB patients suspected of facing infection relapse or treatment failure. XX isolates culture-confirmed MDR isolates were included. All MDR isolates were matched 1:1 with culture-confirmed drug susceptible isolates referred during the same period and from the same region of the country. For included patients undergoing TB treatment and for which a follow-up culture was positive, all available isolates were included. 
+DNA from \mtb{} culture was extracted using the cetyltrimethylammonium bromide (CTAB) method previously described by Van Embden with minor modification \cite{vanEmbden1993}. Briefly, samples were inactivated by heating at $80^\circ$C for 30 minutes. Next, 10mg/ml of lysozyme was added to the suspension and incubated for at least one hour at $37^\circ$C. After adding proteinase K 10mg/ml and sodium dodecyl sulphate (SDS) 10\%, the suspension was incubated for 10 minutes at $65^\circ$C. A mixture of CTAB and 5M NaCl preheated to $65^\circ$C was then added. The suspension was mixed until a milky mixture was obtained and incubated for 10 minutes at $65^\circ$C. Next, chloroform isoamyl alcohol (24:1) mixture was added, followed by centrifugation for 5 minutes at 10,000rpm and $4^\circ$C. The upper phase was recovered, and DNA was precipitated by adding isopropanol to the solution. The mixture was frozen for at least one hour then centrifuged at 10000rpm and $4^\circ$C, for 5 minutes. The supernatant was discarded, and the pellet was washed with 70\% ethanol and centrifuged at 10,000rpm and $4^\circ$C, for 5 minutes. The DNA pellet was dried with speed-vac for 2 minutes and resuspended in 1X TE. DNA was quantified using the Qubit dsDNA HS Assay Kit (Thermo Fisher Scientific, USA).
 
-DNA from MTB culture was extracted using the cetyltrimethylammonium bromide (CTAB) method previously described by Van Embden with little modification (Van Embden et al., 1993). Briefly, Sample was inactivated by heating at 80 ° C for 30 minutes. Lysozyme 10 mg / ml is added to the suspension and sample is incubated for at least one hour at 37 ° C. After addition proteinase K 10 mg / ml and sodium dodecyl sulfate (SDS) 10\%, the suspension was incubated for 10 min at 65 ° C. Mixture of CTAB and 5M NaCl preheated to 65 ° C was the added. The suspension was mixed until a milky mixture was obtained and incubated for 10 minutes at 65ºC. Chloroform: isoamyl alcohol (24:1) mixture was added followed by centrifugation for 5 min at 10,000 rpm, + 4 °C. The upper phase was recovered and DNA was precipitated by adding isopropanol to the solution.  The mixture was frozen at least for one hour then centrifuged at 10000rpm at, + 4 ° C, for 5min.  The supernatant was discarded and pellet was washed with 70\% ethanol and centrifuged at 10,000 rpm, + 4 ° C, for 5 min. The DNA pellet was dried at speed-vac for 2min and resuspended in 1X TE. DNA was quantified using the Qubit dsDNA HS Assay Kit (Thermo Fisher Scientific, USA).
+\subsubsection{South Africa}
+Clinical \mtb{} isolates routinely collected in the Western Cape Province of South Africa, processed by the National Health Laboratory Service (NHLS) and diagnosed as rifampicin-resistant tuberculosis, are biobanked at the South African Medical Research Council Centre for Tuberculosis Research (SAMRC-CTR) housed at the Division of Molecular Biology and Human Genetics at Stellenbosch University, South Africa. A convenience data set of 82 clinical Mtb isolates for which Illumina WGS data was available were selected for \ont{} sequencing.  
 
-% Van Embden J, Cave MD, Crawford JT, Dale J, Eisenach K, Gicquel B, et al. Strain identification of Mycobacterium tuberculosis by DNA fingerprinting: recommendations for a standardized methodology. Journal of clinical microbiology. 1993;31(2):406-9.
+Clinical \mtb{} isolates were cultured on supplemented 7H10 solid media under BSL3 conditions. Phenol-chloroform DNA extraction was performed on heat-inactivated cultured isolates as previously described \cite{Warren2006}.
 
-\subsection{Illumina}
-
-\towrite[inline]{once i get this info from collabs}
-
-\subsection{\ont{}}
-
-\towrite[inline]{once i get this info from collabs}
-
-\subsection{PacBio}
+\subsection{PacBio sequencing}
 \label{app:pacbio-seq}
 
-35 of the Malagasy samples were sequenced and processed at the Next Generation Genomics Core within Cold Spring Harbor Laboratory. Samples were quantified with a Qubit dsDNA HS Assay Kit and QC’d through a Pulsed Field Gel Electrophoresis system. Then, samples were sheared at 10kb using a Megaruptor device and size-selected to 8-10 kb with a Blue pippin instrument - followed by 0.45X ampure bead purification. The PacBio library protocol SMRTbell Express Template Prep Kit 2.0 was used for each sample. Briefly, the first step was the removal of single-stranded overhangs followed by DNA Damage Repair, End-Repair/A-tailing, Ligation of overhang barcoded adaptors and sample pooling. A total of 3 pools were produced: LID50532 (16 samples), LID50533 (10 samples), and LID50534 (9 samples). After pooling, 0.5X ampure bead clean up was performed. A Sequel I instrument was used to sequence the 3 library pools. Libraries were annealed for an hour and bounded for an hour using sequel binding kit 3.0. Bound SMRTbell complexes were then purified with ampure beads. The run was set up as 10kb length for 10 hours movie time. The Sequel 1M V2 SMRT cells were used for each library.  
+Thirty-five of the Malagasy samples were sequenced and processed at the Next Generation Genomics Core within Cold Spring Harbor Laboratory. Samples were quantified with a Qubit dsDNA HS Assay Kit and QC’d through a Pulsed Field Gel Electrophoresis system. Then, samples were sheared at 10kb using a Megaruptor device and size-selected to 8-10 kb with a Blue pippin instrument - followed by 0.45X ampure bead purification. The PacBio library protocol SMRTbell Express Template Prep Kit 2.0 was used for each sample. Briefly, the first step was the removal of single-stranded overhangs followed by DNA Damage Repair, End-Repair/A-tailing, Ligation of overhang barcoded adaptors and sample pooling. A total of 3 pools were produced: LID50532 (16 samples), LID50533 (10 samples), and LID50534 (9 samples). After pooling, 0.5X ampure bead clean up was performed. A Sequel I instrument was used to sequence the 3 library pools. Libraries were annealed for an hour and bounded for an hour using sequel binding kit 3.0. Bound SMRTbell complexes were then purified with ampure beads. The run was set up as 10kb length for 10 hours movie time. The Sequel 1M V2 SMRT cells were used for each library.  
 
 The circular consensus was called via the SMRTlink graphical user interface version 6.0.0.47841.
 
