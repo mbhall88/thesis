@@ -211,47 +211,41 @@ In nearly every filtering combination, the sparse \panrg{} lead to higher recall
 
 \pandora{}'s \vrb{map} routine infers a consensus sequence for a single sample and outputs variant calls with respect to that consensus. However, \pandora{} also has a multi-sample counterpart - the \vrb{compare} command. The \compare{} routine infers a single reference sequence that is maximally close to \emph{all} samples. It outputs a locus presence/absence matrix, along with a VCF of genotypes for all samples with respect to the inferred reference sequence (see \autoref{sec:pandora-compare} for a description of the \compare{} method). As \compare{} was designed for analysing collections of (potentially divergent) samples, we assess its ability to describe \mtb{} transmission clusters. 
 
-The process for calling variants using \compare{} is first to aggregate the novel variants discovered for each sample in \autoref{sec:map-var-calls}. Then, instead of creating an updated \panrg{} for each sample, we use the aggregated novel variants to update the MSAs and \prg{}s as in \autoref{sec:map-var-calls}. In the end, we have a \panrg{} that has novel variants from all samples contained within it, rather than the \prg{}s used by \pandora{} \vrb{map}, which only have the novel variants for a single sample. Next, we run \vrb{pandora compare} using these updated sparse and dense \panrg{}s and filter the resulting VCF as-per \autoref{sec:pandora-filters}.
+The process for calling variants using \compare{} is first to aggregate the novel variants discovered for each sample in \autoref{sec:map-var-calls}. Then, instead of creating an updated \panrg{} for each sample, we use the aggregated novel variants to update the MSAs and \prg{}s as in \autoref{sec:map-var-calls}. In the end, we have a \panrg{} that has novel variants from all samples contained within it, rather than the \prg{}s used by \pandora{} \vrb{map}, which only have the novel variants for a single sample. Next, we run \vrb{pandora compare} using these updated sparse and dense \panrg{}s and filter the resulting VCF as per \autoref{sec:pandora-filters}. 
 
-As a result of its design, it is not possible to provide \compare{} with a reference to base VCF coordinates on (as in \autoref{sec:map-var-calls}). Therefore, we cannot assess the precision and recall for the seven samples as above. We maintain the same filtering strategy as the single-sample approach, however.
+As a result of its design, it is not possible to provide \compare{} with a reference to base VCF coordinates on (as in \autoref{sec:map-var-calls}). Consequently, we cannot assess the precision and recall for the seven samples as above. However, we have evaluated the accuracy of \compare{} in \autoref{sec:denovo-empirical}; therefore, in this chapter, we assess its usefulness for calculating genetic relatedness.
 
 \subsection{Computational performance}
 \label{sec:var-call-comp-perf}
 
-In addition to the quality of the variant calls, the computational cost of producing them is also important. The CPU time and maximum memory usage for performing the \ont{} variant calling is shown in \autoref{fig:var-comp-perf}. \pandora{}'s performance is broken down into the individual stages, while \bcftools{} is represented by a single job (\vrb{pileup\_nanopore}). The median maximum memory for \bcftools{} was 8.2GB, although the maximum was as high as 58.5GB. This is compared to the highest \pandora{} step - updating the MSAs with novel variants - with a median maximum memory usage of 9.7GB and 13.3GB for the sparse and dense \panrg{}s respectively. The highest memory usage for \pandora{} was 18.6GB during the updating of MSAs, nearly 40GB lower than the peak of \bcftools{}. The median CPU time for \bcftools{} was 35129 seconds, or 9.75 hours, with the longest run coming in at 138364 seconds (38.4 hours). To be able to compare \bcftools{} with \pandora{} as a whole, we can sum the median CPU time over each step, which gives 21704 and 53194 seconds, or 6.0 and 14.7 hours, for the sparse and dense \panrg{}s respectively. As with the memory usage, the longest runtime component of the \pandora{} pipeline was updating the MSAs with \denovo{} variants. Note, \bcftools{}' \vrb{mpileup} command is not parallelised, while \pandora{}'s steps are, so the wall clock time for the two is dependent on the number of CPU cores available. 
+\subsubsection{Single sample methods}
+In addition to the quality of the variant calls, the computational cost of producing them is also important. The CPU time and maximum memory usage for performing the \ont{} variant calling is shown in \autoref{fig:var-comp-perf}. \pandora{}'s performance is broken down into the individual stages, while \bcftools{} is represented by a single job (\vrb{pileup\_nanopore}). The median maximum memory for \bcftools{} was 8.2GB, although the maximum was as high as 58.5GB. This is compared to the highest \pandora{} step - updating the MSAs with novel variants - with a median maximum memory usage of 9.7GB and 13.3GB for the sparse and dense \panrg{}s respectively. The highest memory usage for \pandora{} was 18.6GB during the updating of MSAs, nearly 40GB lower than the peak of \bcftools{}. However, we note that the peak memory usage for \pandora{}'s sparse and dense \panrg{} construction (\autoref{sec:tbprg-comp-perf}) was 209 and 301GB, respectively, although this is a one-off cost and does not need to be run for each sample. 
 
+The median CPU time for \bcftools{} was 35129 seconds, or 9.75 hours, with the longest run coming in at 138364 seconds (38.4 hours). To be able to compare \bcftools{} with \pandora{} as a whole, we can sum the median CPU time over each step, which gives 21704 and 53194 seconds, or 6.0 and 14.7 hours, for the sparse and dense \panrg{}s respectively. As with the memory usage, the longest runtime component of the \pandora{} pipeline was updating the MSAs with \denovo{} variants. Note, \bcftools{}' \vrb{mpileup} command is not parallelised, while \pandora{}'s steps are, so the wall clock time for the two is dependent on the number of CPU cores available. 
+
+\subsubsection{Multi sample method}
 The time and memory of \compare{} is not directly comparable to \bcftools{} and \pandora{} \vrb{map} as it runs on all samples at the same time. Additionally, the novel variant discovery phase of \pandora{} \vrb{map} for all samples technically contributes to the overall runtime of \compare{}. As the performance of this discovery step has already been reported, we outline the remainder of the \compare{} steps in \autoref{tab:compare-perf}. In total, the remainder of the sparse and dense \panrg{} steps took 58.4 and 83.1 CPU hours, respectively. The actual wall clock time for these steps was 5.5 and 7.3 hours using 32 CPUs. Maximum memory usage occurred while updating the MSAs and peaked at 38 and 37GB for the sparse and dense \panrg{}s, respectively.
 
 \begin{figure}
      \centering
-     \begin{subfigure}[b]{0.475\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{Chapter2/Figs/cpu_time.png}
-         \caption{}
-         \label{fig:cpu-time}
-     \end{subfigure}
-    %  \hfill
-     \begin{subfigure}[b]{0.475\textwidth}
-         \centering
-         \includegraphics[width=\textwidth]{Chapter2/Figs/max_mem.png}
-         \caption{}
-         \label{fig:max-mem}
-     \end{subfigure}
-        \caption{The CPU time (in seconds; y-axis; \textbf{a}) and maximum memory usage (in megabytes; y-axis; \textbf{b}) for each \ont{} variant-calling job. Sparse (red) and dense (blue) refer to \pandora{} steps with the respective density \panrg{}. \vrb{bcftools} (purple) only has one step (\vrb{pileup\_nanopore}). The violins represent the distribution of CPU time over all samples.}
-        \label{fig:var-comp-perf}
+     \includegraphics[width=0.95\textwidth]{Chapter2/Figs/cpu_and_memory.png}
+    \caption{The CPU time (in seconds; y-axis; top) and maximum memory usage (in megabytes; y-axis; bottom) for each \ont{} variant-calling job. Sparse (red) and dense (blue) refer to \pandora{} steps with the respective density \panrg{}. \vrb{bcftools} (purple) only has one step (\vrb{pileup nanopore}). The violins represent the distribution of CPU time over all samples. Note, the y-axis for both plots is log-scaled.}
+    \label{fig:var-comp-perf}
 \end{figure}
 
 \begin{table}
 \centering
-\begin{tabularx}{0.95\textwidth}{|l|Y|Y|Y|Y|Y|Y|}
-\hline
-                & \multicolumn{3}{c|}{Sparse}                         & \multicolumn{3}{c|}{Dense}                        \\ \hline
-Step            & CPU time (sec) & Real time (H:m)  & Max. RAM (GB)   & CPU time (sec) & Real time (H:m)  & Max. RAM (GB) \\ \hline
-Update MSA      & 114677         & 1:01             & 38              & 130221         & 1:15             & 37            \\ \hline
-Make PRG        & 4700           & 0:05             & 1.2             & 5403           & 0:06             & 1.1           \\ \hline
-Index           & 538            & 0:01             & 2.1             & 1224           & 0:02             & 2.4           \\ \hline
-Compare         & 90486          & 4:25             & 5.4             & 162294         & 6:04             & 6.1           \\ \hline
-\end{tabularx}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lllllll@{}}
+\toprule
+           & \multicolumn{3}{l}{Sparse} & \multicolumn{3}{l}{Dense} \\ \midrule
+Step & CPU time (sec) & Real time (H:m) & Max. RAM (GB) & CPU time (sec) & Real time (H:m) & Max. RAM (GB) \\
+Update MSA & 114677    & 1:01   & 38    & 130221   & 1:15   & 37    \\
+Make PRG   & 4700      & 0:05   & 1.2   & 5403     & 0:06   & 1.1   \\
+Index      & 538       & 0:01   & 2.1   & 1224     & 0:02   & 2.4   \\
+Compare    & 90486     & 4:25   & 5.4   & 162294   & 6:04   & 6.1   \\ \bottomrule
+\end{tabular}%
+}
 \caption{CPU and wall clock time, and memory (RAM) usage for the main steps of running \pandora{}'s multi-sample routine \vrb{compare}. Sparse and Dense refer to two different densities with respect to the number of variants used. All steps were run on a single compute node with 32 CPU cores. MSA=multiple sequence alignment; PRG=population reference graph.}
 \label{tab:compare-perf}
 \end{table}
@@ -259,7 +253,9 @@ Compare         & 90486          & 4:25             & 5.4             & 162294  
 \subsection{Summary}
 \label{sec:var-summary}
 
-In summary, \autoref{fig:prec-recall-filters} shows that our selection of filters for \ont{} variant callers provides precision on-par with Illumina. However, this precision comes at the cost of a loss in recall. The remainder of this chapter explores how the SNP calls from \ont{} can be used to calculate distances between samples and define putative transmission clusters from these distances. We are especially interested in how similar the pairwise distances are between samples and sequencing modality and whether the same distance thresholds used for Illumina can also be used for \ont{}.
+In summary, \autoref{fig:prec-recall-filters} shows that our selection of filters for \ont{} variant callers provides precision on-par with Illumina. However, this precision comes at the cost of a loss in recall. Additionally, both \bcftools{} and \pandora{} have considerable computational costs compared to what is typical for Illumina data.
+
+The remainder of this chapter explores how the SNP calls from \ont{} can be used to calculate distances between samples and define putative transmission clusters from these distances. To recapitulate, we are using SNP calls from \bcftools{} (per-sample), \map{} (per-sample; sparse \panrg{}), and \compare{} (multi-sample; sparse \panrg{}). We are especially interested in how similar the pairwise distances are between samples and sequencing modality and whether the same distance thresholds used for Illumina can also be used for \ont{}.
 
 \begin{figure}
 \begin{center}
