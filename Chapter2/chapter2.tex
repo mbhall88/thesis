@@ -312,7 +312,7 @@ Selecting a SNP threshold to infer transmission clusters from has seen a variety
 
 We use the distance matrices from \autoref{sec:snp-dist} to infer transmission clusters. To cluster samples, for a given SNP threshold $t$, we use pairs of samples with a distance $\le t$ to define a graph, $G=(V,E)$, where samples (nodes, $V$) are connected by weighted edges ($E$), with the weight of an edge indicating the distance between the two samples it connects. We define clusters as the set of connected components $\{C_1, C_2...C_N\}\in G$, where $N$ is the number of clusters. That is, a cluster (connected component), $C_i$, is a subgraph of $G$ where a path exists between any two samples in $C_i$, but no path exists to any samples in the rest of $G$. With this definition, all clusters have a minimum of two members. 
 
-To assess how closely \ont{} SNP-based clustering approximates Illumina SNP-based clustering, we adapt a similarity measure on sets; the Tversky Index \cite{tversky1977}. We define the Illumina clustering as $G$ and the \ont{} clustering as $H$. We are interested in being able to quantify the recall and precision of the \ont{} clustering with respect to Illumina. In this sense, recall describes when clustered samples in $G$ are not clustered (or are in the wrong cluster) in $H$. Likewise, precision in this context tells us when extra samples are added to existing clusters by $H$ or when clusters in $G$ are joined in $H$. 
+To assess how closely \ont{} SNP-based clustering approximates Illumina SNP-based clustering, we adapt a similarity measure on sets; the Tversky Index \cite{tversky1977}. We define the Illumina clustering as $G$ and the \ont{} clustering as $H$. We are interested in being able to quantify the recall and precision of the \ont{} clustering with respect to Illumina. In this sense, recall describes the proportion of clustered samples in $G$ clustered with the expected (correct) samples in $H$. Likewise, precision in this context tells us when extra samples are added to existing clusters by $H$ or when clusters in $G$ are joined in $H$. 
 
 In order to be able to define precision and recall when comparing two clustering graphs $G$ and $H$, we define the Tversky Index
 
@@ -363,9 +363,61 @@ where $S_G$ and $S_H$ are the sets of singletons in the respective graphs.
 \noindent
 We assess the cluster similarities using the Python programming language with the \vrb{networkx} library \cite{networkx}. For a given threshold, we create the Illumina clustering (graph), $G$, and the \ont{} clustering, $H$ - as described above - and use these to calculate the SACR, SACP, and XCR using \autoref{eq:sacr}, \autoref{eq:sacp}, and \autoref{eq:xcr} respectively.
 
+% ===========================================================
+
+\subsubsection{An illustrated example of cluster similarity metrics}
+\label{sec:cluster-example}
+
+\autoref{sec:cluster-similarity} outlines three metrics - SACR, SACP and XCR - for evaluating the similarity between two different strategies for transmission clustering. In order to provide the reader with greater intuition for the purpose of each metric, we present an illustrated example in \autoref{fig:cluster-example}. 
+
+We take \autoref{fig:example-truth} to be the truth clusters and \autoref{fig:example-test} to be test clusters. These are akin to Illumina and \ont{} clusters, respectively, in \autoref{sec:cluster-similarity}. The individual recall and precision values (defined in \autoref{eq:recall} and \autoref{eq:precision}) for each sample in \autoref{fig:example-truth} are shown in \autoref{tab:cluster-example}. SACR and SACP (defined in \autoref{eq:sacr} and \autoref{eq:sacp}) are \emph{sample-averaged}, so their values for this example are 0.82 and 0.83 respectively. 
+
+To highlight the objective of SACR, we use the truth and test clusters containing the sample $F$. Samples $F$, $G$, $H$ and $I$ are shared between both, but $J$ is missing from the test cluster. To calculate the individual recall for $F$, we take the intersection size of the truth and test clusters it exists in and divide it by the size of the truth cluster - $\frac{4}{5}=0.8$. We do the same for the precision of sample $D$, expect we divide by the size of the test cluster - giving $\frac{2}{3}=0.66$. 
+
+The relevance of the XCR metric is best exemplified by the test cluster containing samples $L$ and $M$. As we calculate SACR and SACP for all samples in the \emph{truth} clusters, these two samples would be ignored. However, they are samples that - according to the truth - should not be part of any cluster (singletons). Therefore, SACR and SACP cannot capture these extra clusterings if they do not contain clustered truth samples. XCR covers this limitation and is the proportion of singletons in the truth that are clustered in the test (see \autoref{eq:xcr}). As \autoref{fig:cluster-example} does not show singletons, let us pretend there are 20 singletons in the truth (including samples $L$ and $M$). This would give an XCR of $2/20=0.1$.
+
+\begin{figure}
+     \centering
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Chapter2/Figs/illumina-cluster-example.png}
+         \caption{Truth clusters}
+         \label{fig:example-truth}
+     \end{subfigure}
+     \hfill
+     \begin{subfigure}[b]{0.4\textwidth}
+         \centering
+         \includegraphics[width=\textwidth]{Chapter2/Figs/ont-cluster-example.png}
+         \caption{Test clusters}
+         \label{fig:example-test}
+     \end{subfigure}
+        \caption{Illustrative examples of transmission clustering. \textbf{a)} represents truth clusters, while \textbf{b)} is clustering from some "test" method we would like to compare to \textbf{a}. The nodes represent samples with the numbers on the edges connecting them indicating the distance between those two samples. The red nodes indicate samples with a clustering disparity between the two clusterings.}
+        \label{fig:cluster-example}
+\end{figure}
+
+\begin{table}
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+sample & recall & precision \\ \midrule
+A      & 1.0    & 1.0       \\
+B      & 1.0    & 1.0       \\
+C      & 1.0    & 1.0       \\
+D      & 1.0    & 0.66      \\
+E      & 1.0    & 0.66      \\
+F      & 0.8    & 1.0       \\
+G      & 0.8    & 1.0       \\
+H      & 0.8    & 1.0       \\
+I      & 0.8    & 1.0       \\
+J      & 0.0    & 0.0       \\ \bottomrule
+\end{tabular}
+\caption{Cluster recall and precision results for each sample in \autoref{fig:cluster-example}.}
+\label{tab:cluster-example}
+\end{table}
+
 \subsubsection{Summary}
 
-To summarise, for each sample in an Illumina-defined cluster, SACR is the proportion of samples in its Illumina cluster also in its \ont{} cluster - averaged over all samples. SACP is the proportion of samples in its \ont{} cluster also in its Illumina cluster - averaged over all samples. SACR indicates whether samples have been missed from \ont{} clustering (false negatives), and SACP reveals if additional samples are being added to \ont{} clusters (false positives). One shortcoming of SACR and SACP is that they do not account for when the \ont{} clustering contains clusters where no member of the cluster is part of an Illumina cluster. To that end, XCR is the proportion of Illumina non-clustered (singleton) samples added to a cluster by \ont{}. For example, an XCR value of 0.1 would indicate that 10\% of non-clustered samples were part of a cluster in the \ont{} clustering. We provide an illustrated, worked example of these metrics in \autoref{app:cluster-example}.
+To summarise, for each sample in an Illumina-defined cluster, SACR is the proportion of samples in its Illumina cluster also in its \ont{} cluster - averaged over all samples. SACP is the proportion of samples in its \ont{} cluster also in its Illumina cluster - averaged over all samples. SACR indicates whether samples have been missed from \ont{} clustering (false negatives), and SACP reveals if additional samples are being added to \ont{} clusters (false positives). One shortcoming of SACR and SACP is that they do not account for when the \ont{} clustering contains clusters where no member of the cluster is part of an Illumina cluster. To that end, XCR is the proportion of Illumina non-clustered (singleton) samples added to a cluster by \ont{}. For example, an XCR value of 0.1 would indicate that 10\% of non-clustered samples were part of a cluster in the \ont{} clustering. We provide an illustrated, worked example of these metrics in \autoref{sec:cluster-example}.
 
 Of the metrics outlined above, our primary focus is SACR, as samples missed from clusters are of particular concern for public health agencies.
 
@@ -384,7 +436,7 @@ The \bcftools{} clustering results are summarised in \autoref{tab:bcftools-clust
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/bcftools_clusters.png}
-\caption{{Agreement of Illumina and \bcftools{} (\ont{}) transmission clustering at SNP thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold used when clustering. Samples (nodes) are connected when the SNP distance between them is less than or equal to the relevant threshold. The inner and outer colours for each node indicates the SACR and SACP values, respectively, for its cluster. The Illumina-based clustering is shown.
+\caption{{Agreement of Illumina and \bcftools{} (\ont{}) transmission clustering at SNP thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold used when clustering. Samples (nodes) are connected when the Illumina SNP distance between them is less than or equal to the relevant threshold. The inner and outer colours for each node indicates the SACR and SACP values, respectively, for its cluster. The Illumina-based clustering is shown.
 {\label{fig:bcftools-clusters}}
 }}
 \end{center}
@@ -392,13 +444,14 @@ The \bcftools{} clustering results are summarised in \autoref{tab:bcftools-clust
 
 \begin{table}
 \centering
-\begin{tabularx}{0.95\textwidth}{|Y|Y|Y|Y|} \hline
-Threshold & SACR & SACP  & XCR           \\ \hline
-0         & 1.0  & 1.0   & 0.015 (2/137) \\ \hline
-2         & 1.0  & 0.966 & 0.008 (1/128) \\ \hline
-5         & 1.0  & 0.949 & 0.057 (7/122) \\ \hline
-12 (11)   & 1.0  & 0.845 & 0.031 (3/97) \\ \hline
-\end{tabularx}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Threshold & SACR & SACP  & XCR           \\ \midrule
+0         & 1.0  & 1.0   & 0.015 (2/137) \\
+2         & 1.0  & 0.966 & 0.008 (1/128) \\
+5         & 1.0  & 0.949 & 0.057 (7/122) \\
+12 (11)   & 1.0  & 0.845 & 0.031 (3/97)  \\ \bottomrule
+\end{tabular}
 \caption{Summary of \bcftools{} clustering metrics for four (Illumina) SNP distance thresholds. The threshold(s) in parentheses are the \ont{} equivalent threshold used. The fractions in parentheses for XCR indicate the underlying numbers. SACR=sample-averaged cluster recall; SACP=sample-averaged cluster precision; XCR=excess clustering rate.}
 \label{tab:bcftools-cluster-summary}
 \end{table}
@@ -412,7 +465,7 @@ At no threshold was \pandora{} \vrb{} clustering able to achieve perfect SACR, S
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora_map_clusters.png}
-\caption{{Agreement of Illumina and \pandora{} single-sample (\ont{}) transmission clustering at SNP thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold used when clustering. Samples (nodes) are connected when the SNP distance between them is less than or equal to the relevant threshold. The inner and outer colours for each node indicates the SACR and SACP values, respectively, for its cluster. The Illumina-based clustering is shown.
+\caption{{Agreement of Illumina and \pandora{} single-sample (\ont{}) transmission clustering at SNP thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold used when clustering. Samples (nodes) are connected when the Illumina SNP distance between them is less than or equal to the relevant threshold. The inner and outer colours for each node indicates the SACR and SACP values, respectively, for its cluster. The Illumina-based clustering is shown.
 {\label{fig:map-clusters}}%
 }}
 \end{center}
@@ -420,25 +473,30 @@ At no threshold was \pandora{} \vrb{} clustering able to achieve perfect SACR, S
 
 \begin{table}
 \centering
-\begin{tabularx}{0.95\textwidth}{|Y|Y|Y|Y|} \hline
-Threshold & SACR  & SACP  & XCR            \\ \hline
-0 (16)    & 0.846 & 0.628 & 0.146 (20/137) \\ \hline
-2 (18)    & 0.909 & 0.688 & 0.141 (18/128) \\ \hline
-5 (18)    & 0.857 & 0.643 & 0.115 (11/122) \\ \hline
-12 (27)   & 0.852 & 0.621 & 0.124 (12/97)  \\ \hline
-\end{tabularx}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Threshold & SACR  & SACP  & XCR            \\ \midrule
+0 (16)    & 0.846 & 0.628 & 0.146 (20/137) \\
+2 (18)    & 0.909 & 0.688 & 0.141 (18/128) \\
+5 (18)    & 0.857 & 0.643 & 0.115 (11/122) \\
+12 (27)   & 0.852 & 0.621 & 0.124 (12/97)  \\ \bottomrule
+\end{tabular}
 \caption{Summary of \pandora{} single-sample clustering metrics for four (Illumina) SNP distance thresholds. The threshold(s) in parentheses are the \ont{} equivalent threshold used. The fractions in parentheses for XCR indicate the underlying numbers. SACR=sample-averaged cluster recall; SACP=sample-averaged cluster precision; XCR=excess clustering rate.}
 \label{tab:map-cluster-summary}
 \end{table}
 
 \subsubsection{Pandora multi-sample}
 
-The SNP thresholds we use for \compare{} clustering are 0, 1, 3, and 7. The results of this clustering are summarised in \autoref{tab:compare-cluster-summary} and visualised in \autoref{fig:compare-clusters}. One important result is that unlike the single-sample approach of \pandora{}, the multi-sample mode leads to perfect SACR across all thresholds. Additionally, clustering at the threshold of 0 perfectly mirrors Illumina. At a threshold of 2, there was one singleton added to an otherwise perfect cluster and two additional clusters of size 2. Thresholds 5 and 12 saw some cluster mergers and singletons forming new clusters or being added to existing ones. The actual clusters produced by \compare{} can be seen in \autoref{fig:compare-original-clusters}.
+The SNP thresholds we use for \compare{} (multi-sample) clustering are 0, 1, 3, and 7. The results of this clustering are summarised in \autoref{tab:compare-cluster-summary} and visualised in \autoref{fig:compare-clusters}. One important result is that unlike the single-sample approach of \pandora{}, the multi-sample mode leads to perfect SACR across all thresholds. Additionally, clustering at the threshold of 0 perfectly mirrors Illumina. At a threshold of 2, there was one singleton added to an otherwise perfect cluster and two additional clusters of size 2 (doubletons). 
+
+For threshold 5, there were 12 Illumina clusters, of which seven were perfectly reconstructed by \pandora{}. Of the remaining 5 clusters, three were joined into a single cluster, with no additions, while two were joined with the addition of 3 extra samples. In addition, \compare{} created 4 extra (doubleton) clusters.
+
+Threshold 12 likewise saw cluster mergers and singletons forming new clusters or being added to existing ones; however, SACR remained perfect. The actual clusters produced by \compare{} can be seen in \autoref{fig:compare-original-clusters}.
 
 \begin{figure}
 \begin{center}
 \includegraphics[width=0.90\columnwidth]{Chapter2/Figs/pandora_compare_clusters.png}
-\caption{{Agreement of Illumina and \pandora{} multi-sample (\ont{}) transmission clustering at SNP thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold used when clustering. Samples (nodes) are connected when the SNP distance between them is less than or equal to the relevant threshold. The inner and outer colours for each node indicates the SACR and SACP values, respectively, for its cluster. The Illumina-based clustering is shown.
+\caption{{Agreement of Illumina and \pandora{} multi-sample (\ont{}) transmission clustering at SNP thresholds 0 (top-left), 2 (top-right), 5 (bottom-left) and 12 (bottom-right). The title of each subplot indicates the Illumina (Ill.) and \ont{} (NP) threshold used when clustering. Samples (nodes) are connected when the Illumina SNP distance between them is less than or equal to the relevant threshold. The inner and outer colours for each node indicates the SACR and SACP values, respectively, for its cluster. The Illumina-based clustering is shown.
 {\label{fig:compare-clusters}}%
 }}
 \end{center}
@@ -446,13 +504,14 @@ The SNP thresholds we use for \compare{} clustering are 0, 1, 3, and 7. The resu
 
 \begin{table}
 \centering
-\begin{tabularx}{0.95\textwidth}{|Y|Y|Y|Y|} \hline
-Threshold & SACR  & SACP  & XCR            \\ \hline
-0        & 1.0 & 1.0 & 0.0 (0/137) \\ \hline
-2 (1)    & 1.0 & 0.966 & 0.039 (5/128) \\ \hline
-5 (3)    & 1.0 & 0.690 & 0.090 (11/122) \\ \hline
-12 (7)   & 1.0 & 0.772 & 0.103 (10/97)  \\ \hline
-\end{tabularx}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Threshold & SACR & SACP  & XCR            \\ \midrule
+0         & 1.0  & 1.0   & 0.0 (0/137)    \\
+2 (1)     & 1.0  & 0.966 & 0.039 (5/128)  \\
+5 (3)     & 1.0  & 0.690 & 0.090 (11/122) \\
+12 (7)    & 1.0  & 0.772 & 0.103 (10/97)  \\ \bottomrule
+\end{tabular}
 \caption{Summary of \pandora{} multi-sample clustering metrics for four (Illumina) SNP distance thresholds. The threshold(s) in parentheses are the \ont{} equivalent threshold used. The fractions in parentheses for XCR indicate the underlying numbers. SACR=sample-averaged cluster recall; SACP=sample-averaged cluster precision; XCR=excess clustering rate.}
 \label{tab:compare-cluster-summary}
 \end{table}
@@ -460,9 +519,11 @@ Threshold & SACR  & SACP  & XCR            \\ \hline
 \subsection{Summary}
 \label{sec:cluster-summary}
 
-The results presented in this section show that when using \bcftools{} for variant-calling, \ont{} is capable of producing transmission clusters with a high degree of similarity to Illumina. Most importantly, no samples deemed part of a cluster by Illumina were missed by \bcftools{}. We have also shown that the Illumina SNP thresholds of 0, 2, and 5 are also valid for \ont{} variant calls from \bcftools{} and the threshold of 12 needs only decrease to 11. 
+The results presented in this section show that when using \bcftools{} for variant-calling, \ont{} is capable of producing transmission clusters with a high degree of similarity to Illumina. Most importantly, no samples deemed part of a cluster by Illumina were missed by \bcftools{} (i.e., $SACR=1.0$). However, as the SNP threshold increases, \bcftools{} erroneously adds more samples to clusters, with an SACP of 0.845 at a SNP threshold of 12. That is, on average, 84.5\% of the members in a sample's \ont{} cluster are also in its Illumina cluster. 
 
-We also investigated whether the genome graph method of \pandora{} can produce accurate transmission clusters. While the single-sample approach did not yield outstanding results, the multi-sample method shows promise. For all SNP thresholds assessed, \compare{} did not miss any samples from clustering. The SACP values for thresholds 0 and 2 were as good as \bcftools{}, but at thresholds 5 and 12 \compare{} did not perform as well. 
+We have also shown that the Illumina SNP thresholds of 0, 2, and 5 are also valid for \ont{} variant calls from \bcftools{} and the threshold of 12 needs only decrease to 11. 
+
+We also investigated whether the genome graph method of \pandora{} can produce accurate transmission clusters. While the single-sample approach did not yield outstanding results, the multi-sample method shows promise. For all SNP thresholds assessed, \compare{} did not miss any samples from clustering. The SACP values for thresholds 0 and 2 were as good as \bcftools{}, but at thresholds 5 and 12 \compare{} did not perform as well. For example, at threshold 12, \bcftools{} erroneously added two doubleton clusters and three singletons to larger clusters, while \compare{} added three doubletons and six singletons.
 
 \noindent
 In conclusion, we recommend clustering \ont{} data based on \bcftools{} SNP calls for concordant clusters with Illumina.
