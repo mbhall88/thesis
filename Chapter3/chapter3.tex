@@ -538,7 +538,7 @@ In summary, \mykrobe{} \ont{} AMR predictions are consistent with those from Ill
 For most drugs, \drprg{} predictions are concordant with \mykrobe{}'s Illumina calls. More than half of the \drprg{} missed resistance calls were due to it not being able to detect heterozygous positions. \drprg{} \ont{} predictions also missed some resistant calls because of a low fraction of read support for the mutation in question. The resounding reason for false resistance calls from \drprg{}, for both technologies, was incorrect indel calls in \textit{pncA}. However, nearly half of the \drprg{} false positives are potentially missed resistance on \mykrobe{}'s part due to it having filtered out the calls due to low support. 
 
 %=========================================================================
-\section{Concordance of genotype-based predictions with culture-based phenotype}
+\section{Concordance of genotype-based predictions with culture-based phenotypes}
 \label{sec:pheno-concordance}
 
 In this section, we assess the concordance of \ont{} and Illumina WGS genotype-based AMR predictions with gold-standard culture-based DST phenotypes.
@@ -560,11 +560,13 @@ We follow the same classification approach as in \autoref{sec:geno-concordance},
 \end{center}
 \end{figure}
 
-These results provide a positive outcome for both our aims. First, \ont{} predictions (striped bars in \autoref{sec:pheno-concordance}) are highly congruent with Illumina. That is, they have equivalent numbers for each classification category. One exception to this is \mykrobe{} \ont{} having noticeably more FPs for isoniazid compared with its Illumina equivalent; all of the extra \ont{} FP calls were indels with no Illumina support. Second, the genome graph-based approach \drprg{}, developed in this chapter, provides predictions consistent with \mykrobe{} - and in some cases, slightly better. 
+These results provide a positive outcome for both our aims. First, \ont{} predictions (striped bars in \autoref{fig:pheno-concordance}) are highly congruent with Illumina. That is, they have equivalent numbers for each classification category. One exception to this is \mykrobe{} \ont{} having noticeably more FPs for isoniazid compared with its Illumina equivalent; all of the extra \ont{} FP calls were indels with no Illumina support. Second, the genome graph-based approach \drprg{}, developed in this chapter, provides predictions consistent with \mykrobe{} - and in some cases, slightly better. 
 
-Ethambutol and streptomycin had many more FPs and FNs compared to the other drugs for both prediction tools. On further investigation, all ethambutol FPs contain strong evidence for a non-synonymous mutation at codon 306 in \textit{embB}, which is strongly linked to drug resistance \cite{Maningi2017,Srivastava2009,Brossier2015}. Of the 14 samples with FP ethambutol calls (16 for \mykrobe{} Illumina), six additionally had LPA phenotypes. In all cases, the LPA disagreed with the culture-based phenotype (i.e., LPA was resistant and culture was susceptible). In addition, half of the FNs also have LPA phenotypes available, and both of these cases differed from the culture-based phenotype. When taken together, this information would suggest that the culture-based phenotype for ethambutol may be wrong in most of these erroneous cases.
+The most striking and important result from this analysis is the isoniazid FP discrepancy between \mykrobe{} and \drprg{} \ont{} predictions, with 9 and 2 FPs, respectively. As isoniazid is one of the most crucial first-line anti-TB drugs, accurate predictions are critical (\autoref{sec:amr}). Six of the \mykrobe{}-\ont{} isoniazid FPs were caused by erroneous indel calls, which show no support on Illumina, and \drprg{}-\ont{} either had no support or filtered out the call due to poor support. An interesting (but not surprising) observation is that all of these indels occur at homopolymer sites.
 
-While there is no streptomycin LPA data to check discrepancies against, an interesting observation is that 23/38 (60\%) of ethambutol FPs also had an FP streptomycin prediction. There was no one particular mutation found amongst the streptomycin FPs. However, in all cases, the predicted variant had firm support from the tool and the relevant COMPASS and \bcftools{} VCFs from \autoref{sec:var-calls}. 
+Ethambutol and streptomycin had many more FPs and FNs compared to the other drugs for both prediction tools. On further investigation, all ethambutol FPs contain strong evidence for a non-synonymous mutation at codon 306 in \textit{embB}, which is strongly linked to drug resistance \cite{Maningi2017,Srivastava2009,Brossier2015}. Of the 14 samples with FP ethambutol calls (16 for \mykrobe{}-Illumina), six additionally had LPA phenotypes. In all cases, the LPA disagreed with the culture-based phenotype (i.e., LPA was resistant and culture was susceptible). In addition, half of the FNs also have LPA phenotypes available, and both of these cases differed from the culture-based phenotype. When taken together, this information would suggest that the culture-based phenotype for ethambutol \emph{may} be wrong in most of these erroneous cases. However, as highlighted in \autoref{sec:amr}, we stress that while LPA is predictive of resistance, it cannot be used as a means for inferring susceptibility. Therefore, some phenotype-LPA discrepancies may be mutations missing from the LPA catalogue or phenotype minimum inhibitory concentrations (MICs) being close to the cut-off for resistance.
+
+Perhaps the most concerning result from this analysis is the high FNR on isoniazid. However, this is not limited to \ont{} predictions. It is difficult to pinpoint the reasons for missed resistance as there is no way of knowing which mutations we expect to find. There were six samples for which all tool-modality combinations missed resistance. Interestingly, four of these six also had FN calls for rifampicin (accounting for nearly all of the rifampicin FNs). Additionally, 3/10 \drprg{}-\ont{} FNs were missed due to (FRS) filtering of the \textit{fabG1} promoter mutation C-15X mentioned in \autoref{sec:geno-concordance}. Given the consistent missed resistance across sequencing modalities, the most probable cause of the FNs is an incomplete catalogue. Not all resistance-causing mutations are known, and thus, there will always be limitations to such a panel.
 
 The high streptomycin false-negative rate for all tools and technologies is challenging to account for, as we do not know which resistance-causing mutations we are expected to find. However, manual assessment of the prediction VCFs produced by \drprg{}, and the individual calls by \mykrobe{}, show there is evidence for known resistance-causing mutations in 4/6 cases. One of those is the mutation K88M in \textit{rpsL} which is not in our panel but has been linked to drug resistance previously \cite{Smittipat2016}. While the other FNs were filtered out either due to low coverage or strand bias. Given the low number of streptomycin-resistant samples (8) in this dataset, it is inappropriate to make any claims about the ability to detect resistance for this drug here.
 
@@ -573,17 +575,9 @@ The results from our genome graph-based tool \drprg{} are very positive. There w
 \begin{table}
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
-\hline
-Drug &
-  Technology &
-  Tool &
-  FN(R) &
-  FP(S) &
-  FNR(95\% CI) &
-  FPR(95\% CI) &
-  PPV(95\% CI) &
-  NPV(95\% CI) \\ \hline
+\begin{tabular}{@{}lllllllll@{}}
+\toprule
+Drug & Technology                & Tool       & FN(R) & FP(S)  & FNR(95\% CI)                  & FPR(95\% CI)         & PPV(95\% CI)         & NPV(95\% CI)           \\ \midrule
 \multirow{4}{*}{Amikacin} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
@@ -592,34 +586,10 @@ Drug &
   0.0\% (0.0-25.9\%) &
   2.6\% (0.7-9.0\%) &
   84.6\% (57.8-95.7\%) &
-  100.0\% (95.1-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  2(11) &
-  2(77) &
-  18.2\% (5.1-47.7\%) &
-  2.6\% (0.7-9.0\%) &
-  81.8\% (52.3-94.9\%) &
-  97.4\% (91.0-99.3\%) \\ \cline{2-9} 
- &
-  \multirow{2}{*}{Nanopore} &
-  \drprg{} &
-  0(11) &
-  2(77) &
-  0.0\% (0.0-25.9\%) &
-  2.6\% (0.7-9.0\%) &
-  84.6\% (57.8-95.7\%) &
-  100.0\% (95.1-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  0(11) &
-  2(77) &
-  0.0\% (0.0-25.9\%) &
-  2.6\% (0.7-9.0\%) &
-  84.6\% (57.8-95.7\%) &
-  100.0\% (95.1-100.0\%) \\ \hline
+  100.0\% (95.1-100.0\%) \\
+     &                           & \mykrobe{} & 2(11) & 2(77)  & \textbf{18.2\% (5.1-47.7\%)}  & 2.6\% (0.7-9.0\%)    & 81.8\% (52.3-94.9\%) & 97.4\% (91.0-99.3\%)   \\
+     & \multirow{2}{*}{Nanopore} & \drprg{}   & 0(11) & 2(77)  & 0.0\% (0.0-25.9\%)            & 2.6\% (0.7-9.0\%)    & 84.6\% (57.8-95.7\%) & 100.0\% (95.1-100.0\%) \\
+     &                           & \mykrobe{} & 0(11) & 2(77)  & 0.0\% (0.0-25.9\%)            & 2.6\% (0.7-9.0\%)    & 84.6\% (57.8-95.7\%) & 100.0\% (95.1-100.0\%) \\ \cmidrule(l){3-9} 
 \multirow{4}{*}{Capreomycin} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
@@ -628,52 +598,20 @@ Drug &
   - &
   2.0\% (0.3-10.3\%) &
   0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  0(0) &
-  1(51) &
-  - &
-  2.0\% (0.3-10.3\%) &
-  0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{2-9} 
- &
-  \multirow{2}{*}{Nanopore} &
-  \drprg{} &
-  0(0) &
-  1(51) &
-  - &
-  2.0\% (0.3-10.3\%) &
-  0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  0(0) &
-  1(51) &
-  - &
-  2.0\% (0.3-10.3\%) &
-  0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \hline
+  100.0\% (92.9-100.0\%) \\
+     &                           & \mykrobe{} & 0(0)  & 1(51)  & -                             & 2.0\% (0.3-10.3\%)   & 0.0\% (0.0-79.3\%)   & 100.0\% (92.9-100.0\%) \\
+     & \multirow{2}{*}{Nanopore} & \drprg{}   & 0(0)  & 1(51)  & -                             & 2.0\% (0.3-10.3\%)   & 0.0\% (0.0-79.3\%)   & 100.0\% (92.9-100.0\%) \\
+     &                           & \mykrobe{} & 0(0)  & 1(51)  & -                             & 2.0\% (0.3-10.3\%)   & 0.0\% (0.0-79.3\%)   & 100.0\% (92.9-100.0\%) \\ \cmidrule(l){3-9} 
 \multirow{4}{*}{Ethambutol} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
   4(14) &
   14(76) &
   28.6\% (11.7-54.6\%) &
-  18.4\% (11.3-28.6\%) &
+  \textbf{18.4\% (11.3-28.6\%)} &
   41.7\% (24.5-61.2\%) &
-  93.9\% (85.4-97.6\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  4(14) &
-  16(76) &
-  28.6\% (11.7-54.6\%) &
-  21.1\% (13.4-31.5\%) &
-  38.5\% (22.4-57.5\%) &
-  93.8\% (85.0-97.5\%) \\ \cline{2-9} 
+  93.9\% (85.4-97.6\%) \\
+     &                           & \mykrobe{} & 4(14) & 16(76) & 28.6\% (11.7-54.6\%)          & 21.1\% (13.4-31.5\%) & 38.5\% (22.4-57.5\%) & 93.8\% (85.0-97.5\%)   \\
  &
   \multirow{2}{*}{Nanopore} &
   \drprg{} &
@@ -682,52 +620,28 @@ Drug &
   28.6\% (11.7-54.6\%) &
   18.4\% (11.3-28.6\%) &
   41.7\% (24.5-61.2\%) &
-  93.9\% (85.4-97.6\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  4(14) &
-  14(76) &
-  28.6\% (11.7-54.6\%) &
-  18.4\% (11.3-28.6\%) &
-  41.7\% (24.5-61.2\%) &
-  93.9\% (85.4-97.6\%) \\ \hline
+  93.9\% (85.4-97.6\%) \\
+     &                           & \mykrobe{} & 4(14) & 14(76) & 28.6\% (11.7-54.6\%)          & 18.4\% (11.3-28.6\%) & 41.7\% (24.5-61.2\%) & 93.9\% (85.4-97.6\%)   \\ \cmidrule(l){3-9} 
 \multirow{4}{*}{Isoniazid} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
   8(50) &
   2(48) &
   16.0\% (8.3-28.5\%) &
-  4.2\% (1.2-14.0\%) &
+  \textbf{4.2\% (1.2-14.0\%)} &
   95.5\% (84.9-98.7\%) &
-  85.2\% (73.4-92.3\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  8(50) &
-  3(48) &
-  16.0\% (8.3-28.5\%) &
-  6.2\% (2.1-16.8\%) &
-  93.3\% (82.1-97.7\%) &
-  84.9\% (72.9-92.1\%) \\ \cline{2-9} 
+  85.2\% (73.4-92.3\%) \\
+     &                           & \mykrobe{} & 8(50) & 3(48)  & 16.0\% (8.3-28.5\%)           & 6.2\% (2.1-16.8\%)   & 93.3\% (82.1-97.7\%) & 84.9\% (72.9-92.1\%)   \\
  &
   \multirow{2}{*}{Nanopore} &
   \drprg{} &
   10(50) &
   2(48) &
-  20.0\% (11.2-33.0\%) &
-  4.2\% (1.2-14.0\%) &
-  95.2\% (84.2-98.7\%) &
-  82.1\% (70.2-90.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  7(50) &
-  9(48) &
-  14.0\% (7.0-26.2\%) &
-  18.8\% (10.2-31.9\%) &
-  82.7\% (70.3-90.6\%) &
-  84.8\% (71.8-92.4\%) \\ \hline
+  \textbf{20.0\% (11.2-33.0\%)} &
+  \textbf{4.2\% (1.2-14.0\%)} &
+  \textbf{95.2\% (84.2-98.7\%)} &
+  82.1\% (70.2-90.0\%) \\
+     &                           & \mykrobe{} & 7(50) & 9(48)  & 14.0\% (7.0-26.2\%)           & 18.8\% (10.2-31.9\%) & 82.7\% (70.3-90.6\%) & 84.8\% (71.8-92.4\%)   \\ \cmidrule(l){3-9} 
 \multirow{4}{*}{Kanamycin} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
@@ -736,34 +650,10 @@ Drug &
   - &
   2.0\% (0.3-10.3\%) &
   0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  0(0) &
-  1(51) &
-  - &
-  2.0\% (0.3-10.3\%) &
-  0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{2-9} 
- &
-  \multirow{2}{*}{Nanopore} &
-  \drprg{} &
-  0(0) &
-  1(51) &
-  - &
-  2.0\% (0.3-10.3\%) &
-  0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  0(0) &
-  1(51) &
-  - &
-  2.0\% (0.3-10.3\%) &
-  0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \hline
+  100.0\% (92.9-100.0\%) \\
+     &                           & \mykrobe{} & 0(0)  & 1(51)  & -                             & 2.0\% (0.3-10.3\%)   & 0.0\% (0.0-79.3\%)   & 100.0\% (92.9-100.0\%) \\
+     & \multirow{2}{*}{Nanopore} & \drprg{}   & 0(0)  & 1(51)  & -                             & 2.0\% (0.3-10.3\%)   & 0.0\% (0.0-79.3\%)   & 100.0\% (92.9-100.0\%) \\
+     &                           & \mykrobe{} & 0(0)  & 1(51)  & -                             & 2.0\% (0.3-10.3\%)   & 0.0\% (0.0-79.3\%)   & 100.0\% (92.9-100.0\%) \\ \cmidrule(l){3-9} 
 \multirow{4}{*}{Ofloxacin} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
@@ -772,34 +662,10 @@ Drug &
   0.0\% (-0.0-27.8\%) &
   3.9\% (1.4-11.0\%) &
   76.9\% (49.7-91.8\%) &
-  100.0\% (95.0-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  0(10) &
-  4(76) &
-  0.0\% (-0.0-27.8\%) &
-  5.3\% (2.1-12.8\%) &
-  71.4\% (45.4-88.3\%) &
-  100.0\% (94.9-100.0\%) \\ \cline{2-9} 
- &
-  \multirow{2}{*}{Nanopore} &
-  \drprg{} &
-  0(10) &
-  3(76) &
-  0.0\% (-0.0-27.8\%) &
-  3.9\% (1.4-11.0\%) &
-  76.9\% (49.7-91.8\%) &
-  100.0\% (95.0-100.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  0(10) &
-  4(76) &
-  0.0\% (-0.0-27.8\%) &
-  5.3\% (2.1-12.8\%) &
-  71.4\% (45.4-88.3\%) &
-  100.0\% (94.9-100.0\%) \\ \hline
+  100.0\% (95.0-100.0\%) \\
+     &                           & \mykrobe{} & 0(10) & 4(76)  & 0.0\% (-0.0-27.8\%)           & 5.3\% (2.1-12.8\%)   & 71.4\% (45.4-88.3\%) & 100.0\% (94.9-100.0\%) \\
+     & \multirow{2}{*}{Nanopore} & \drprg{}   & 0(10) & 3(76)  & 0.0\% (-0.0-27.8\%)           & 3.9\% (1.4-11.0\%)   & 76.9\% (49.7-91.8\%) & 100.0\% (95.0-100.0\%) \\
+     &                           & \mykrobe{} & 0(10) & 4(76)  & 0.0\% (-0.0-27.8\%)           & 5.3\% (2.1-12.8\%)   & 71.4\% (45.4-88.3\%) & 100.0\% (94.9-100.0\%) \\ \cmidrule(l){3-9} 
 \multirow{4}{*}{Rifampicin} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
@@ -808,34 +674,10 @@ Drug &
   14.9\% (7.4-27.7\%) &
   2.3\% (0.4-11.8\%) &
   97.6\% (87.4-99.6\%) &
-  86.0\% (73.8-93.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  5(47) &
-  1(44) &
-  10.6\% (4.6-22.6\%) &
-  2.3\% (0.4-11.8\%) &
-  97.7\% (87.9-99.6\%) &
-  89.6\% (77.8-95.5\%) \\ \cline{2-9} 
- &
-  \multirow{2}{*}{Nanopore} &
-  \drprg{} &
-  5(47) &
-  1(44) &
-  10.6\% (4.6-22.6\%) &
-  2.3\% (0.4-11.8\%) &
-  97.7\% (87.9-99.6\%) &
-  89.6\% (77.8-95.5\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  6(47) &
-  1(44) &
-  12.8\% (6.0-25.2\%) &
-  2.3\% (0.4-11.8\%) &
-  97.6\% (87.7-99.6\%) &
-  87.8\% (75.8-94.3\%) \\ \hline
+  86.0\% (73.8-93.0\%) \\
+     &                           & \mykrobe{} & 5(47) & 1(44)  & 10.6\% (4.6-22.6\%)           & 2.3\% (0.4-11.8\%)   & 97.7\% (87.9-99.6\%) & 89.6\% (77.8-95.5\%)   \\
+     & \multirow{2}{*}{Nanopore} & \drprg{}   & 5(47) & 1(44)  & 10.6\% (4.6-22.6\%)           & 2.3\% (0.4-11.8\%)   & 97.7\% (87.9-99.6\%) & 89.6\% (77.8-95.5\%)   \\
+     &                           & \mykrobe{} & 6(47) & 1(44)  & 12.8\% (6.0-25.2\%)           & 2.3\% (0.4-11.8\%)   & 97.6\% (87.7-99.6\%) & 87.8\% (75.8-94.3\%)   \\ \cmidrule(l){3-9} 
 \multirow{4}{*}{Streptomycin} &
   \multirow{2}{*}{Illumina} &
   \drprg{} &
@@ -844,37 +686,13 @@ Drug &
   37.5\% (13.7-69.4\%) &
   12.2\% (6.8-21.0\%) &
   33.3\% (15.2-58.3\%) &
-  96.0\% (88.9-98.6\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  5(8) &
-  10(82) &
-  62.5\% (30.6-86.3\%) &
-  12.2\% (6.8-21.0\%) &
-  23.1\% (8.2-50.3\%) &
-  93.5\% (85.7-97.2\%) \\ \cline{2-9} 
- &
-  \multirow{2}{*}{Nanopore} &
-  \drprg{} &
-  4(8) &
-  9(82) &
-  50.0\% (21.5-78.5\%) &
-  11.0\% (5.9-19.6\%) &
-  30.8\% (12.7-57.6\%) &
-  94.8\% (87.4-98.0\%) \\ \cline{3-9} 
- &
-   &
-  \mykrobe{} &
-  4(8) &
-  9(82) &
-  50.0\% (21.5-78.5\%) &
-  11.0\% (5.9-19.6\%) &
-  30.8\% (12.7-57.6\%) &
-  94.8\% (87.4-98.0\%) \\ \hline
+  96.0\% (88.9-98.6\%) \\
+     &                           & \mykrobe{} & 5(8)  & 10(82) & \textbf{62.5\% (30.6-86.3\%)} & 12.2\% (6.8-21.0\%)  & 23.1\% (8.2-50.3\%)  & 93.5\% (85.7-97.2\%)   \\
+     & \multirow{2}{*}{Nanopore} & \drprg{}   & 4(8)  & 9(82)  & 50.0\% (21.5-78.5\%)          & 11.0\% (5.9-19.6\%)  & 30.8\% (12.7-57.6\%) & 94.8\% (87.4-98.0\%)   \\
+     &                           & \mykrobe{} & 4(8)  & 9(82)  & 50.0\% (21.5-78.5\%)          & 11.0\% (5.9-19.6\%)  & 30.8\% (12.7-57.6\%) & 94.8\% (87.4-98.0\%)   \\ \cmidrule(l){3-9} 
 \end{tabular}%
 }
-\caption{Comparison of WGS-based drug resistance prediction concordance with culture-based drug susceptibility testing (DST) phenotypes. For this comparison, we assume the DST phenotype is correct and evaluate the WGS predictions accordingly. \drprg{} and \mykrobe{} are the two tools that provide WGS predictions. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
+\caption{Comparison of WGS-based drug resistance prediction concordance with culture-based drug susceptibility testing (DST) phenotypes. For this comparison, we assume the DST phenotype is correct and evaluate the WGS predictions accordingly. \drprg{} and \mykrobe{} are the two tools that provide WGS predictions. Bold text is used to highlight differences of note between \drprg{} and \mykrobe{}. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
 \label{tab:pheno-concordance}
 \end{table}
 
@@ -882,7 +700,7 @@ Drug &
 
 WGS-based drug resistance predictions from \ont{} are as reliable as those from Illumina when compared to culture-based DST phenotypes. Additionally, we have shown that genome graphs provide reliable predictions for both Illumina and \ont{} data using our tool \drprg{}.
 
-While there is a seemingly high number of FNs and FPs for some drugs, many of these errors result from a suspect culture-based phenotype or the absence of known resistance-causing mutations in the panel.
+While there is a seemingly high number of FNs and FPs for some drugs, many of these errors result from a (\mykrobe{}) \ont{}-related indel issues or the absence of known resistance-causing mutations in the panel. Importantly, missed resistance predictions were not technology-driven and presumably occurred because the catalogue lacks the relevant resistance-causing mutations.
 
 %=========================================================================
 \section{Effect of \ont{} read depth}
