@@ -96,7 +96,7 @@ We now outline these two steps in detail.
 \subsection{Constructing a panel reference graph}
 \label{sec:drprg-index}
 
-The first stage of predicting drug resistance from \drprg{} is coordinated by the \vrb{build} subcommand. As input, \vrb{build} requires a panel of mutations and a reference genome and annotation. We use the reference and annotation for the \mtb{} strain H37Rv (accession NC\_000962.3) and the default panel used by \mykrobe{} (v0.10.0) \cite{hunt2019}. As \mykrobe{} also builds in common variants which are known to \emph{not} cause resistance, we also add such variants from a recent World Health Organization (WHO) catalogue \cite{whopanel2021}. 
+The first stage of predicting drug resistance from \drprg{} is coordinated by the \vrb{build} subcommand. As input, \vrb{build} requires a panel of mutations and a reference genome and annotation. We use the reference and annotation for the \mtb{} strain H37Rv (accession NC\_000962.3) and the default panel used by \mykrobe{} (v0.10.0) \cite{hunt2019}.
 
 The panel of variants can be either resistance- or susceptibility-associated. Each entry in the panel file describes the gene the variant occurs in, the mutation it causes, and any drug it impacts. The mutation can represent a nucleic or amino acid change and is of the form reference, position, alternate. For example, a DNA mutation, \vrb{A5T}, indicates the reference base, \vrb{A}, at position 5 in the gene, is changed to a \vrb{T}. An \vrb{X} indicates any nucleic or amino acid other than the one listed as the reference.
 
@@ -868,7 +868,7 @@ We also describe and evaluate a new method for AMR prediction using genome graph
 
 \subsection{Mutation catalogue improvement}
 
-The panel (catalogue) describing the consequence of each mutation is a vital component of any AMR prediction program and can be the primary point-of-difference between tools \cite{hunt2019}. For the work in this chapter, we used the default \mykrobe{} panel for \drprg{}. However, there are two changes to the \drprg{} panel that we would like to incorporate in future work: synonymous mutations and including variants from a new WHO catalogue.
+The panel (catalogue) describing the consequence of each mutation is a vital component of any AMR prediction program and can be the primary point-of-difference between tools \cite{hunt2019}. For the work in this chapter, we used the default \mykrobe{} panel for \drprg{}. However, there are two changes to the \drprg{} panel that we would like to incorporate in future work: synonymous mutations and including variants from a new World Health Organization (WHO) catalogue.
 
 \subsubsection{Synonymous mutations}
 
