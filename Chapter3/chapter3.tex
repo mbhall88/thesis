@@ -889,9 +889,9 @@ The apparent first improvement would be to incorporate all WHO variants associat
 
 \subsection{Low read depth samples}
 
-In \autoref{sec:dst-covg} we showed that read depth has no noticeable impact on AMR predictions. However, the lowest depth sample in this chapter has 29x read depth. This depth threshold was a conscious decision made in \autoref{sec:ch2-qc}, where we excluded any sample with less than approximately 30x read depth from further analysis. Thus, there are 33 samples in our full dataset that have \ont{} read depth between 5 and 30x. For those with culture-based phenotype information, we could repeat the analysis in \autoref{sec:dst-covg}. We would then have an even more fine-grained idea of where the \ont{} read depth limits are for reliable AMR predictions.
+In \autoref{sec:dst-covg} we showed that read depth has no noticeable impact on AMR predictions. However, the lowest depth sample in this chapter has 29x read depth. This depth threshold was a conscious decision made in \autoref{sec:ch2-qc}, where we excluded any sample with less than approximately 30x read depth from further analysis. Thus, there are 33 samples in our full dataset that have \ont{} read depth between 5 and 30x. For those with culture-based phenotype information, we could repeat the analysis in \autoref{sec:dst-covg}. We would then have an even more fine-grained idea of where the \ont{} read depth limits are for reliable AMR predictions. Additionally, we could subsample those isolates with phenotype data and $\ge30$x depth to select low depths. 
 
-\subsection{Validation on a larger datasets}
+\subsection{Validation on larger datasets}
 
 Smith \etal{} recently published a dataset of 431 \mtb{} isolates with matched \ont{} and Illumina sequencing \cite{smith2020}. As they are from the New York State Department of Health, these samples also have gold-standard DST information for eight drugs we provide predictions. Importantly, they have phenotype information for pyrazinamide, one drug we did not have sufficient data for in this chapter. Combining this dataset with ours would give us a very good \ont{} validation set and provide improved confidence in the false-positive and -negative rates. 
 
@@ -899,7 +899,7 @@ In addition to improving the validation numbers for \ont{}, we could also provid
 
 \subsection{Indel calls}
 \label{sec:indel-dst-fw}
-Indels are important variants for \mtb{} drug resistance. In particular, any frameshift in \textit{katG} or \textit{pncA} leads to isoniazid or pyrazinamide resistance respectively \cite{miotto2017}. Perhaps the limitation we rue the most from \autoref{chap:clustering}, and this chapter, is the lack of in-depth indel analysis. These mutation types have appeared as error causes for several tools and drugs in this chapter. Thus, indel-calling must be assessed in future work.
+Indels are important variants for \mtb{} drug resistance. In particular, any frameshift in \textit{katG} or \textit{pncA} leads to isoniazid or pyrazinamide resistance, respectively \cite{miotto2017}. Perhaps the limitation we rue the most from \autoref{chap:clustering}, and this chapter, is the lack of in-depth indel analysis. These mutation types have appeared as error causes for several tools and drugs in this chapter. In particular, as we saw in \autoref{sec:geno-concordance}, \mykrobe{}-\ont{} has a high FPR for isoniazid, due to erroneous indel calls. As isoniazid is an important first-line drug, understanding how these FPs can be avoided is vital. Thus, indel-calling must be assessed in future work.
 
 To properly evaluate and improve indel calls, we need a trustworthy set of expected variants. In \autoref{sec:drprg-discover} we only investigated novel SNP calls made by \drprg{}, as we already had a reliable truth set from \autoref{chap:clustering}. Our proposed method for gathering such a truth panel of indels would be to run Clockwork (\url{https://github.com/iqbal-lab-org/clockwork}; manuscript in preparation) on all samples. Clockwork calls variants with \vrb{samtools} and Cortex and integrates them for a high-quality, filtered set of SNPs and indels.
 
@@ -921,5 +921,3 @@ Another potential challenge is that we implicitly assume the reference allele is
 \section{Availability of data and materials}
 
 \drprg{} is open-source and freely available under an MIT license at \url{https://github.com/mbhall88/drprg}. The pipelines and scripts used in this chapter are available at \url{https://github.com/mbhall88/head_to_head_pipeline/tree/master/analysis/resistance_prediction}. All analyses were run using the workflow management program \vrb{snakemake} \cite{snakemake2021}. All figures were generated using the Python libraries \vrb{matplotlib} \cite{matplotlib} and \vrb{seaborn} \cite{seaborn} - \autoref{fig:available-dst} was generated using \url{https://github.com/jnothman/UpSetPlot}.
-
-\towrite[inline]{availability of the data if it has been deposited prior to submission}
