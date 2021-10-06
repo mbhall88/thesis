@@ -726,11 +726,11 @@ As \autoref{fig:pheno-covg} illustrates, we see no relationship between \ont{} r
 
 One of the main advantages \drprg{} has over \mykrobe{} is the ability to discover off-catalogue (novel) variants. The reason \drprg{} can call mutations outside of the panel is that it uses \pandora{} as the underlying method for producing predictions from sequencing reads.
 
-The \cryptic{} Consortium have shown that refusing to make predictions in the case where a non-panel variant is discovered in a resistance-associated gene can improve pan-susceptibility prediction \cite{cryptic2018}. However, that work focused only on first-line drugs and did not detail the variants discovered. 
+The \cryptic{} Consortium have shown that refusing to make predictions in the case where a non-panel variant is discovered in a resistance-associated gene can improve pan-susceptibility prediction by reducing missed resistance (FN) calls \cite{cryptic2018}. However, that work focused only on first-line drugs and did not detail the variants discovered. 
 
 In this section, we aim to assess the novel variant detection capacity of \drprg{} on both Illumina and \ont{} data. While this study is underpowered to make pan-susceptibility predictions, we have a dataset with well-characterised SNPs from \autoref{chap:denovo}. These high-quality variant calls give us a way of determining how many SNPs \drprg{} finds and misses in resistance-associated genes. 
 
-We remove any position in the COMPASS SNPs VCF from \autoref{sec:illumina-var-call} that falls into one of three categories: i) does not occur inside any mutation catalogue gene; ii) not an alternate allele call; or iii) exists in the panel. After this filtering, we have a VCF containing SNPs in resistance-associated genes that do not occur in the panel - referred to as the truth VCF.
+We remove any position in the COMPASS SNPs VCF from \autoref{sec:illumina-var-call} that falls into one of three categories: i) does not occur inside any mutation catalogue gene; ii) does not call an alternate allele; or iii) exists in the panel. After this filtering, we have a VCF containing SNPs in resistance-associated genes that do not occur in the panel - referred to as the truth VCF.
 
 We classify the novel SNPs called by \drprg{} against the truth VCF using \vrb{hap.py} - a VCF comparison program developed by Illumina and the Global Alliance for Genomics and Health Benchmarking Team \cite{happy2019}. \autoref{fig:novel-classifications} and \autoref{tab:novel-classifications} show the number of TP, FP, and FN novel SNP calls made by \drprg{} for each drug across all 150 samples. 
 
@@ -749,35 +749,35 @@ Despite the poor recall in \textit{gyrA} and \textit{ahpC}, the precision of nov
 
 \begin{table}
 \centering
-\begin{tabular}{|l|l|c|c|c|c|c|}
-\hline
-Gene                            & Technology & FN & FP & TP  & Recall & Precision \\ \hline
-\multirow{2}{*}{\textit{ahpC}}  & Illumina   & 2  & 0  & 34  & 0.944  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 19 & 0  & 17  & 0.472  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{eis}}   & Illumina   & 1  & 0  & 2   & 0.667  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 0  & 0  & 3   & 1.000  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{embA}}  & Illumina   & 2  & 0  & 49  & 0.961  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 2  & 0  & 49  & 0.961  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{embB}}  & Illumina   & 8  & 0  & 31  & 0.795  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 10 & 0  & 29  & 0.744  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{fabG1}} & Illumina   & 5  & 0  & 2   & 0.286  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 4  & 0  & 3   & 0.429  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{gid}}   & Illumina   & 6  & 0  & 26  & 0.812  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 7  & 0  & 25  & 0.781  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{gyrA}}  & Illumina   & 44 & 0  & 23  & 0.343  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 43 & 0  & 24  & 0.358  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{inhA}}  & Illumina   & 2  & 0  & 0   & 0.000  & -         \\ \cline{2-7} 
-                                & Nanopore   & 0  & 0  & 2   & 1.000  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{katG}}  & Illumina   & 0  & 0  & 5   & 1.000  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 0  & 0  & 5   & 1.000  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{pncA}}  & Illumina   & 2  & 0  & 1   & 0.333  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 2  & 0  & 1   & 0.333  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{rpoB}}  & Illumina   & 8  & 2  & 127 & 0.941  & 0.984     \\ \cline{2-7} 
-                                & Nanopore   & 6  & 2  & 129 & 0.956  & 0.985     \\ \hline
-\multirow{2}{*}{\textit{rpsL}}  & Illumina   & 0  & 0  & 5   & 1.000  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 1  & 0  & 4   & 0.800  & 1.000     \\ \hline
-\multirow{2}{*}{\textit{rrs}}   & Illumina   & 8  & 0  & 13  & 0.619  & 1.000     \\ \cline{2-7} 
-                                & Nanopore   & 10 & 1  & 11  & 0.524  & 0.917     \\ \hline
+\begin{tabular}{@{}lllllll@{}}
+\toprule
+Gene                            & Technology & FN & FP & TP  & Recall & Precision \\ \midrule
+\multirow{2}{*}{\textit{ahpC}}  & Illumina   & 2  & 0  & 34  & 0.944  & 1.000     \\
+                                & \ont{}     & 19 & 0  & 17  & 0.472  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{eis}}   & Illumina   & 1  & 0  & 2   & 0.667  & 1.000     \\
+                                & \ont{}     & 0  & 0  & 3   & 1.000  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{embA}}  & Illumina   & 2  & 0  & 49  & 0.961  & 1.000     \\
+                                & \ont{}     & 2  & 0  & 49  & 0.961  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{embB}}  & Illumina   & 8  & 0  & 31  & 0.795  & 1.000     \\
+                                & \ont{}     & 10 & 0  & 29  & 0.744  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{fabG1}} & Illumina   & 5  & 0  & 2   & 0.286  & 1.000     \\
+                                & \ont{}     & 4  & 0  & 3   & 0.429  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{gid}}   & Illumina   & 6  & 0  & 26  & 0.812  & 1.000     \\
+                                & \ont{}     & 7  & 0  & 25  & 0.781  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{gyrA}}  & Illumina   & 44 & 0  & 23  & 0.343  & 1.000     \\
+                                & \ont{}     & 43 & 0  & 24  & 0.358  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{inhA}}  & Illumina   & 2  & 0  & 0   & 0.000  & -         \\
+                                & \ont{}     & 0  & 0  & 2   & 1.000  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{katG}}  & Illumina   & 0  & 0  & 5   & 1.000  & 1.000     \\
+                                & \ont{}     & 0  & 0  & 5   & 1.000  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{pncA}}  & Illumina   & 2  & 0  & 1   & 0.333  & 1.000     \\
+                                & \ont{}     & 2  & 0  & 1   & 0.333  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{rpoB}}  & Illumina   & 8  & 2  & 127 & 0.941  & 0.984     \\
+                                & \ont{}     & 6  & 2  & 129 & 0.956  & 0.985     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{rpsL}}  & Illumina   & 0  & 0  & 5   & 1.000  & 1.000     \\
+                                & \ont{}     & 1  & 0  & 4   & 0.800  & 1.000     \\ \cmidrule(l){2-7}
+\multirow{2}{*}{\textit{rrs}}   & Illumina   & 8  & 0  & 13  & 0.619  & 1.000     \\
+                                & \ont{}     & 10 & 1  & 11  & 0.524  & 0.917     \\ \cmidrule(l){2-7} 
 \end{tabular}
 \caption{Classification of novel SNP calls made by \drprg{} in resistance-associated genes. Counts are across all samples. TP - true positive; FN - false negative; FP - false positive.}
 \label{tab:novel-classifications}
@@ -798,7 +798,7 @@ Having seen that the off-panel SNPs called by \drprg{} are precise, we look at h
 
 Of note in \autoref{fig:pheno-unknown} is the reduced number of missed resistance calls made when we include unknown variants - when compared to \autoref{fig:pheno-concordance}. That is, a call of unknown is our way of indicating to the user that we did not find a \emph{known} resistance-causing mutation; however, we did find a mutation that is not known to be either resistance- or susceptibility-associated.
 
-While we see a reduction in the number of missed resistance calls (FN) when calling unknown variants, the number of definitive susceptibility (TN) calls is also reduced. In particular, ethambutol, rifampicin, and streptomycin see a large number of unknown calls. The large number of unknown calls for rifampicin is not unexpected as \textit{rpoB} (associated with rifampicin resistance) had by far the most novel variants in the above analysis (\autoref{fig:novel-classifications}). Nearly every one of these unknown rifampicin calls relates to synonymous mutations D103D (C309T) and A1075A (T3225C) that are known not to be associated with drug resistance \cite{Jagielski2018}. Likewise, synonymous mutations were also the cause of the bulk of unknown calls for other drugs. However, there were some indel calls found. As our truth VCF only contains SNPs, we cannot assess the validity of these indel calls.
+While we see a reduction in the number of missed resistance calls (FN) when calling unknown variants, the number of definitive susceptibility (TN) calls is also reduced. However, these are not "missed" susceptibility calls and would just require phenotyping more samples (a situation preferred by many clinicians in response to \cite{hunt2019}). In particular, ethambutol, rifampicin, and streptomycin see a large number of unknown calls. A large number of unknown calls for rifampicin is not unexpected as \textit{rpoB} (associated with rifampicin resistance) had by far the most novel variants in the above analysis (\autoref{fig:novel-classifications}). Nearly every one of these unknown rifampicin calls relates to synonymous mutations D103D (C309T) and A1075A (T3225C) that are known not to be associated with drug resistance \cite{Jagielski2018}. Likewise, synonymous mutations were also the cause of the bulk of unknown calls for other drugs. However, there were some indel calls found. As our truth VCF only contains SNPs, we cannot assess the validity of these indel calls.
 
 A simple solution for the excessive unknown calls in susceptible samples would include synonymous mutations in the panel as susceptibility-associated.
 
@@ -815,7 +815,7 @@ A simple solution for the excessive unknown calls in susceptible samples would i
 
 Producing unknown drug resistance predictions based on novel variant calls is a point of difference for \drprg{}. In this section, we have shown that novel variants detected by \drprg{} are precise, but that missed calls require some more work.
 
-We have also shown that we can reduce missed resistance calls by refusing to make predictions for drugs with variants of unknown consequences. However, this currently comes at the cost of fewer susceptibility calls, although an easy fix - incorporating synonymous mutations - has been identified.
+We have also shown that we can reduce missed resistance calls by refusing to make predictions for drugs with variants of unknown consequences. However, this currently comes at the cost of fewer susceptibility calls, which means sending more samples for phenotyping, not missing susceptibility. Although, an easy fix for many of these susceptible samples sent for phenotyping - incorporating synonymous mutations - has been identified.
 
 %=========================================================================
 \section{Discussion}
