@@ -220,7 +220,7 @@ gyrA    380     01a6abfd        GACAG   AACAC,CACAC,GACAC,GCCAC,GGCAC,TACAC,TACA
   }
 }
 \end{minted}
-\caption{An example drug susceptibility JSON report file produced by \drprg{}. The report maps a drug to its prediction and any relevant evidence supporting that prediction. S=susceptible; U=unknown (i.e., novel variant); R=resistant.}
+\caption{An example drug susceptibility JSON report file produced by \drprg{}. The report maps a drug to its prediction and any relevant evidence supporting that prediction. Note, evidence for susceptibility (\vrb{"S"}) predictions is not provided as susceptibility is assumed where no \vrb{R/U} prediction is made. S=susceptible; U=unknown (i.e., novel variant); R=resistant.}
 \label{fig:example-drprg-report}
 \end{figure}
 
@@ -250,35 +250,44 @@ When comparing the WGS concordance with culture-based phenotypes, these results 
 \begin{table}
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
-\hline
+\begin{tabular}{@{}lllllllll@{}}
+\toprule
 Drug &
   Technology &
-  Tool &
+  \mykrobe{} &
   FN(R) &
   FP(S) &
   FNR(95\% CI) &
   FPR(95\% CI) &
   PPV(95\% CI) &
-  NPV(95\% CI) \\ \hline
- &
-   &
-  \mykrobe{} &
+  NPV(95\% CI) \\ \midrule
+\multirow{4}{*}{Amikacin} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   1(11) &
   1(77) &
   9.1\% (1.6-37.7\%) &
   1.3\% (0.2-7.0\%) &
   90.9\% (62.3-98.4\%) &
-  98.7\% (93.0-99.8\%) \\ \cline{3-9} 
+  98.7\% (93.0-99.8\%) \\
  &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(11) &
-  \cellcolor[HTML]{EFEFEF}2(77) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-25.9\%) &
-  \cellcolor[HTML]{EFEFEF}2.6\% (0.7-9.0\%) &
-  \cellcolor[HTML]{EFEFEF}84.6\% (57.8-95.7\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (95.1-100.0\%) \\ \cline{2-9} 
+   &
+  \mykrobe{} &
+  0(11) &
+  2(77) &
+  0.0\% (0.0-25.9\%) &
+  2.6\% (0.7-9.0\%) &
+  84.6\% (57.8-95.7\%) &
+  100.0\% (95.1-100.0\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
+  2(11) &
+  2(77) &
+  18.2\% (5.1-47.7\%) &
+  2.6\% (0.7-9.0\%) &
+  81.8\% (52.3-94.9\%) &
+  97.4\% (91.0-99.3\%) \\
  &
    &
   \mykrobe{} &
@@ -287,34 +296,16 @@ Drug &
   18.2\% (5.1-47.7\%) &
   2.6\% (0.7-9.0\%) &
   81.8\% (52.3-94.9\%) &
-  97.4\% (91.0-99.3\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Amikacin} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}2(11) &
-  \cellcolor[HTML]{EFEFEF}2(77) &
-  \cellcolor[HTML]{EFEFEF}18.2\% (5.1-47.7\%) &
-  \cellcolor[HTML]{EFEFEF}2.6\% (0.7-9.0\%) &
-  \cellcolor[HTML]{EFEFEF}81.8\% (52.3-94.9\%) &
-  \cellcolor[HTML]{EFEFEF}97.4\% (91.0-99.3\%) \\ \hline
- &
-   &
-  \mykrobe{} &
+  97.4\% (91.0-99.3\%) \\ \\ \cmidrule(l){3-9} 
+\multirow{4}{*}{Capreomycin} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   0(0) &
   0(51) &
   - &
   0.0\% (0.0-7.0\%) &
   - &
-  100.0\% (93.0-100.0\%) \\ \cline{3-9} 
- &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(0) &
-  \cellcolor[HTML]{EFEFEF}1(51) &
-  \cellcolor[HTML]{EFEFEF}- &
-  \cellcolor[HTML]{EFEFEF}2.0\% (0.3-10.3\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-79.3\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \cline{2-9} 
+  100.0\% (93.0-100.0\%) \\
  &
    &
   \mykrobe{} &
@@ -323,70 +314,88 @@ Drug &
   - &
   2.0\% (0.3-10.3\%) &
   0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Capreomycin} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(0) &
-  \cellcolor[HTML]{EFEFEF}1(51) &
-  \cellcolor[HTML]{EFEFEF}- &
-  \cellcolor[HTML]{EFEFEF}2.0\% (0.3-10.3\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-79.3\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \hline
+  100.0\% (92.9-100.0\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
+  0(0) &
+  1(51) &
+  - &
+  2.0\% (0.3-10.3\%) &
+  0.0\% (0.0-79.3\%) &
+  100.0\% (92.9-100.0\%) \\
  &
    &
   \mykrobe{} &
+  0(0) &
+  1(51) &
+  - &
+  2.0\% (0.3-10.3\%) &
+  0.0\% (0.0-79.3\%) &
+  100.0\% (92.9-100.0\%) \\ \\ \cmidrule(l){3-9} 
+\multirow{4}{*}{Ethambutol} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   12(14) &
   5(76) &
   85.7\% (60.1-96.0\%) &
-  6.6\% (2.8-14.5\%) &
+  \textbf{6.6\% (2.8-14.5\%)} &
   28.6\% (8.2-64.1\%) &
-  85.5\% (76.4-91.5\%) \\ \cline{3-9} 
- &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}4(14) &
-  \cellcolor[HTML]{EFEFEF}14(76) &
-  \cellcolor[HTML]{EFEFEF}28.6\% (11.7-54.6\%) &
-  \cellcolor[HTML]{EFEFEF}18.4\% (11.3-28.6\%) &
-  \cellcolor[HTML]{EFEFEF}41.7\% (24.5-61.2\%) &
-  \cellcolor[HTML]{EFEFEF}93.9\% (85.4-97.6\%) \\ \cline{2-9} 
+  85.5\% (76.4-91.5\%) \\
  &
    &
   \mykrobe{} &
+  4(14) &
+  14(76) &
+  \textbf{28.6\% (11.7-54.6\%)} &
+  18.4\% (11.3-28.6\%) &
+  41.7\% (24.5-61.2\%) &
+  93.9\% (85.4-97.6\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
   4(14) &
   16(76) &
   28.6\% (11.7-54.6\%) &
   21.1\% (13.4-31.5\%) &
   38.5\% (22.4-57.5\%) &
-  93.8\% (85.0-97.5\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Ethambutol} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}3(14) &
-  \cellcolor[HTML]{EFEFEF}16(76) &
-  \cellcolor[HTML]{EFEFEF}21.4\% (7.6-47.6\%) &
-  \cellcolor[HTML]{EFEFEF}21.1\% (13.4-31.5\%) &
-  \cellcolor[HTML]{EFEFEF}40.7\% (24.5-59.3\%) &
-  \cellcolor[HTML]{EFEFEF}95.2\% (86.9-98.4\%) \\ \hline
+  93.8\% (85.0-97.5\%) \\
  &
    &
   \mykrobe{} &
+  3(14) &
+  16(76) &
+  21.4\% (7.6-47.6\%) &
+  21.1\% (13.4-31.5\%) &
+  40.7\% (24.5-59.3\%) &
+  95.2\% (86.9-98.4\%) \\ \\ \cmidrule(l){3-9} 
+\multirow{4}{*}{Isoniazid} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   16(50) &
   1(48) &
   32.0\% (20.8-45.8\%) &
-  2.1\% (0.4-10.9\%) &
+  \textbf{2.1\% (0.4-10.9\%)} &
   97.1\% (85.5-99.5\%) &
-  74.6\% (62.7-83.7\%) \\ \cline{3-9} 
+  74.6\% (62.7-83.7\%) \\
  &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}7(50) &
-  \cellcolor[HTML]{EFEFEF}7(48) &
-  \cellcolor[HTML]{EFEFEF}14.0\% (7.0-26.2\%) &
-  \cellcolor[HTML]{EFEFEF}14.6\% (7.2-27.2\%) &
-  \cellcolor[HTML]{EFEFEF}86.0\% (73.8-93.0\%) &
-  \cellcolor[HTML]{EFEFEF}85.4\% (72.8-92.8\%) \\ \cline{2-9} 
+   &
+  \mykrobe{} &
+  7(50) &
+  7(48) &
+  \textbf{14.0\% (7.0-26.2\%)} &
+  14.6\% (7.2-27.2\%) &
+  86.0\% (73.8-93.0\%) &
+  85.4\% (72.8-92.8\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
+  8(50) &
+  3(48) &
+  16.0\% (8.3-28.5\%) &
+  6.2\% (2.1-16.8\%) &
+  93.3\% (82.1-97.7\%) &
+  84.9\% (72.9-92.1\%) \\
  &
    &
   \mykrobe{} &
@@ -395,34 +404,16 @@ Drug &
   16.0\% (8.3-28.5\%) &
   6.2\% (2.1-16.8\%) &
   93.3\% (82.1-97.7\%) &
-  84.9\% (72.9-92.1\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Isoniazid} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}8(50) &
-  \cellcolor[HTML]{EFEFEF}3(48) &
-  \cellcolor[HTML]{EFEFEF}16.0\% (8.3-28.5\%) &
-  \cellcolor[HTML]{EFEFEF}6.2\% (2.1-16.8\%) &
-  \cellcolor[HTML]{EFEFEF}93.3\% (82.1-97.7\%) &
-  \cellcolor[HTML]{EFEFEF}84.9\% (72.9-92.1\%) \\ \hline
- &
-   &
-  \mykrobe{} &
+  84.9\% (72.9-92.1\%) \\ \\ \cmidrule(l){3-9} 
+\multirow{4}{*}{Kanamycin} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   0(0) &
   0(51) &
   - &
   0.0\% (0.0-7.0\%) &
   - &
-  100.0\% (93.0-100.0\%) \\ \cline{3-9} 
- &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(0) &
-  \cellcolor[HTML]{EFEFEF}1(51) &
-  \cellcolor[HTML]{EFEFEF}- &
-  \cellcolor[HTML]{EFEFEF}2.0\% (0.3-10.3\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-79.3\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \cline{2-9} 
+  100.0\% (93.0-100.0\%) \\
  &
    &
   \mykrobe{} &
@@ -431,34 +422,34 @@ Drug &
   - &
   2.0\% (0.3-10.3\%) &
   0.0\% (0.0-79.3\%) &
-  100.0\% (92.9-100.0\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Kanamycin} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(0) &
-  \cellcolor[HTML]{EFEFEF}1(51) &
-  \cellcolor[HTML]{EFEFEF}- &
-  \cellcolor[HTML]{EFEFEF}2.0\% (0.3-10.3\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-79.3\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (92.9-100.0\%) \\ \hline
+  100.0\% (92.9-100.0\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
+  0(0) &
+  1(51) &
+  - &
+  2.0\% (0.3-10.3\%) &
+  0.0\% (0.0-79.3\%) &
+  100.0\% (92.9-100.0\%) \\
  &
    &
   \mykrobe{} &
+  0(0) &
+  1(51) &
+  - &
+  2.0\% (0.3-10.3\%) &
+  0.0\% (0.0-79.3\%) &
+  100.0\% (92.9-100.0\%) \\ \\ \cmidrule(l){3-9} 
+\multirow{4}{*}{Ofloxacin} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   1(10) &
   2(76) &
   10.0\% (1.8-40.4\%) &
   2.6\% (0.7-9.1\%) &
   81.8\% (52.3-94.9\%) &
-  98.7\% (92.8-99.8\%) \\ \cline{3-9} 
- &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(10) &
-  \cellcolor[HTML]{EFEFEF}4(76) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (-0.0-27.8\%) &
-  \cellcolor[HTML]{EFEFEF}5.3\% (2.1-12.8\%) &
-  \cellcolor[HTML]{EFEFEF}71.4\% (45.4-88.3\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (94.9-100.0\%) \\ \cline{2-9} 
+  98.7\% (92.8-99.8\%) \\
  &
    &
   \mykrobe{} &
@@ -467,34 +458,52 @@ Drug &
   0.0\% (-0.0-27.8\%) &
   5.3\% (2.1-12.8\%) &
   71.4\% (45.4-88.3\%) &
-  100.0\% (94.9-100.0\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Ofloxacin} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(10) &
-  \cellcolor[HTML]{EFEFEF}4(76) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (-0.0-27.8\%) &
-  \cellcolor[HTML]{EFEFEF}5.3\% (2.1-12.8\%) &
-  \cellcolor[HTML]{EFEFEF}71.4\% (45.4-88.3\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (94.9-100.0\%) \\ \hline
+  100.0\% (94.9-100.0\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
+  0(10) &
+  4(76) &
+  0.0\% (-0.0-27.8\%) &
+  5.3\% (2.1-12.8\%) &
+  71.4\% (45.4-88.3\%) &
+  100.0\% (94.9-100.0\%) \\
  &
    &
   \mykrobe{} &
+  0(10) &
+  4(76) &
+  0.0\% (-0.0-27.8\%) &
+  5.3\% (2.1-12.8\%) &
+  71.4\% (45.4-88.3\%) &
+  100.0\% (94.9-100.0\%) \\ \\ \cmidrule(l){3-9} 
+\multirow{4}{*}{Rifampicin} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   21(47) &
   0(44) &
   44.7\% (31.4-58.8\%) &
   0.0\% (0.0-8.0\%) &
   100.0\% (87.1-100.0\%) &
-  67.7\% (55.6-77.8\%) \\ \cline{3-9} 
+  67.7\% (55.6-77.8\%) \\
  &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}6(47) &
-  \cellcolor[HTML]{EFEFEF}1(44) &
-  \cellcolor[HTML]{EFEFEF}12.8\% (6.0-25.2\%) &
-  \cellcolor[HTML]{EFEFEF}2.3\% (0.4-11.8\%) &
-  \cellcolor[HTML]{EFEFEF}97.6\% (87.7-99.6\%) &
-  \cellcolor[HTML]{EFEFEF}87.8\% (75.8-94.3\%) \\ \cline{2-9} 
+   &
+  \mykrobe{} &
+  6(47) &
+  1(44) &
+  \textbf{12.8\% (6.0-25.2\%)} &
+  2.3\% (0.4-11.8\%) &
+  97.6\% (87.7-99.6\%) &
+  87.8\% (75.8-94.3\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
+  5(47) &
+  1(44) &
+  10.6\% (4.6-22.6\%) &
+  2.3\% (0.4-11.8\%) &
+  97.7\% (87.9-99.6\%) &
+  89.6\% (77.8-95.5\%) \\
  &
    &
   \mykrobe{} &
@@ -503,34 +512,34 @@ Drug &
   10.6\% (4.6-22.6\%) &
   2.3\% (0.4-11.8\%) &
   97.7\% (87.9-99.6\%) &
-  89.6\% (77.8-95.5\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Rifampicin} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}5(47) &
-  \cellcolor[HTML]{EFEFEF}1(44) &
-  \cellcolor[HTML]{EFEFEF}10.6\% (4.6-22.6\%) &
-  \cellcolor[HTML]{EFEFEF}2.3\% (0.4-11.8\%) &
-  \cellcolor[HTML]{EFEFEF}97.7\% (87.9-99.6\%) &
-  \cellcolor[HTML]{EFEFEF}89.6\% (77.8-95.5\%) \\ \hline
- &
-   &
-  \mykrobe{} &
+  89.6\% (77.8-95.5\%) \\ \\ \cmidrule(l){3-9} 
+\multirow{4}{*}{Streptomycin} &
+  \multirow{2}{*}{\ont{}} &
+  \mykrobe{}-default &
   6(8) &
   5(82) &
   75.0\% (40.9-92.9\%) &
-  6.1\% (2.6-13.5\%) &
+  \textbf{6.1\% (2.6-13.5\%)} &
   28.6\% (8.2-64.1\%) &
-  92.8\% (85.1-96.6\%) \\ \cline{3-9} 
+  92.8\% (85.1-96.6\%) \\
  &
-  \multirow{-2}{*}{Illumina} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}3(8) &
-  \cellcolor[HTML]{EFEFEF}9(82) &
-  \cellcolor[HTML]{EFEFEF}37.5\% (13.7-69.4\%) &
-  \cellcolor[HTML]{EFEFEF}11.0\% (5.9-19.6\%) &
-  \cellcolor[HTML]{EFEFEF}35.7\% (16.3-61.2\%) &
-  \cellcolor[HTML]{EFEFEF}96.1\% (89.0-98.6\%) \\ \cline{2-9} 
+   &
+  \mykrobe{} &
+  3(8) &
+  9(82) &
+  \textbf{37.5\% (13.7-69.4\%)} &
+  11.0\% (5.9-19.6\%) &
+  35.7\% (16.3-61.2\%) &
+  96.1\% (89.0-98.6\%) \\
+ &
+  \multirow{2}{*}{Illumina} &
+  \mykrobe{}-default &
+  5(8) &
+  10(82) &
+  62.5\% (30.6-86.3\%) &
+  12.2\% (6.8-21.0\%) &
+  23.1\% (8.2-50.3\%) &
+  93.5\% (85.7-97.2\%) \\
  &
    &
   \mykrobe{} &
@@ -539,19 +548,10 @@ Drug &
   62.5\% (30.6-86.3\%) &
   12.2\% (6.8-21.0\%) &
   23.1\% (8.2-50.3\%) &
-  93.5\% (85.7-97.2\%) \\ \cline{3-9} 
-\multirow{-4}{*}{Streptomycin} &
-  \multirow{-2}{*}{Nanopore} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}5(8) &
-  \cellcolor[HTML]{EFEFEF}10(82) &
-  \cellcolor[HTML]{EFEFEF}62.5\% (30.6-86.3\%) &
-  \cellcolor[HTML]{EFEFEF}12.2\% (6.8-21.0\%) &
-  \cellcolor[HTML]{EFEFEF}23.1\% (8.2-50.3\%) &
-  \cellcolor[HTML]{EFEFEF}93.5\% (85.7-97.2\%) \\ \hline
+  93.5\% (85.7-97.2\%) \\ \cmidrule(l){3-9} 
 \end{tabular}%
 }
-\caption{Comparison of WGS drug resistance predictions with culture-based phenotype. For this comparison, we assume the culture-based phenotype is correct and evaluate \mykrobe{} with default and adjusted settings for Illumina and \ont{} resistance predictions accordingly. Pyrazinamide and Moxifloxacin are excluded as phenotype information is only available for one sample. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
+\caption{Comparison of WGS drug resistance predictions with culture-based phenotype. For this comparison, we assume the culture-based phenotype is correct and evaluate \mykrobe{} with default and adjusted settings for Illumina and \ont{} resistance predictions accordingly. Pyrazinamide and Moxifloxacin are excluded as phenotype information is only available for one sample. Bold text is used to highlight differences of note. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
 \label{tab:mykrobe-settings-pheno}
 \end{table}
 
@@ -568,194 +568,33 @@ Drug &
 \begin{table}
 \centering
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{|l|l|l|l|l|l|l|l|}
-\hline
-Drug &
-  Tool &
-  FN(R) &
-  FP(S) &
-  FNR(95\% CI) &
-  FPR(95\% CI) &
-  PPV(95\% CI) &
-  NPV(95\% CI) \\ \hline
- &
-  \mykrobe{} &
-  2(12) &
-  2(138) &
-  16.7\% (4.7-44.8\%) &
-  1.4\% (0.4-5.1\%) &
-  83.3\% (55.2-95.3\%) &
-  98.6\% (94.9-99.6\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Amikacin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(12) &
-  \cellcolor[HTML]{EFEFEF}2(138) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-24.2\%) &
-  \cellcolor[HTML]{EFEFEF}1.4\% (0.4-5.1\%) &
-  \cellcolor[HTML]{EFEFEF}85.7\% (60.1-96.0\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (97.3-100.0\%) \\ \hline
- &
-  \mykrobe{} &
-  2(12) &
-  2(138) &
-  16.7\% (4.7-44.8\%) &
-  1.4\% (0.4-5.1\%) &
-  83.3\% (55.2-95.3\%) &
-  98.6\% (94.9-99.6\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Capreomycin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(12) &
-  \cellcolor[HTML]{EFEFEF}2(138) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-24.2\%) &
-  \cellcolor[HTML]{EFEFEF}1.4\% (0.4-5.1\%) &
-  \cellcolor[HTML]{EFEFEF}85.7\% (60.1-96.0\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (97.3-100.0\%) \\ \hline
- &
-  \mykrobe{} &
-  4(17) &
-  0(133) &
-  23.5\% (9.6-47.3\%) &
-  0.0\% (0.0-2.8\%) &
-  100.0\% (77.2-100.0\%) &
-  97.1\% (92.7-98.9\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Ciprofloxacin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}1(17) &
-  \cellcolor[HTML]{EFEFEF}0(133) &
-  \cellcolor[HTML]{EFEFEF}5.9\% (1.0-27.0\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-2.8\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (80.6-100.0\%) &
-  \cellcolor[HTML]{EFEFEF}99.3\% (95.9-99.9\%) \\ \hline
- &
-  \mykrobe{} &
-  40(56) &
-  0(94) &
-  71.4\% (58.5-81.6\%) &
-  0.0\% (0.0-3.9\%) &
-  100.0\% (80.6-100.0\%) &
-  70.1\% (61.9-77.2\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Ethambutol} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}3(57) &
-  \cellcolor[HTML]{EFEFEF}0(93) &
-  \cellcolor[HTML]{EFEFEF}5.3\% (1.8-14.4\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-4.0\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (93.4-100.0\%) &
-  \cellcolor[HTML]{EFEFEF}96.9\% (91.2-98.9\%) \\ \hline
- &
-  \mykrobe{} &
-  15(80) &
-  1(70) &
-  18.8\% (11.7-28.7\%) &
-  1.4\% (0.3-7.7\%) &
-  98.5\% (91.9-99.7\%) &
-  82.1\% (72.6-88.9\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Isoniazid} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(80) &
-  \cellcolor[HTML]{EFEFEF}7(70) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-4.6\%) &
-  \cellcolor[HTML]{EFEFEF}10.0\% (4.9-19.2\%) &
-  \cellcolor[HTML]{EFEFEF}92.0\% (84.3-96.0\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (94.3-100.0\%) \\ \hline
- &
-  \mykrobe{} &
-  2(13) &
-  2(137) &
-  15.4\% (4.3-42.2\%) &
-  1.5\% (0.4-5.2\%) &
-  84.6\% (57.8-95.7\%) &
-  98.5\% (94.8-99.6\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Kanamycin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(13) &
-  \cellcolor[HTML]{EFEFEF}2(137) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-22.8\%) &
-  \cellcolor[HTML]{EFEFEF}1.5\% (0.4-5.2\%) &
-  \cellcolor[HTML]{EFEFEF}86.7\% (62.1-96.3\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (97.2-100.0\%) \\ \hline
- &
-  \mykrobe{} &
-  4(17) &
-  0(133) &
-  23.5\% (9.6-47.3\%) &
-  0.0\% (0.0-2.8\%) &
-  100.0\% (77.2-100.0\%) &
-  97.1\% (92.7-98.9\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Moxifloxacin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}1(17) &
-  \cellcolor[HTML]{EFEFEF}0(133) &
-  \cellcolor[HTML]{EFEFEF}5.9\% (1.0-27.0\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-2.8\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (80.6-100.0\%) &
-  \cellcolor[HTML]{EFEFEF}99.3\% (95.9-99.9\%) \\ \hline
- &
-  \mykrobe{} &
-  4(17) &
-  0(133) &
-  23.5\% (9.6-47.3\%) &
-  0.0\% (0.0-2.8\%) &
-  100.0\% (77.2-100.0\%) &
-  97.1\% (92.7-98.9\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Ofloxacin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}0(17) &
-  \cellcolor[HTML]{EFEFEF}0(133) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-18.4\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-2.8\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (81.6-100.0\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (97.2-100.0\%) \\ \hline
- &
-  \mykrobe{} &
-  13(31) &
-  0(119) &
-  41.9\% (26.4-59.2\%) &
-  0.0\% (0.0-3.1\%) &
-  100.0\% (82.4-100.0\%) &
-  90.2\% (83.9-94.2\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Pyrazinamide} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}1(31) &
-  \cellcolor[HTML]{EFEFEF}0(119) &
-  \cellcolor[HTML]{EFEFEF}3.2\% (0.6-16.2\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-3.1\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (88.6-100.0\%) &
-  \cellcolor[HTML]{EFEFEF}99.2\% (95.4-99.9\%) \\ \hline
- &
-  \mykrobe{} &
-  30(79) &
-  0(71) &
-  38.0\% (28.1-49.0\%) &
-  0.0\% (0.0-5.1\%) &
-  100.0\% (92.7-100.0\%) &
-  70.3\% (60.8-78.3\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Rifampicin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}1(79) &
-  \cellcolor[HTML]{EFEFEF}0(71) &
-  \cellcolor[HTML]{EFEFEF}1.3\% (0.2-6.8\%) &
-  \cellcolor[HTML]{EFEFEF}0.0\% (0.0-5.1\%) &
-  \cellcolor[HTML]{EFEFEF}100.0\% (95.3-100.0\%) &
-  \cellcolor[HTML]{EFEFEF}98.6\% (92.5-99.8\%) \\ \hline
- &
-  \mykrobe{} &
-  20(45) &
-  2(105) &
-  44.4\% (30.9-58.8\%) &
-  1.9\% (0.5-6.7\%) &
-  92.6\% (76.6-97.9\%) &
-  83.7\% (76.2-89.2\%) \\ \cline{2-8} 
-\multirow{-2}{*}{Streptomycin} &
-  \cellcolor[HTML]{EFEFEF}\mykrobe{}-default &
-  \cellcolor[HTML]{EFEFEF}2(46) &
-  \cellcolor[HTML]{EFEFEF}2(104) &
-  \cellcolor[HTML]{EFEFEF}4.3\% (1.2-14.5\%) &
-  \cellcolor[HTML]{EFEFEF}1.9\% (0.5-6.7\%) &
-  \cellcolor[HTML]{EFEFEF}95.7\% (85.5-98.8\%) &
-  \cellcolor[HTML]{EFEFEF}98.1\% (93.3-99.5\%) \\ \hline
+\begin{tabular}{@{}llllllll@{}}
+\toprule
+Drug                          & Tool               & FN(R)  & FP(S)  & FNR(95\% CI)                & FPR(95\% CI)        & PPV(95\% CI)           & NPV(95\% CI)           \\ \midrule
+\multirow{2}{*}{Amikacin}     & \mykrobe{}-default & 2(12)  & 2(138) & 16.7\% (4.7-44.8\%)         & 1.4\% (0.4-5.1\%)   & 83.3\% (55.2-95.3\%)   & 98.6\% (94.9-99.6\%)   \\
+                              & \mykrobe{}         & 0(12)  & 2(138) & \textbf{0.0\% (0.0-24.2\%)} & 1.4\% (0.4-5.1\%)   & 85.7\% (60.1-96.0\%)   & 100.0\% (97.3-100.0\%) \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Capreomycin}  & \mykrobe{}-default & 2(12)  & 2(138) & 16.7\% (4.7-44.8\%)         & 1.4\% (0.4-5.1\%)   & 83.3\% (55.2-95.3\%)   & 98.6\% (94.9-99.6\%)   \\
+                              & \mykrobe{}         & 0(12)  & 2(138) & \textbf{0.0\% (0.0-24.2\%)} & 1.4\% (0.4-5.1\%)   & 85.7\% (60.1-96.0\%)   & 100.0\% (97.3-100.0\%) \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Ciprofloxacin} & \mykrobe{}-default & 4(17)  & 0(133) & 23.5\% (9.6-47.3\%)  & 0.0\% (0.0-2.8\%)          & 100.0\% (77.2-100.0\%) & 97.1\% (92.7-98.9\%) \\
+                              & \mykrobe{}         & 1(17)  & 0(133) & \textbf{5.9\% (1.0-27.0\%)} & 0.0\% (0.0-2.8\%)   & 100.0\% (80.6-100.0\%) & 99.3\% (95.9-99.9\%)   \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Ethambutol}   & \mykrobe{}-default & 40(56) & 0(94)  & 71.4\% (58.5-81.6\%)        & 0.0\% (0.0-3.9\%)   & 100.0\% (80.6-100.0\%) & 70.1\% (61.9-77.2\%)   \\
+                              & \mykrobe{}         & 3(57)  & 0(93)  & \textbf{5.3\% (1.8-14.4\%)} & 0.0\% (0.0-4.0\%)   & 100.0\% (93.4-100.0\%) & 96.9\% (91.2-98.9\%)   \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Isoniazid}     & \mykrobe{}-default & 15(80) & 1(70)  & 18.8\% (11.7-28.7\%) & \textbf{1.4\% (0.3-7.7\%)} & 98.5\% (91.9-99.7\%)   & 82.1\% (72.6-88.9\%) \\
+                              & \mykrobe{}         & 0(80)  & 7(70)  & \textbf{0.0\% (0.0-4.6\%)}  & 10.0\% (4.9-19.2\%) & 92.0\% (84.3-96.0\%)   & 100.0\% (94.3-100.0\%) \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Kanamycin}    & \mykrobe{}-default & 2(13)  & 2(137) & 15.4\% (4.3-42.2\%)         & 1.5\% (0.4-5.2\%)   & 84.6\% (57.8-95.7\%)   & 98.5\% (94.8-99.6\%)   \\
+                              & \mykrobe{}         & 0(13)  & 2(137) & \textbf{0.0\% (0.0-22.8\%)} & 1.5\% (0.4-5.2\%)   & 86.7\% (62.1-96.3\%)   & 100.0\% (97.2-100.0\%) \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Moxifloxacin} & \mykrobe{}-default & 4(17)  & 0(133) & 23.5\% (9.6-47.3\%)         & 0.0\% (0.0-2.8\%)   & 100.0\% (77.2-100.0\%) & 97.1\% (92.7-98.9\%)   \\
+                              & \mykrobe{}         & 1(17)  & 0(133) & \textbf{5.9\% (1.0-27.0\%)} & 0.0\% (0.0-2.8\%)   & 100.0\% (80.6-100.0\%) & 99.3\% (95.9-99.9\%)   \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Ofloxacin}    & \mykrobe{}-default & 4(17)  & 0(133) & 23.5\% (9.6-47.3\%)         & 0.0\% (0.0-2.8\%)   & 100.0\% (77.2-100.0\%) & 97.1\% (92.7-98.9\%)   \\
+                              & \mykrobe{}         & 0(17)  & 0(133) & \textbf{0.0\% (0.0-18.4\%)} & 0.0\% (0.0-2.8\%)   & 100.0\% (81.6-100.0\%) & 100.0\% (97.2-100.0\%) \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Pyrazinamide}  & \mykrobe{}-default & 13(31) & 0(119) & 41.9\% (26.4-59.2\%) & 0.0\% (0.0-3.1\%)          & 100.0\% (82.4-100.0\%) & 90.2\% (83.9-94.2\%) \\
+                              & \mykrobe{}         & 1(31)  & 0(119) & \textbf{3.2\% (0.6-16.2\%)} & 0.0\% (0.0-3.1\%)   & 100.0\% (88.6-100.0\%) & 99.2\% (95.4-99.9\%)   \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Rifampicin}   & \mykrobe{}-default & 30(79) & 0(71)  & 38.0\% (28.1-49.0\%)        & 0.0\% (0.0-5.1\%)   & 100.0\% (92.7-100.0\%) & 70.3\% (60.8-78.3\%)   \\
+                              & \mykrobe{}         & 1(79)  & 0(71)  & \textbf{1.3\% (0.2-6.8\%)}  & 0.0\% (0.0-5.1\%)   & 100.0\% (95.3-100.0\%) & 98.6\% (92.5-99.8\%)   \\ \cmidrule(l){2-8} 
+\multirow{2}{*}{Streptomycin} & \mykrobe{}-default & 20(45) & 2(105) & 44.4\% (30.9-58.8\%)        & 1.9\% (0.5-6.7\%)   & 92.6\% (76.6-97.9\%)   & 83.7\% (76.2-89.2\%)   \\
+                              & \mykrobe{}         & 2(46)  & 2(104) & \textbf{4.3\% (1.2-14.5\%)} & 1.9\% (0.5-6.7\%)   & 95.7\% (85.5-98.8\%)   & 98.1\% (93.3-99.5\%)   \\ \cmidrule(l){2-8} 
 \end{tabular}%
 }
-\caption{Comparison of \ont{} drug resistance predictions concordance with Illumina predictions. For this comparison, we assume the \mykrobe{} resistance prediction from Illumina data is correct and evaluate the \ont{} prediction accordingly. \mykrobe{}-default and \mykrobe{} indicates \mykrobe{} with default or adjusted settings, respectively. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
+\caption{Comparison of \ont{} drug resistance predictions concordance with Illumina predictions. For this comparison, we assume the \mykrobe{} resistance prediction from Illumina data is correct and evaluate the \ont{} prediction accordingly. \mykrobe{}-default and \mykrobe{} indicates \mykrobe{} with default or adjusted settings, respectively. Bold text is used to highlight differences of note. FN=false negative; R=number of resistant samples; FP=false positive; S=number of susceptible samples; FNR=false negative rate; FPR=false positive rate; PPV=positive predictive value; NPV=negative predictive value; CI=Wilson score confidence interval}
 \label{tab:mykrobe-settings-geno}
 \end{table}
