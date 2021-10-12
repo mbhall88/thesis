@@ -190,7 +190,7 @@ Construction of a \prg{} is accomplished with a recursive cluster and collapse a
 \includegraphics[width=1\columnwidth]{Chapter0/Figs/make-prg.png}
 \caption{Construction of a locus reference graph (\prg{}) from a multiple sequence alignment (MSA; left) with the recursive cluster and collapse algorithm implemented in \makeprg{}. Vertical slices in the MSA are collapsed when there is a minimum match length of 4. Sections not collapsed are recursively clustered and collapsed (if possible), until no further clustering is possible or a maximum nesting level is attained. In this example, a nesting level of 2 is reached.}
 \label{fig:make-prg-rcc}
-\source{\cite{rachelthesis,pandora}}
+\source{\cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}}
 \end{figure}
 
 \subsection{Index, quasi-map, and sequence inference}
@@ -236,9 +236,9 @@ To allow this multi-sample variation inference, \pandora{} infers the maximum li
         \includegraphics[width=0.95\columnwidth]{Chapter0/Figs/variant_representation.png}
          \caption{Multi-sample variation inference}
          \label{fig:var-representation}
-         \source{\cite{rachelthesis,pandora}}
+         \source{\cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}}
      \end{subfigure}
-     \caption{The impact of sequence inference on variant representation. In both \textbf{(a)} and \textbf{(b)} the left panel (a) shows the \prg{}. \textbf{a)} the blue line indicates the inferred sequence (maximum likelihood path). b and c show how the choice of this sequence affects the representation of variant sites when genotyping. \textbf{b}) the black line indicates the multi-sample inferred sequence, while the blue and orange lines are two different samples. b and c show that small differences between the samples are represented as small variants by inferring the sequence that is maximally close to the two samples (c).}
+     \caption{The impact of sequence inference on variant representation. In both \textbf{(a)} and \textbf{(b)} the left panel (i) shows the \prg{}. \textbf{a)} the blue line indicates the inferred sequence (maximum likelihood path). ii and iii show how the choice of this sequence affects the representation of variant sites when genotyping. \textbf{b}) the black line indicates the multi-sample inferred sequence, while the blue and orange lines are two different samples. ii and iii show that small differences between the samples are represented as small variants by inferring the sequence that is maximally close to the two samples (iii).}
      \label{fig:pandora-var-representation}
 \end{figure}
 
