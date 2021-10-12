@@ -55,21 +55,21 @@ Another interesting property of the bacterial genome is the distinctive "U-shape
         \centering
         \caption{}
         \label{fig:pangenome-venn}
-        \source{\cite{McInerney2017}}
+        \source{Reprinted by permission from Springer Nature Customer Service Centre GmbH: Springer Nature Nature Microbiology \cite{McInerney2017}, Copyright © 2017, Macmillan Publishers Limited.}
      \end{subfigure}
      \begin{subfigure}[b]{0.475\textwidth}
          \centering
         \includegraphics[height=0.21\textheight]{Chapter0/Figs/gene_frequency_distribution.png}
          \caption{}
          \label{fig:pangenome-freq}
-         \source{\cite{pandora}}
+         \source{\cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}}
      \end{subfigure}
      \begin{subfigure}[b]{0.8\textwidth}
         \includegraphics[width=1\linewidth]{Chapter0/Figs/pangenome-size.png}
         \centering
         \caption{}
         \label{fig:pangenome-size}
-        \source{\cite{Land2015}}
+        \source{\cite{Land2015} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}}
      \end{subfigure}
     \caption{The size and gene frequency distribution of the bacterial pan-genome. \textbf{a}) Venn diagram representation of the pan-genome and its core and accessory components. \textbf{b}) The asymmetric U-shaped gene frequency distribution for 10 genomes within 6 bacterial species. Genes are generally rare (left) or common (right). \textbf{c}) the size (y-axis) of the core (red) and accessory (blue; Pan) genome of \ecoli{} as more genomes are sampled (x-axis).}
         \label{fig:pangenome}
@@ -121,7 +121,7 @@ Reference genome bias is the most significant limitation of bacterial variant ca
 \includegraphics[height=0.35\textheight]{Chapter0/Figs/single_ref_problem.png}
 \caption{An illustration of the single-reference problem. Each vertical column depicts a genome, with the coloured blocks representing loci (genes). The numbers next to each locus indicate a variant with respect to other loci of the same colour. The percentage figures at the bottom indicate what percentage of variants in the other genomes could be found by a perfect variant caller if that genome was used as a reference. Not all genomes contain the same loci; hence no genome can capture all of the variants.}
 \label{fig:reference-bias}
-\source{\cite{rachelthesis,pandora}}
+\source{\cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}}
 \end{figure}
 
 Given the biases resulting from the use of a single reference genome, an alternative solution is needed. One solution that is rapidly maturing is the use of a \emph{genome graph} to replace a single reference.
@@ -135,10 +135,10 @@ A rich array of algorithms and methods have been proposed for representing and o
 
 \begin{figure}
 \centering
-\includegraphics[width=0.75\columnwidth]{Chapter0/Figs/graph-representation.png}
-\caption{Conceptual representation of a genome graph. \textbf{a}) Variants cause a "bubble", or divergent path. Note, the second bubble represents an insertion/deletion. \textbf{b}) Variation can be arbitrarily nested. In this example, there is a SNP within an insertion.}
+\includegraphics[width=0.6\columnwidth]{Chapter0/Figs/graph-representation.png}
+\caption{Conceptual representation of a genome graph. \textbf{a}) Variants cause a "bubble", or divergent path. Note, the second bubble represents an insertion/deletion. \textbf{b}) Variation can be arbitrarily nested. In this example, there is a SNP within an insertion. \textbf{c}) Haplotype information can be encoded by "colouring" variants and disallowing paths that mix colours.}
 \label{fig:graph-representation}
-\source{\cite{Sherman2020}}
+\source{Reprinted by permission from Springer Nature Customer Service Centre GmbH: Springer Nature Nature Reviews Genetics \cite{Sherman2020}, Copyright © 2020, Springer Nature Limited.}
 \end{figure}
 
 \subsection{Existing methods}
