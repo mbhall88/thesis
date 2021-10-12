@@ -15,9 +15,9 @@
 \section{Publication and collaboration acknowledgements}
 \label{sec:denovo-acknowledge}
 
-The software program that this chapter extends, \pandora{}, is the result of Rachel Colquhoun's DPhil thesis \cite{rachelthesis}.
+The software program that this chapter extends, \pandora{}, was first conceived and implemented in Rachel Colquhoun's DPhil thesis \cite{rachelthesis}.
 
-A preprint describing \pandora{} and the work in this chapter is available at \cite{pandora}. This paper was a collaborative project that spans five years of work by Rachel (first author), myself (second author), Leandro Ishi (third author), and others.
+A paper describing \pandora{} and the work in this chapter is available at \cite{pandora}. This paper was a collaborative project that spans five years of work by Rachel (first author), myself (second author), Leandro Ishi (third author), and others.
 
 My aim here is to clarify what work is solely mine and what was completed in collaboration. Where possible, I have also attempted to indicate within certain sections the work not completed by myself.
 
@@ -33,18 +33,16 @@ The idea for the \ont{} basecalling model comparison in \autoref{sec:denovo-meth
 
 The construction of the pan-genome truth set of variants discussed in \autoref{sec:denovo-empirical-eval} and \autoref{app:pangenome-snp-truth} is the work of Leandro Ishi. It is included in this chapter to aid the reader's understanding of how recall is calculated.
 
-I am forever grateful to Rachel, Leandro, and Zam for their tireless work on this project. I will cherish the \emph{many} insightful whiteboard sessions, cafeteria discussions, and convoluted Slack and GitHub messages.
-
 % ==================================================================
 \section{Introduction}
 
 Standard approaches to variant analysis are effectively a first-order approximation. In such an approximation, samples are considered identical to a selected reference; one aligns sequencing reads to it, identifying apparent variations via the read pileup, and then the reference is modified to get an estimate of the sample's genome. We term such a procedure a "linear" or "single-reference" approach. 
 
-As mentioned in \autoref{sec:pandora-intro}, \pandora{} is a method developed by a previous PhD student in our lab, Rachel Colquhoun \cite{rachelthesis}. \pandora{} works on the principle of approximating a genome as a hierarchical mosaic. At a high level, \pandora{} represents a pan-genome as a mosaic of loci, while at the locus level, it is a mosaic of previously observed genomes. Loci in this context can represent any genomic unit desired; a gene, intergenic region, or a mobile genetic element - the method is agnostic. Sequences from many genomes in a population are collapsed into a graph structure (\autoref{sec:make_prg}) to form a locus population reference graph (\prg{}). All of the pan-genome's \prg{}s are collected into the high-level hierarchical mosaic: a pan-genome reference graph (\panrg{}).
+As mentioned in \autoref{sec:pandora-intro}, \pandora{} is a method developed by a previous PhD student in our lab, Rachel Colquhoun \cite{rachelthesis}. \pandora{} works on the principle of approximating a genome as a hierarchical mosaic. At a high level, \pandora{} represents a pan-genome as a mosaic of loci, while at the locus level, it is a mosaic of previously observed genomes. Loci in this context can represent any genomic unit desired; a gene, intergenic region, or a mobile genetic element - the method is agnostic. Sequences from many genomes in a population are collapsed into a graph structure (\autoref{sec:make_prg}) to form a locus population reference graph (\prg{}). All of the pan-genome's \prg{}s are collected into the high-level pan-genome reference graph (\panrg{}).
 
-When given a set of Illumina or \ont{} sequencing reads, \pandora{} identifies which \panrg{} loci are present and infers a consensus sequence for each. This consensus is the maximum likelihood path through the respective \prg{} and is used as the first-order approximation for the sample. Variants are then genotyped with respect to the consensus sequences. 
+When given a set of Illumina or \ont{} sequencing reads, \pandora{} identifies which \panrg{} loci are present and infers a consensus sequence for each. This consensus is the maximum likelihood path through the respective \prg{} and is used as the first-order approximation for the sample.
 
-While \pandora{} enables the comparison of genomes to a level of detail provided by no other tool, there is still a significant shortcoming: it cannot discover novel mutations. If a sample contains a variant not present in a \prg{}, the best \pandora{} can do is select the path closest to that variant. Therefore, we begin this chapter by describing a method for performing \denovo{} variant discovery in a genome graph and implement it in \pandora{}.
+While \pandora{} - before the work in this chapter - enables the comparison of genomes to a level of detail provided by no other tool, there is still a significant shortcoming: it cannot discover novel mutations. As such, before the work presented in this chapter, \pandora{} was effectively a genotyping tool. If a sample contains a variant not present in a \prg{}, the best \pandora{} can do is select the path closest to that variant. Therefore, we begin this chapter by describing a method for performing \denovo{} variant discovery in a genome graph and implement it in \pandora{} - turning \pandora{} into a two-stage approximation method.
 
 We use a simulated genome and associated \ont{} dataset to show that without this discovery capability, \pandora{} cannot detect variants absent from a \prg{}. In addition, we explore the impact of various parameters on the \denovo{} discovery method and find read depth to have a vital influence.
 
