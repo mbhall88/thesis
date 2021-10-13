@@ -156,7 +156,7 @@ Comparing the truth VCF to the one produced by \pandora{} requires care. The var
 
 We avoid the error-prone conversion of linear coordinates into graph coordinates, or vice versa, by using a coordinate-free evaluation. This approach maps variant \emph{probes} to each other and compares the probe sequences.  
 
-We define a probe-set $P$ as a collection of probes, $p$, where $p$ represents an entry, $e$, in a VCF file, $V$. For each $e \in V$, $p$ is constructed by the concatenation of $l_w$, $e_c$, and $r_w$ (in that order), where $e_c$ is the called variant of $e$ (alternate allele), and $l_w$ and $r_w$ are the sequences, of maximum length $w$, in the VCF reference to the left and right, respectively, of $e_c$. For \pandora{}, the VCF reference is the maximum likelihood sequence, and for the truth VCF it is the simulated genome (without the simulated SNPs).
+We define a probe-set $P$ as a collection of probes, $p$, where $p$ represents an entry, $e$, in a VCF file, $V$. For each $e \in V$, $p$ is constructed by the concatenation of $l_w$, $e_c$, and $r_w$ (in that order), where $e_c$ is the called allele of $e$, and $l_w$ and $r_w$ are the sequences, of maximum length $w$, in the VCF reference to the left and right, respectively, of $e_c$. For \pandora{}, the VCF reference is the maximum likelihood sequence, and for the truth VCF it is the simulated genome (without the simulated SNPs).
 
 A truth probe-set, $P_t$, was constructed from the VCF of variants added to the simulated genome and a query probe-set, $P_q$, from the variants called by \pandora{}. We then mapped all probes from $P_t$ to $P_q$ using \vrb{bwa mem} \cite{li2013}. We classify each probe in $P_t$ as a true positive (TP) if the $e_c$ part of the probe exactly matches the sequence it aligns to in $P_q$, or a false negative (FN) otherwise. Any probe in $P_q$ that does not have a TP truth probe mapped to it is classified as a false positive (FP). We perform this assessment for the "no \denovo{}" and "with \denovo{}" VCF files from \pandora{}. 
 
@@ -169,37 +169,37 @@ We first look at \autoref{fig:denovo-sims}, which shows how precision and recall
 
 The parameter that appears to have the most visible impact on the precision and recall is the coverage (\autoref{fig:denovo-sims-covg}). It is somewhat unsurprising that as coverage increases, so do both precision and recall. However, there does not seem to be any noticeable difference for coverage $\ge 60$.
 
-In the best case, the highest recall and precision values are 0.91 and 1.0, respectively. The data point is the same in both instances, with a coverage of 60, \kmer{} size of 13, number of SNPs 100, and a maximum nesting level of 10. Upon further investigation of the nine missed variants (FNs) for this data point, six were within $2k-1$ positions of the start or end of the locus, one was a null call where the expected (correct) variant had the highest coverage, one was falsely called as a homopolymer deletion, and the remaining missed call never had \denovo{} discovery triggered for that region of the locus. Therefore, only 3/9 FNs for this example (the last three) were discoverable with our \denovo{} method.
+In the best case, the highest recall and precision values are 0.91 and 1.0, respectively. The data point is the same in both instances, with a coverage of 60, \kmer{} size of 13, number of SNPs 100, and a maximum nesting level of 10. Upon further investigation of the nine missed variants (FNs) for this data point, six were within $2k-1$ positions of the start or end of the locus, one was a null call (indicating genotyping uncertainty), one was falsely called as a homopolymer deletion, and the remaining missed call never had \denovo{} discovery triggered for that region of the locus. Therefore, only 3/9 FNs for this example (the last three) were discoverable with our \denovo{} method.
 
-The last point requires some elaboration, as it may not be clear why only three FNs in the best-performing data point were expected to be detected by \denovo{}. In the case of the null genotype call, the correct variant was discovered, and it had higher coverage than the reference allele (26 vs 11); therefore, it is a failure of the genotyping. The homopolymer deletion is both a failure of \denovo{} and the genotyping; \denovo{} (incorrectly) discovered the candidate indel, but the genotyping confirmed it, ignoring the correct allele, which was present. Furthermore, the variant \denovo{} discovery was never initiated for most likely has enough coverage on the reference allele that a candidate region was not detected - by default, we only flag a candidate region if coverage drops below 3.
+The last point requires some elaboration, as it may not be clear why only three FNs in the best-performing data point were expected to be detected by \denovo{}. As a reminder, the role of the \denovo{} component is to collect candidate alleles that are potentially in the sample but missing from the graph; if that set includes the truth, it has succeeded. Whether or not that true allele is genotyped as being present and recorded in the VCF is the job of the sequence inference and genotyping components of \pandora{}. In the case of the null genotype call, the correct variant was discovered, and it had higher coverage than the reference allele (26 vs 11); therefore, it is a failure of the genotyping. The homopolymer deletion is a failure of the genotyping; while \denovo{} (incorrectly) discovered the candidate indel, it also discovered the correct allele, but the genotyping chose the homopolymer deletion. Furthermore, the variant which \denovo{} discovery was never initiated for most likely has enough coverage on the reference allele that a candidate region was not detected - by default, we only flag a candidate region if coverage drops below 3.
 
 In the case of the six missed calls near the ends of loci, these are not detectable by our current \denovo{} method as they occur within $2k-1$ positions of the boundary of a locus. The reason this makes them undetectable is related to our need for start and end anchor \kmer{}s in order to find candidate paths (\autoref{sec:path-enum}). The start and end \kmer{}s are a collection of $k$ \kmer{}s, meaning $2k-1$ positions are required surrounding a candidate region in order to be able to initiate \denovo{} discovery. We will return to this limitation later (\autoref{sec:fw-path-enum}).
 
 \begin{figure}
      \centering
      \begin{subfigure}[b]{0.475\textwidth}
-        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_covg.png}
         \centering
-        \caption{Simulated coverage (read depth)}
+        \caption[position=above]{Simulated coverage (read depth)}
         \label{fig:denovo-sims-covg}
+        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_covg.png}
      \end{subfigure}
      \begin{subfigure}[b]{0.475\textwidth}
          \centering
-        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_num_snps.png}
-         \caption{Number of SNPs simulated}
+          \caption[position=above]{Number of SNPs simulated}
          \label{fig:denovo-sims-num-snps}
-     \end{subfigure}
-     \begin{subfigure}[b]{0.475\textwidth}
-        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_kmer.png}
-        \centering
-        \caption{\denovo{} discovery \kmer{} size}
-        \label{fig:denovo-sims-kmer-size}
+        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_num_snps.png}
      \end{subfigure}
      \begin{subfigure}[b]{0.475\textwidth}
          \centering
-        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_nesting.png}
-         \caption{\prg{} maximum nesting level}
+        \caption[position=above]{\denovo{} discovery \kmer{} size}
+        \label{fig:denovo-sims-kmer-size}
+        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_kmer.png}
+     \end{subfigure}
+     \begin{subfigure}[b]{0.475\textwidth}
+         \centering
+         \caption[position=above]{\prg{} maximum nesting level}
          \label{fig:denovo-sims-nesting}
+        \includegraphics[width=1\linewidth]{Chapter1/Figs/denovo_precrec_nesting.png}
      \end{subfigure}
     \caption{Recall (x-axis) and precision (y-axis) of \denovo{} variants discovered by \pandora{} on a simulated dataset. Subplots style the points by the parameter indicated in the subtitle. Each point indicates a single run of \pandora{} with a unique combination of all parameters.}
         \label{fig:denovo-sims}
@@ -207,7 +207,7 @@ In the case of the six missed calls near the ends of loci, these are not detecta
 
 While not an issue for the best-performing example we have just been examining, missing loci were another common source of FNs. If \pandora{} decides a locus is not present after quasi-mapping (\autoref{sec:pandora-intro}), then it is impossible for \denovo{} to discover any variants in it. We note that the vast majority of missing loci have a length of less than 250 base pairs (\autoref{app:denovo-missing-lengths}).
 
-When looking across all 144 combinations of parameters, we found that, on average, 7.8\% of variants are near the ends of loci and 2.8\% are in absent loci (see \autoref{fig:denovo-errors}). 
+When looking across all 144 combinations of parameters, we found that, on average, 7.8\% of the true variants are near the ends of loci and 2.8\% are in absent loci (see \autoref{fig:denovo-errors}). 
 
 \begin{figure}
     \centering
@@ -233,7 +233,7 @@ Recall    & 0.674 (5)    & 0.671 (13)                                           
 
 For the final analysis of the simulation data, we look at how the precision and recall change with an increasing genotype confidence threshold. We select the data point with the optimal maximum nesting level (5) and \denovo{} \kmer{} size (13), along with 4 SNPs per gene, as this is within the range expected for an \ecoli{} genome. In addition, we include the data points for \pandora{} with no \denovo{} discovery. Next, starting at 0 and increasing by 10 until 700, we filter out any variant with a genotype confidence score below the current threshold. The purpose of this analysis is to illustrate what the cost on recall is for requiring more confident variant calls at different read depths and the impact of including \denovo{} variant discovery in \pandora{}. 
 
-\autoref{fig:denovo-sims-roc} shows the same relationship we saw earlier: coverage has a significant impact on precision and recall. Most importantly, though, it shows that the inclusion of \denovo{} discovery is vital. As shown by the lower-left inset, the best recall achievable for this set of parameters \emph{without} variant discovery is 1.0\%. This is compared to a maximum of 81.5\% when using \denovo{} discovery. Focusing on the 100x coverage data point with \denovo{} discovery, the best recall (81.5\%) leads to a precision of 97.0\%, but the cost of increasing precision to 99\% is decreasing recall to 25\%. 
+\autoref{fig:denovo-sims-roc} shows the same relationship we saw earlier: coverage has a significant impact on precision and recall. Most importantly, though, it shows that the inclusion of \denovo{} discovery is vital for finding novel variants. As shown by the lower-left inset, the best recall achievable for this set of parameters \emph{without} variant discovery is 1.0\%. This is compared to a maximum of 81.5\% when using \denovo{} discovery. Focusing on the 100x coverage data point with \denovo{} discovery, the best recall (81.5\%) leads to a precision of 97.0\%, but the cost of increasing precision to 99\% is decreasing recall to 25\%. 
 
 \begin{figure}
     \centering
