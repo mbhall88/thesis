@@ -238,7 +238,7 @@ For the final analysis of the simulation data, we look at how the precision and 
 \begin{figure}
     \centering
     \includegraphics[width=0.9\textwidth]{Chapter1/Figs/denovo-sims-roc.png}
-    \caption{Precision-recall curve for increasing genotype confidence score thresholds. The curves are coloured by read depth (coverage). Each marker/point is a different genotype confidence threshold, starting with 0 as the right-most value and increasing as the line moves towards the (top) left.}
+    \caption{Precision-recall curve for increasing genotype confidence score thresholds. The curves are coloured by read depth (coverage). Each marker/point is a different genotype confidence threshold, starting with 0 as the right-most value and increasing as the line moves towards the (top) left. Note, the y-axis has been cut to provide more clarity of precision.}
     \label{fig:denovo-sims-roc}
 \end{figure}
 
@@ -254,13 +254,13 @@ We have also shown that, on average, approximately 10.5\% of (simulated) SNPs ar
 
 Having shown, for simulated data, that the \denovo{} variant discovery method indeed alleviates a major limitation of \pandora{}, we turn our attention to evaluating its performance on empirical data. However, rather than the single-sample (\pandora{} \vrb{map}) approach we used for genotyping in \autoref{sec:denovo-sims}, we evaluate \pandora{}'s multi-sample comparison protocol - \compare{}.
 
-The inference of variation within a collection of samples is one of the unique aspects of \pandora{}. As detailed in \autoref{sec:pandora-compare}, the \vrb{compare} routine of \pandora{} genotypes multiple samples against a \panrg{} simultaneously, with the aim of representing variation between the samples in the most succinct manner possible (see \autoref{fig:var-representation}). It does this by selecting a single maximum likelihood path that best approximates the samples under investigation.
+The inference of variation within a collection of samples is one of the unique aspects of \pandora{}. As detailed in \autoref{sec:pandora-compare}, the \vrb{compare} routine of \pandora{} genotypes multiple samples against a \panrg{} simultaneously, with the aim of representing variation between the samples in the most succinct manner possible (see \autoref{fig:var-representation}). It does this by selecting a single maximum likelihood path that best approximates the samples under investigation - akin to an "average" path of the samples.
 
 Evaluating the variant calls from such a graph-based method is by no means trivial. In this section, we aim to compare the variant calls made by \pandora{} against those made by single-reference (linear) methods for both Illumina and \ont{} data.
 
 In keeping with the focus of this chapter, we will also assess the utility of \denovo{} variant discovery within \pandora{}. While we have shown its benefit on simulated data, the \panrg{} used did not contain many of the simulated SNPs. However, we expect many of the SNPs in real data also to be present in a \panrg{} built from a pan-genome of diverse samples. 
 
-\textit{Note: all work in this section is described in full in \cite{pandora}. See \autoref{sec:denovo-acknowledge} for a detailed description of what work was completed by myself.}
+\textit{Note: all work in this section (\autoref{sec:denovo-empirical}) is described in full in \cite{pandora}. See \autoref{sec:denovo-acknowledge} for a detailed description of what work was completed by myself.}
 
 \subsection{Dataset}
 \label{sec:denovo-empirical-data}
@@ -271,7 +271,7 @@ The empirical data we use for this evaluation is a diverse set of 20 \ecoli{} sa
 \subsubsection{References}
 The \panrg{} we use as the reference for \pandora{} was constructed from a combination of \ecoli{} genes and intergenic regions. 23,054 gene MSAs from 350 RefSeq genomes were obtained from the panX database \cite{panx}, while 14,374 intergenic region MSAs from 228 ST131 genomes were collected from \cite{thorpe2018}. \prg{}s were constructed for each locus using \makeprg{} and then all were combined into a single \panrg{} file and indexed with \pandora{}.
 
-As single-reference variant callers cannot use a \panrg{}, we selected 24 reference genomes from five major phylogroups - one phylogroup is not contained within the sample set. These references were selected to be spread across phylogroups, ensuring some were close to our samples. By calling variants for each sample with respect to each reference genome, we can directly view the impact of reference selection on the results of standard variant callers.
+As single-reference variant callers cannot use a \panrg{}, we selected 24 reference genomes from five major phylogroups - one phylogroup is not contained within the sample set. These references were selected to be spread across phylogroups, and where the phylogroup was present in our samples, we chose the nearest RefSeq genome according to Mash, and a phylogenetic tree \cite{pandora}. By calling variants for each sample with respect to each reference genome, we can directly view the impact of reference selection on the results of standard variant callers.
 
 \subsection{Variant calling}
 
@@ -291,9 +291,9 @@ A direct comparison of the VCF files produced by \pandora{} and the single-refer
 
 The first step in this evaluation is the generation of a pan-genome SNP truth set. \autoref{app:pangenome-snp-truth} details the construction of this truth set, resulting in 618,305 SNPs we expect to find amongst the 20 samples.
 
-There are two measures of recall in a pan-genome (see \autoref{app:pangenome-snp-truth}), but of interest to this section is the average allelic recall (AvgAR). Briefly, AvgAR is the average recall of all pan-genome variants. For example, we have three genomes with two pan-genome variants $P1$ and $P2$ between them. $P1$ has the alleles A, G, and T across the three genomes, and $P2$ has alleles C and T. If we find the $P1$ alleles A and T, we have a $P1$ recall of 0.66 (2/3), and if we only find the $P2$ allele C, we have a $P2$ recall of 0.5 (1/2). Therefore, in this example, we have an AvgAR of $\frac{0.66+0.5}{2}=0.58$.
+There are two measures of recall in a pan-genome (see \autoref{app:pangenome-snp-truth}), but of interest to this section is the average allelic recall (AvgAR). Briefly, AvgAR is the average recall of all pan-genome variants. For example, we have three genomes with two pan-genome variants $P_1$ and $P_2$ between them. $P_1$ has the alleles A, A, and T across the three genomes, and $P_2$ has alleles C, T, and T. If we find the $P_1$ alleles A (for only one sample) and T, we have a $P_1$ recall of 0.66 (2/3), and if we only find the $P_2$ allele C, we have a $P_2$ recall of 0.33 (1/3). Therefore, in this example, we have an AvgAR of $\frac{0.66+0.33}{2}=0.5$.
 
-To calculate AvgAR (recall) for tool-reference pairs, we perform the following: i) apply the variant calls for each sample to the reference sequence the calls were made with respect to (giving 20 mutated sequences); ii) we map all truth set probes to these mutated reference sequences with \vrb{bwa mem}; iii) we classify a mapping as TP if the aligned sequences match. For each pan-genome variant, we then count what proportion of its alleles have a TP mapping and calculate AvgAR accordingly. In the end, we have an AvgAR value for each variant caller and reference sequence combination - i.e., 24 AvgAR values for each caller.
+To calculate AvgAR (recall) for tool-reference pairs, we perform the following: i) apply the variant calls for each sample to the reference sequence the calls were made with respect to (giving 20 mutated sequences); ii) we map all truth set probes to these mutated reference sequences with \vrb{bwa mem}; iii) we classify a mapping as TP if the alleles within the aligned sequences match. Then, for each pan-genome variant, we count the proportion of its alleles with a TP mapping and calculate AvgAR accordingly. In the end, we have an AvgAR value for each variant caller and reference sequence combination - i.e., 24 AvgAR values for each caller.
 
 We determine precision in a somewhat similar manner. First, we create probes for each variant in a given VCF, with 150bp of flanking sequence taken from the VCF reference sequence. Second, we map each probe to the sample's assembly sequence. Next, we filter out poor quality mappings or mappings to low-quality regions of the assembly. Finally, each mapping's precision is classified as a continuous score - rather than a binary true or false positive - by dividing the number of matching bases (ignoring the flanking sequences) by the alignment length. Thus, for example, if the called allele is ATG and maps to a sequence ATTG, the precision score is 0.75. Ultimately, we calculate precision as the sum of precision scores, divided by the number of evaluated calls.
 
@@ -315,6 +315,7 @@ Two crucial observations from \autoref{fig:denovo-methylation} are that the use 
     \includegraphics[width=0.9\textwidth]{Chapter1/Figs/pandora_basecaller_roc.png}
     \caption{Effect of \ont{} methylation-aware basecalling on \pandora{} \denovo{} variant discovery. The lines show the average allelic recall (AvgAR; y-axis) and error rate ($1-$precision; x-axis) of \pandora{} with increasing genotype confidence score thresholds with (solid line) and without (dashed line) \denovo{} variant discovery. The red line shows data basecalled with the default \guppy{} model and blue being basecalled with a methylation-aware model.}
     \label{fig:denovo-methylation}
+    \source{Adapted from \cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}. The colour scheme has been altered, along with the wording of some labels. However, none of these changes in any way alters the underlying data or interpretation of that data.}
 \end{figure}
 
 \begin{table}
@@ -364,6 +365,7 @@ Equally impressive is the improvement in recall over \vrb{snippy} using \pandora
      \end{subfigure}
     \caption{Precision-recall curve for variant calls from Illumina (left; \textbf{(a)}) and \ont{} (right; \textbf{(b)}) data for different variant calling tools (colours). Each curve represents increasing genotype confidence thresholds, starting with no filtering in the top-right of each curve and increasing towards the bottom-left. \pandora{} has a single line with (blue) and without (red) \denovo{} variant discovery, which represents the error rate and recall across all 20 samples. The other variant callers are traditional single-reference tools; therefore, each line represents the use of 1/24 reference genomes from across five major \ecoli{} phylogroups. Inset windows are used to give more granularity for error rate in the best performing tools.}
         \label{fig:pandora-roc}
+    \source{Adapted from \cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}. The colour scheme has been altered, along with the wording of some labels, and the inclusion of inset windows. However, none of these changes in any way alters the underlying data or interpretation of that data.}
 \end{figure}
 
 \subsection{Summary}
