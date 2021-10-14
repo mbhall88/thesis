@@ -105,7 +105,7 @@ A benchmark of alignment-free methods for various sequence analysis applications
 
 \subsubsection{Assembly-based methods}
 \label{sec:asm-var-call}
-There are two forms of assembly-based variant calling. In the first, an assembled genome for a sample (or samples) is compared to a reference via whole-genome alignment. Software such as MUMmer \cite{mummer2018} or Minimap2/paftools \cite{li2018} facilitate this assembly-to-assembly alignment and then identify positions where the two disagree. An assembly-based method that is prevalent in bacterial genomics is Parsnp \cite{Treangen2014}, which aligns the \emph{core} genome of assemblies and then calls SNPs (only) \emph{between} those genomes. A major limitation with these types of assembly-based approaches is that there is no sense of the quality of calls. As an assembly naturally has a depth of 1x at all positions, there is no information about variant support - all variants are considered equal in this scheme.
+There are two forms of assembly-based variant calling. In the first, an assembled genome for a sample (or samples) is compared to a reference via whole-genome alignment. Software such as MUMmer \cite{mummer2018} or \vrb{minimap2}/\vrb{paftools} \cite{li2018} facilitate this assembly-to-assembly alignment and then identify positions where the two disagree. An assembly-based method that is prevalent in bacterial genomics is Parsnp \cite{Treangen2014}, which aligns the \emph{core} genome of assemblies and then calls SNPs (only) \emph{between} those genomes. A major limitation with these types of assembly-based approaches is that there is no sense of the quality of calls. As an assembly naturally has a depth of 1x at all positions, there is no information about variant support - all variants are considered equal in this scheme.
 
 The second form of assembly-based variant calling performs assembly and genotyping. Cortex \denovo{} assembles a sample from sequencing reads and genotypes variants at "bubble" sites in its de Bruijn graph \cite{iqbal2012}. It produces variant calls with respect to a provided reference genome and has been used extensively in bacterial genomics \cite{bradley2015,hunt2019,Stasiewicz2015,Young2017,Lees2017}.
 
@@ -154,10 +154,10 @@ The Variation Graph Toolkit (VG) \cite{vg2018} is a suite of tools for construct
 
 As with GraphTyper, the use of seed-and-extend alignment makes the support of long reads unlikely. (We note there have been discussions within the VG GitHub repository for four years about supporting long reads; however, no support has been announced). Another limitation of VG is that in order to produce variant calls, the user must provide a reference genome, again, either inheriting reference bias or requiring a verbose description of simple variants (see \autoref{sec:pandora-compare} for an elaboration of this point).
 
-A significant limitation of VG is its computational resource requirements. As VG attempts to be a "general" method - i.e., it is undirected and allows cycles to support events such as inversions and repeats naturally - it is CPU and disk intensive \cite{strainflair2021,gramtools2021,minigraph2020} to the point of requiring over one terabyte of temporary disk space to construct a graph \cite{gramtools2021}, or not being useable \cite{minigraph2020}.
+A significant limitation of VG is its computational resource requirements. As VG attempts to be a "general" method - i.e., it is undirected and allows cycles to support events such as inversions and repeats naturally - it is CPU and disk intensive \cite{strainflair2021,gramtools2021,minigraph2020} to the point of requiring over one terabyte of temporary disk space to construct a bacterial (\mtb{}) graph \cite{gramtools2021}, or not being useable \cite{minigraph2020}.
 
 \subsubsection{Minigraph}
-Minigraph \cite{minigraph2020} represents a genome graph as a bidirectional graph, which allows cycles. The construction process starts with a single genome and iteratively adds structural variants (SVs; regions of divergence $\ge 100$bp and $\le 100$kbp). In each round, a genome is aligned to the existing graph (a linear sequence in the beginning), augmenting it with sequence from poorly mapped regions (SVs). Minigraph aligns sequencing reads or assemblies to this graph using a modified version of minimap2's minimizer \kmer{}-based seed-and-chain approach \cite{li2018}. As such, Minigraph should inherently support long reads.
+Minigraph \cite{minigraph2020} represents a genome graph as a bidirectional graph, which allows cycles. The construction process starts with a single genome and iteratively adds structural variants (SVs; regions of divergence $\ge 100$bp and $\le 100$kbp). In each round, a genome is aligned to the existing graph (a linear sequence in the beginning), augmenting it with sequence from poorly mapped regions (SVs). Minigraph aligns sequencing reads or assemblies to this graph using a modified version of \vrb{minimap2}'s minimizer \kmer{}-based seed-and-chain approach \cite{li2018}. As such, Minigraph should inherently support long reads.
 
 As Minigraph only incorporates SVs of 100bp or longer, it does not variant-call in the typical sense. It instead produces a BED-like file that calls SVs from the alignment. This is the main limitation of Minigraph: it cannot call variants smaller than 100bp, which are especially important in bacterial genomes. However, the authors acknowledge this limitation and state that the reason for this exclusion is that smaller variants can be easily identified with standard approaches. 
 
@@ -196,7 +196,7 @@ Construction of a \prg{} is accomplished with a recursive cluster and collapse a
 \subsection{Index, quasi-map, and sequence inference}
 
 \subsubsection{$(w,k)$-minimizers}
-A core concept within \pandora{} is $(w,k)$-minimizers \cite{Roberts2004} - interchangeably referred to as minimizer (or minimizing) \kmer{}s. A $(w,k)$-minimizer is a representative \kmer{} from a collection of $w$ consecutive \kmer{}s in a string (sequence). The function used to select this representative can use any ordering one prefers; \pandora{} uses the same ordering strategy as minimap \cite{minimap2016} - the \kmer{} with the minimum invertible integer hash function value. The purpose of minimizer \kmer{}s is to reduce the number of \kmer{}s required to represent a sequence but ensure that if two strings share a significant exact match, they will share at least one minimizer. Additionally, \pandora{} requires $w\le k$, ensuring all \prg{} bases are covered by a minimizer (except, at most, the first and last $w-1$ bases).
+A core concept within \pandora{} is $(w,k)$-minimizers \cite{Roberts2004} - interchangeably referred to as minimizer (or minimizing) \kmer{}s. A $(w,k)$-minimizer is a representative \kmer{} from a collection of $w$ consecutive \kmer{}s in a string (sequence). \pandora{} uses the same strategy as minimap \cite{minimap2016} - the \kmer{} with the minimum invertible integer hash function value is selected as the minimizer. The purpose of minimizer \kmer{}s is to reduce the number of \kmer{}s required to represent a sequence but ensure that if two strings share a significant exact match, they will share at least one minimizer. Additionally, \pandora{} requires $w\le k$, ensuring all \prg{} bases are covered by a minimizer (except, at most, the first and last $w-1$ bases).
 
 \subsubsection{Indexing}
 Each \prg{} is represented within \pandora{} as a minimizer \kmer{} graph. This graph is constructed by walking all paths in the \prg{} and selecting minimizer \kmer{}s as outlined above. As $w\le k$, walking each path ensures a minimizer covers every site within the graph. The index of a \panrg{} is a map from a minimizer \kmer{} to the position(s) and \prg{}(s) it occurs in. 
@@ -227,18 +227,18 @@ To allow this multi-sample variation inference, \pandora{} infers the maximum li
      \begin{subfigure}[b]{0.95\textwidth}
         \includegraphics[width=0.95\columnwidth]{Chapter0/Figs/map_variation_representation.png}
         \centering
-        \caption{Single-sample variation inference}
+        \caption{Single-sample variant representation}
         \label{fig:map-var-representation}
         \source{\cite{rachelthesis}}
      \end{subfigure}
      \begin{subfigure}[b]{0.95\textwidth}
          \centering
         \includegraphics[width=0.95\columnwidth]{Chapter0/Figs/variant_representation.png}
-         \caption{Multi-sample variation inference}
+         \caption{Multi-sample variant representation}
          \label{fig:var-representation}
          \source{\cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}}
      \end{subfigure}
-     \caption{The impact of sequence inference on variant representation. In both \textbf{(a)} and \textbf{(b)} the left panel (i) shows the \prg{}. \textbf{a)} the blue line indicates the inferred sequence (maximum likelihood path). ii and iii show how the choice of this sequence affects the representation of variant sites when genotyping. \textbf{b}) the black line indicates the multi-sample inferred sequence, while the blue and orange lines are two different samples. ii and iii show that small differences between the samples are represented as small variants by inferring the sequence that is maximally close to the two samples (iii).}
+     \caption{The impact of reference choice on variant representation. In both \textbf{(a)} and \textbf{(b)} the left panel (i) shows the \prg{}. \textbf{a)} the blue line indicates the reference sequence. ii and iii show how the choice of this sequence affects the representation of variant sites when genotyping. \textbf{b}) the black line indicates the reference sequence, while the blue and orange lines are two different samples. ii and iii show that small differences between the samples are represented as small variants by selecting the sequence that is maximally close to the two samples (iii).}
      \label{fig:pandora-var-representation}
 \end{figure}
 
