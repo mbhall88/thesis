@@ -403,7 +403,7 @@ Despite the impact of \ont{} systematic errors on \denovo{} variant discovery, w
 \noindent
 Without the addition of \denovo{} variant discovery, \pandora{}'s recall is higher than all other variant callers tested - although only marginally higher than \vrb{medaka}. This shows the power of genome graphs to provide access to sections of the genome previously unavailable to single-reference methods. Now that we have provided the functionality for \pandora{} to perform novel variant detection, the door is open to access even more of the pan-genome. 
 
-One application that stands to benefit from pan-genome graphs is prospective surveillance of a bacterial population. The \panrg{} used by \pandora{} is a stable reference capable of handling an evolving cohort and can detect if a strain appears with a new locus. For example, the appearance of the $bla_{NDM-1}$ gene - which confers resistance to carbapenem in Gram-negative bacteria - on plasmids \cite{Yong2009,Kumarasamy2010} might have been more readily detected with the use of a \panrg{}. In this circumstance, hard reference bias can become quite dangerous, and methods without this limitation will more quickly detect concerning loci.
+One application that stands to benefit from pan-genome graphs is prospective surveillance of a bacterial population. Current approaches to such surveillance perform multiple levels of genome alignment in order to find the most appropriate reference for a given sample \cite{Gorrie2021}. In contrast, the \panrg{} used by \pandora{} is a stable reference capable of handling an evolving cohort.
 
 % ==================================================================
 \section{Limitations and future work}
