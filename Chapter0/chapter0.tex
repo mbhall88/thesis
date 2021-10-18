@@ -194,6 +194,7 @@ Construction of a \prg{} is accomplished with a recursive cluster and collapse a
 \end{figure}
 
 \subsection{Index, quasi-map, and sequence inference}
+\label{sec:pandora-map-intro}
 
 \subsubsection{$(w,k)$-minimizers}
 A core concept within \pandora{} is $(w,k)$-minimizers \cite{Roberts2004} - interchangeably referred to as minimizer (or minimizing) \kmer{}s. A $(w,k)$-minimizer is a representative \kmer{} from a collection of $w$ consecutive \kmer{}s in a string (sequence). \pandora{} uses the same strategy as minimap \cite{minimap2016} - the \kmer{} with the minimum invertible integer hash function value is selected as the minimizer. The purpose of minimizer \kmer{}s is to reduce the number of \kmer{}s required to represent a sequence but ensure that if two strings share a significant exact match, they will share at least one minimizer. Additionally, \pandora{} requires $w\le k$, ensuring all \prg{} bases are covered by a minimizer (except, at most, the first and last $w-1$ bases).

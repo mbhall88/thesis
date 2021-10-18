@@ -54,27 +54,23 @@ Finally, we use an empirical dataset consisting of 20 diverse \ecoli{} samples t
 
 We define a method that extends \pandora{}, with a subcommand \vrb{discover}, to allow for the \denovo{} discovery of variants not present in a \prg{}. We implemented it within the \pandora{} codebase in the C++ programming language. 
 
-\pandora{}, as implemented by Rachel Colquhoun (before this chapter), approximates a novel genome as a mosaic of prior genomes - the nearest path through the \panrg{}. In this chapter, we add two further steps: first, locating regions of the mosaic which were not supported by reads ("candidate regions"), and second, performing a particular type of local assembly in those regions.
+\pandora{}, as implemented by Rachel Colquhoun (before this chapter), approximates a novel genome as a mosaic of prior genomes - the nearest path through the \panrg{}. In this chapter, we add two further steps: first, locating regions of the mosaic which were not supported by reads (\emph{candidate regions}), and second, performing a particular type of local assembly in those regions.
 
 The first step of \denovo{} variant discovery in genome graphs is finding the candidate regions that show evidence of dissimilarity from the sample's reads.
 
 \subsection{Finding candidate regions}
 \label{sec:denovo-candidate-regions}
 
-The input required for finding candidate regions are a locus \prg{} (node), $n$, within the \pandora{} \panrg{}; the maximum likelihood path of $n$, as both sequence $mlp_n$ and (minimizer) \kmer{}s, $kmlp_n$; and a padding size, $w$, for the number of positions surrounding the candidate region to retrieve.
+After quasi-mapping the sample reads to the \panrg{} and inferring the maximum likelihood path (a path of minimizing \kmer{}s; $kmlp_n$) for each locus \prg{}, $n$ - as explained previously in \autoref{sec:pandora-map-intro} - we discover candidate regions in this path. To do so, we transform $kmlp_n$ into a sequence, $mlp_n$, and use the \kmer{} coverage in $kmlp_n$ as an approximation to the read coverage of each base in $mlp_n$.
 
-We define a candidate region, $r$, as an interval within $mlp_n$ where read depth (coverage) is less than a given threshold, for less than $m$ consecutive positions. $m$ acts to restrict the size of variants we can detect. If set too large, the following steps become much slower due to the combinatorial expansion of possible paths. We note that coverage is actually stored on $kmlp_n$, but is stored for the whole \kmer{}. We convert the coverage on $kmlp_n$ into per-position coverage on $mlp_n$ and use that to identify low-coverage segments as described.  
+We define a candidate region, $r$, as an interval within $mlp_n$ where read depth (coverage) is less than a given threshold for less than $m$ consecutive positions. $m$ acts to restrict the size of variants we can detect. If set too large, the following steps become much slower due to the combinatorial expansion of possible paths. 
 
 \subsection{Enumerating paths through candidate regions}
 \label{sec:path-enum}
 
-For all candidate regions, $r$, we construct a \dbg{} $G_r$ from the subsequences of the reads that overlap $r$, using the GATB library \cite{gatb2014}. 
+For all candidate regions, $r$, we construct a \dbg{} $G_r$ from the subsequences of the reads that overlap $r$, using the GATB library \cite{gatb2014}. We define $A_L$ and $A_R$ as sets of \kmer{}s to the left and right of $r$ in the maximum likelihood path, $mlp_n$. They are anchors to allow insertion of new sequences found by \denovo{} discovery into the \prg{}. Each set has a maximum size of $k$. 
 
-We define $A_L$ and $A_R$ as sets of \kmer{}s to the left and right of $r$ in the maximum likelihood path, $mlp_n$. They are anchors to allow insertion of new sequences found by \denovo{} discovery into the \prg{}. Each set has a maximum size of $k$.
-
-We abandon \denovo{} discovery if no pairwise combination of $A_L$ and $A_R$ exists in the \dbg{} $G_r$.
-
-We use sets of \kmer{}s for $A_L$ and $A_R$, rather than a single anchor \kmer{}, to provide redundancy in the case where sequencing errors cause some anchors to not be in $G_r$. We define the start anchor \kmer{}, $a_L$, as the first (left-most) $a_L \in A_L \land a_L \in G_r$. Likewise, we define the end anchor \kmer{}, $a_R$, as the left-most $a_R \in A_R \land a_R \in G_r$.
+We use sets of \kmer{}s for $A_L$ and $A_R$, rather than a single anchor \kmer{}, to provide redundancy in the case where sequencing errors cause some anchors to not be in $G_r$. We define the start anchor \kmer{}, $a_L$, as the first (left-most) $a_L \in A_L \land a_L \in G_r$. Likewise, we define the end anchor \kmer{}, $a_R$, as the left-most $a_R \in A_R \land a_R \in G_r$. We abandon \denovo{} discovery if no pairwise combination of $A_L$ and $A_R$ exists in the \dbg{} $G_r$.
 
 Now that we have two anchor \kmer{}s, $a_L$ and $a_R$, our goal is to find all valid paths between these anchors in $G_r$.
 
@@ -93,9 +89,9 @@ In order to reduce the path-space within $G_r$, we prune paths based on multiple
 
 In addition to $T_r$, obtained by performing DFS on $G_r$, we produce a distance map $D_r$ that results from running reversed breadth-first search (BFS) on $G_r$, beginning from the \emph{end} anchor ($a_R$). We say reversed BFS as we explore the \emph{predecessors} of each node, rather than the successors. $D_r$ is a binary search tree where each node in the tree represents a \kmer{} in $G_r$ that is reachable from $a_R$ via reversed BFS. Each node additionally has an integer that describes the shortest path from that node to $a_R$.
 
-We use $D_r$ to prune the path-space as follows. As we walk the candidate path ($p_r$) in \autoref{sec:path-enum}, for each node (\kmer{}; $v$) in the \dbg{} $G_r$, starting at $a_L$, we lookup $v$ in $D_r$ to see if $a_R$ can be reached in a minimum of $i$ nodes, where $i$ is defined as the maximum allowed path length minus the number of nodes walked to reach $v$. If one of these conditions is not met, we abandon $p_r$. 
+We use $D_r$ to prune the path-space as follows. As we walk the candidate path ($p_r$) in \autoref{sec:path-enum}, for each node (\kmer{}; $v$) in the \dbg{} $G_r$, starting at $a_L$, we lookup $v$ in $D_r$ to see if $a_R$ can be reached in a maximum of $i$ nodes, where $i$ is defined as the maximum allowed path length minus the number of nodes walked to reach $v$. If this condition is not met, we abandon $p_r$. 
 
-The advantage of this pruning strategy is that we never explore paths that will not reach our endpoint. Additionally, we will discard any path once we have made too many loops around a graph cycle.
+The advantage of this pruning strategy is that we never explore paths that will not reach our endpoint while satisfying the maximum allowed path length. Additionally, we will discard any path once we have made too many loops around a graph cycle.
 
 \noindent
 To illustrate the benefit of this pruning algorithm, we present an example in \autoref{fig:pruning}. This graph represents $G_r$ ($T_r$ more specifically, as only nodes reachable from $a_L$ are present), with the nodes representing \kmer{}s. The anchor \kmer{}s $a_L$ and $a_R$ are coloured red, and the numbers associated with each node represent the distance map $D_r$ - indicating the length of the shortest path to $a_R$ from that node. The lighter blue nodes and dashed edges indicate nodes that would cause us to abandon a path walk. For example, if we have stipulated a maximum allowed path length of 4, starting at $a_L$, whenever we reach a light blue node, the number of steps taken to reach that node, plus the length of the shortest path from that node to $a_R$, will always be greater than 4. Take the path $a_L \rightarrow B \rightarrow C \rightarrow E \rightarrow F$; we have taken four steps to reach this node, yet the shortest path to $a_R$ is 2, meaning, in the best-case scenario, $p_r$ would have length 6. In this way, we prevent needlessly walking the section of the graph $F \rightarrow G \rightarrow H \rightarrow I$. While this is a small example, in real graphs, the saving is potentially huge.
@@ -282,7 +278,7 @@ To produce a multi-sample VCF file of variants for \pandora{} we follow a somewh
 We compare the Illumina variant calls from \pandora{} against those from Samtools \cite{samtools2009} and Snippy (\url{https://github.com/tseemann/snippy}) (which is a wrapper around Freebayes \cite{Garrison2012}). The \ont{} variant callers we evaluate against are Medaka (\url{https://github.com/nanoporetech/medaka}) and Nanopolish \cite{Loman2015}. Each variant caller is run on all 20 samples with all 24 reference genomes. 
 
 \noindent
-In total, we produce 480 VCFs for each linear variant caller and 20 (one per sample) for \pandora{}.
+In total, we produce 480 VCFs for each linear variant caller and one multi-sample VCF for \pandora{}.
 
 \subsection{Evaluation}
 \label{sec:denovo-empirical-eval}
@@ -293,7 +289,7 @@ The first step in this evaluation is the generation of a pan-genome SNP truth se
 
 There are two measures of recall in a pan-genome (see \autoref{app:pangenome-snp-truth}), but of interest to this section is the average allelic recall (AvgAR). Briefly, AvgAR is the average recall of all pan-genome variants. For example, we have three genomes with two pan-genome variants $P_1$ and $P_2$ between them. $P_1$ has the alleles A, A, and T across the three genomes, and $P_2$ has alleles C, T, and T. If we find the $P_1$ alleles A (for only one sample) and T, we have a $P_1$ recall of 0.66 (2/3), and if we only find the $P_2$ allele C, we have a $P_2$ recall of 0.33 (1/3). Therefore, in this example, we have an AvgAR of $\frac{0.66+0.33}{2}=0.5$.
 
-To calculate AvgAR (recall) for tool-reference pairs, we perform the following: i) apply the variant calls for each sample to the reference sequence the calls were made with respect to (giving 20 mutated sequences); ii) we map all truth set probes to these mutated reference sequences with \vrb{bwa mem}; iii) we classify a mapping as TP if the alleles within the aligned sequences match. Then, for each pan-genome variant, we count the proportion of its alleles with a TP mapping and calculate AvgAR accordingly. In the end, we have an AvgAR value for each variant caller and reference sequence combination - i.e., 24 AvgAR values for each caller.
+To calculate AvgAR (recall) for tool-reference pairs, we perform the following: i) apply the variant calls for each sample to the reference sequence the calls were made with respect to (giving 20 mutated sequences); ii) we map all truth set probes to these mutated reference sequences with \vrb{bwa mem}; iii) we classify a mapping as TP if the alleles within the aligned sequences match. Then, for each pan-genome variant, we count the proportion of its alleles with a TP mapping and calculate AvgAR accordingly. In the end, we have an AvgAR value for each variant caller and reference sequence combination - i.e., 24 AvgAR values for each linear caller, and one value for \pandora{}.
 
 We determine precision in a somewhat similar manner. First, we create probes for each variant in a given VCF, with 150bp of flanking sequence taken from the VCF reference sequence. Second, we map each probe to the sample's assembly sequence. Next, we filter out poor quality mappings or mappings to low-quality regions of the assembly. Finally, each mapping's precision is classified as a continuous score - rather than a binary true or false positive - by dividing the number of matching bases (ignoring the flanking sequences) by the alignment length. Thus, for example, if the called allele is ATG and maps to a sequence ATTG, the precision score is 0.75. Ultimately, we calculate precision as the sum of precision scores, divided by the number of evaluated calls.
 
@@ -340,7 +336,7 @@ Given the dramatic improvement in precision and recall from using the methylatio
 
 We now compare the precision and recall of \pandora{} on Illumina and \ont{} data against two single-reference variant callers for each technology. For the \ont{} analysis, we use the reads basecalled with the methylation-aware model (\autoref{sec:denovo-methylation}). In addition, we run \pandora{} with and without \denovo{} variant discovery to see the impact of the work in this chapter.
 
-We use AvgAR as the measure of recall (see \autoref{sec:denovo-empirical-eval}), error rate as the measure of precision ($1-$precision), and apply increasing genotype confidence thresholds to illustrate the precision-recall trade-off. 
+We use AvgAR as the measure of recall (see \autoref{sec:denovo-empirical-eval}) and apply increasing genotype confidence thresholds to illustrate the precision-recall trade-off. 
 
 The results of this analysis are shown in \autoref{fig:pandora-roc}. For both sequencing technologies, \pandora{} with \denovo{} variant discovery has the highest (unfiltered) recall of 85.82\% on Illumina data and 85.51\% on \ont{}. In terms of error rate, \vrb{snippy} had the lowest Illumina unfiltered value of 0.01\% (with reference CP010170.1), while \pandora{} without \denovo{} variant discovery had the lowest \ont{} unfiltered rate of 0.19\%. 
 
