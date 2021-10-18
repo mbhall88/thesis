@@ -160,6 +160,7 @@ Although we only use SNPs for identifying transmission clusters (\autoref{sec:ma
 In \autoref{sec:snp-dist}, we fit linear models that describe the relationship between the Illumina and \ont{} SNP distance between pairs of samples. Using the equations for each model, we can infer a \ont{} threshold ($y$) corresponding to a given Illumina threshold ($x$). Next, we investigate how well these model-based thresholds perform by using the cluster similarity metrics defined in \autoref{sec:cluster-similarity}. To assess the performance, we look at the SACR, SACP, and XCR for all threshold values surrounding the model-based threshold and see whether the model-based threshold performs best.
 
 \subsection{BCFtools}
+\label{app:dist-sweep-bcftools}
 
 For the Illumina SNP thresholds 0, 2, 5, and 12, the corresponding \bcftools{} model-inferred thresholds are 1, 3, 5, and 10 (red vertical dashed lines in \autoref{fig:bcftools-dist-sweep}). Based on the threshold sweep in \autoref{fig:bcftools-dist-sweep}, the best SNP distance thresholds to use for \bcftools{} are deemed 0, 2, 5, and 11 as these provide the best balance between the three similarity metrics.
 
