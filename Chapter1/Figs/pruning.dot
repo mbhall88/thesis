@@ -1,20 +1,32 @@
-graph G {
-    edge [penwidth=3.0,color="#2e3440"];
+digraph G {
+    edge [penwidth=3.0,color="#2e3440",arrowsize=0.33];
     node [style=filled];
     aL[label=<a<SUB>L</SUB>>,style=filled,color="#d08770"];
     aR[label=<a<SUB>R</SUB>>,style=filled,color="#d08770"];
     {node [color="#5e81ac"] B C E }
     {node [color="#81a1c1"] F G H I D J}
-    aL -- J [style=dashed];
-    aL -- B;
-    B   -- C;
-    C   -- E;
-    E   -- F [style=dashed];
-    C   -- aR;
-    E   -- aR;
-    F   -- G [style=dashed];
-    G   -- H [style=dashed];
-    H   -- I [style=dashed];
-    I   -- aR [style=dashed];
-    aR -- D [style=dashed];
+    aL -> J [style=dashed;];
+    J -> aL [style=dashed;];
+    aL -> B;
+    B -> aL;
+    B   -> C;
+    C   -> B;
+    C   -> E;
+    E   -> C;
+    E   -> F [style=dashed];
+    F   -> E [style=dashed];
+    C   -> aR;
+    aR   -> C;
+    E   -> aR;
+    aR   -> E;
+    F   -> G [style=dashed];
+    G   -> F [style=dashed];
+    G   -> H [style=dashed];
+    H   -> G [style=dashed];
+    H   -> I [style=dashed];
+    I   -> H [style=dashed];
+    I   -> aR [style=dashed];
+    aR   -> I [style=dashed];
+    aR -> D [style=dashed];
+    D -> aR [style=dashed];
 }
