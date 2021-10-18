@@ -45,6 +45,8 @@
 
 % allow \vrb{something} to function the same as \texttt{something} 
 % https://tex.stackexchange.com/questions/475230/inline-environment-shortcut-like-blah
+\usepackage{fancyvrb}
+\usepackage{fvextra} % allows line breaks in verbatim https://tex.stackexchange.com/a/451397/133785
 \newcommand{\vrb}{\texttt}
 % euro symbol as \euro
 \usepackage{eurosym}
@@ -93,9 +95,6 @@
 
 % add frames around figure environment
 \usepackage{framed}
-
-\usepackage{fancyvrb}
-\usepackage{fvextra} % allows line breaks in verbatim https://tex.stackexchange.com/a/451397/133785
 
 % ********************************** Tables ************************************
 \usepackage{booktabs} % For professional looking tables

@@ -138,7 +138,7 @@ The third strategy is the one we ended up using - removing loci with $\ge 30\%$ 
 
 % ===========================================================
 
-\section{Precision and recall of all variant calls from \pandora{}}
+\section{Precision and recall of all \pandora{} variant calls}
 \label{app:pandora-all-vars}
 
 Although we only use SNPs for identifying transmission clusters (\autoref{sec:map-var-calls}), we also assessed \pandora{} variant calls for all variants - SNPs and indels up to a length of 20bp. The precision and recall using the same filters as in \autoref{sec:map-var-calls} are shown in \autoref{fig:pandora-filters-all}. We did this for the sake of future work that might be interested in using \pandora{} indel calls, such as predicting drug resistance. Again, the sparse \prg{} gave better precision and recall than the dense one. The use of all variants leads to a median recall improvement to 75.48\% (all filters) - up 3.49\% from SNPs only. On the other hand, precision sees a drop to 95.90\% (median) when assessing all variants - compared to 100\% for SNPs only. Given the large drop in precision, it is clear that \pandora{} indel-calling needs further improvement. However, indel-calling (deletions especially) is a known limitation of \ont{} \cite{jain2018,wick2019} and others have seen precision drops when adding indels to the evaluation \cite{clair2020}.
