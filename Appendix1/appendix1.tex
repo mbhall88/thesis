@@ -27,7 +27,7 @@ The circular consensus was called via the SMRTlink graphical user interface vers
 
 % ===========================================================
 
-\section{Benchmark of long read genome assembly methods for \mtb{}}
+\section{Benchmarking long read assembly methods for \mtb{}}
 \label{app:asm}
 We chose samples with greater than 30x coverage across all three sequencing technologies to produce high-quality assemblies. In total, this left 9 Malagasy samples. There have been many new genome assembly methods produced since the last known assessment of \mtb{} long-read assemblies \cite{bainomugisa2018}. As such, we compare five assemblers and select the one that produces the most consistently good results. The reason for this comparison is that different assembly algorithms can produce quite varied results depending on sequencing technology used, species, or computational resource availability \cite{demaio2019,wick2020}.  
 
@@ -154,7 +154,7 @@ Although we only use SNPs for identifying transmission clusters (\autoref{sec:ma
 
 % ===========================================================
 
-\section{Selecting \ont{} SNP thresholds to define transmission clusters}
+\section{Selecting \ont{} SNP thresholds for transmission clusters}
 \label{app:dist-sweep}
 
 In \autoref{sec:snp-dist}, we fit linear models that describe the relationship between the Illumina and \ont{} SNP distance between pairs of samples. Using the equations for each model, we can infer a \ont{} threshold ($y$) corresponding to a given Illumina threshold ($x$). Next, we investigate how well these model-based thresholds perform by using the cluster similarity metrics defined in \autoref{sec:cluster-similarity}. To assess the performance, we look at the SACR, SACP, and XCR for all threshold values surrounding the model-based threshold and see whether the model-based threshold performs best.

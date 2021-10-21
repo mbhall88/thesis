@@ -101,7 +101,6 @@ year = {2011},
 issue_date = {2/1/2011},
 publisher = {JMLR.org},
 volume = {12},
-number = {null},
 issn = {1532-4435},
 abstract = {Scikit-learn is a Python module integrating a wide range of state-of-the-art machine
 learning algorithms for medium-scale supervised and unsupervised problems. This package
@@ -113,7 +112,8 @@ can be downloaded from http://scikit-learn.sourceforge.net.},
 journal = {J. Mach. Learn. Res.},
 month = nov,
 pages = {2825–2830},
-numpages = {6}
+numpages = {6},
+doi = {}
 }
 
 @article{stimson2019, 
@@ -179,6 +179,7 @@ volume = {84}
   address = {Pasadena, CA USA},
   year =      {2008},
   editor =    {Ga\"el Varoquaux and Travis Vaught and Jarrod Millman},
+  url = {https://www.osti.gov/biblio/960616}
 }
 
 @article{marin2021, 
@@ -188,8 +189,7 @@ title = {{Genomic sequence characteristics and the empiric accuracy of short-rea
 author = {Marin, Maximillian and Vargas, Roger and Harris, Michael and Jeffrey, Brendan and Epperson, L. Elaine and Durbin, David and Strong, Michael and Salfinger, Max and Iqbal, Zamin and Akhundova, Irada and Vashakidze, Sergo and Crudu, Valeriu and Rosenthal, Alex and Farhat, Maha Reda}, 
 journal = {bioRxiv}, 
 doi = {10.1101/2021.04.08.438862}, 
-abstract = {{Short-read whole genome sequencing (WGS) is a vital tool for clinical applications and basic research. Genetic divergence from the reference genome, repetitive sequences, and sequencing bias, reduce the performance of variant calling using short-read alignment, but the loss in recall and specificity has not been adequately characterized. For the clonal pathogen Mycobacterium tuberculosis (Mtb), researchers frequently exclude 10.7\% of the genome believed to be repetitive and prone to erroneous variant calls. To benchmark short-read variant calling, we used 36 diverse clinical Mtb isolates dually sequenced with Illumina short-reads and PacBio long-reads. We systematically study the short-read variant calling accuracy and the influence of sequence uniqueness, reference bias, and GC content. Reference based Illumina variant calling had a recall ≥89.0\% and precision ≥98.5\% across parameters evaluated. The best balance between precision and recall was achieved by tuning the mapping quality (MQ) threshold, i.e. confidence of the read mapping (recall 85.8\%, precision 99.1\% at MQ ≥ 40). Masking repetitive sequence content is an alternative conservative approach to variant calling that maintains high precision (recall 70.2\%, precision 99.6\% at MQ≥40). Of the genomic positions typically excluded for Mtb, 68\% are accurately called using Illumina WGS including 52 of the 168 PE/PPE genes (34.5\%). We present a refined list of low confidence regions and examine the largest sources of variant calling error. Our improved approach to variant calling has broad implications for the use of WGS in the study of Mtb biology, inference of transmission in public health surveillance systems, and more generally for WGS applications in other organisms.}}, 
-pages = {2021.04.08.438862}
+abstract = {{Short-read whole genome sequencing (WGS) is a vital tool for clinical applications and basic research. Genetic divergence from the reference genome, repetitive sequences, and sequencing bias, reduce the performance of variant calling using short-read alignment, but the loss in recall and specificity has not been adequately characterized. For the clonal pathogen Mycobacterium tuberculosis (Mtb), researchers frequently exclude 10.7\% of the genome believed to be repetitive and prone to erroneous variant calls. To benchmark short-read variant calling, we used 36 diverse clinical Mtb isolates dually sequenced with Illumina short-reads and PacBio long-reads. We systematically study the short-read variant calling accuracy and the influence of sequence uniqueness, reference bias, and GC content. Reference based Illumina variant calling had a recall ≥89.0\% and precision ≥98.5\% across parameters evaluated. The best balance between precision and recall was achieved by tuning the mapping quality (MQ) threshold, i.e. confidence of the read mapping (recall 85.8\%, precision 99.1\% at MQ ≥ 40). Masking repetitive sequence content is an alternative conservative approach to variant calling that maintains high precision (recall 70.2\%, precision 99.6\% at MQ≥40). Of the genomic positions typically excluded for Mtb, 68\% are accurately called using Illumina WGS including 52 of the 168 PE/PPE genes (34.5\%). We present a refined list of low confidence regions and examine the largest sources of variant calling error. Our improved approach to variant calling has broad implications for the use of WGS in the study of Mtb biology, inference of transmission in public health surveillance systems, and more generally for WGS applications in other organisms.}}
 }
 
 @article{bainomugisa2018, 
@@ -333,14 +333,15 @@ volume = {34}
 }
 
 @article{Jajou2019, 
-year = {2019}, 
-keywords = {pipeline,mtb}, 
-title = {{Towards standardisation: comparison of five whole genome sequencing (WGS) analysis pipelines for detection of epidemiologically linked tuberculosis cases}}, 
-author = {Jajou, Rana and Kohl, Thomas A and Walker, Timothy and Norman, Anders and Cirillo, Daniela Maria and Tagliani, Elisa and Niemann, Stefan and Neeling, Albert de and Lillebaek, Troels and Anthony, Richard M and Soolingen, Dick van}, 
-journal = {Eurosurveillance}, 
-url = {https://www.eurosurveillance.org/content/10.2807/1560-7917.ES.2019.24.50.1900130}, 
-number = {50}, 
-volume = {24}
+   author = "Jajou, Rana and Kohl, Thomas A and Walker, Timothy and Norman, Anders and Cirillo, Daniela Maria and Tagliani, Elisa and Niemann, Stefan and de Neeling, Albert and Lillebaek, Troels and Anthony, Richard M and van Soolingen, Dick",
+   title = "Towards standardisation: comparison of five whole genome sequencing (WGS) analysis pipelines for detection of epidemiologically linked tuberculosis cases",
+   journal = "Eurosurveillance",
+   year = "2019",
+   volume = "24",
+   number = "50", 
+   eid = 1900130,
+   url = "https://www.eurosurveillance.org/content/10.2807/1560-7917.ES.2019.24.50.1900130",
+   doi = "10.2807/1560-7917.ES.2019.24.50.1900130" 
 }
 
 @article{samtools2009, 
@@ -678,7 +679,7 @@ volume = {41}
 @article{garg2021, 
 year = {2021}, 
 keywords = {assembly,pacbio,human,long-reads}, 
-title = {{Chromosome-scale, haplotype-resolved assembly of human genomes}}, 
+title = {{Chromosome-scale, haplotype-resolved assembly of human\\ genomes}}, 
 author = {Garg, Shilpa and Fungtammasan, Arkarachai and Carroll, Andrew and Chou, Mike and Schmitt, Anthony and Zhou, Xiang and Mac, Stephen and Peluso, Paul and Hatas, Emily and Ghurye, Jay and Maguire, Jared and Mahmoud, Medhat and Cheng, Haoyu and Heller, David and Zook, Justin M. and Moemke, Tobias and Marschall, Tobias and Sedlazeck, Fritz J. and Aach, John and Chin, Chen-Shan and Church, George M. and Li, Heng}, 
 journal = {Nature Biotechnology}, 
 issn = {1087-0156}, 
@@ -805,19 +806,18 @@ volume = {23}
 }
 
 @article{antipov2016, 
-year = {2016}, 
-keywords = {assembly,hybrid-assembly,software}, 
-title = {{hybrid SPA des : an algorithm for hybrid assembly of short and long reads}}, 
-author = {Antipov, Dmitry and Korobeynikov, Anton and McLean, Jeffrey S. and Pevzner, Pavel A.}, 
-journal = {Bioinformatics}, 
-issn = {1367-4803}, 
-doi = {10.1093/bioinformatics/btv688}, 
-pmid = {26589280}, 
-pmcid = {PMC4907386}, 
-abstract = {{Motivation: Recent advances in single molecule real-time (SMRT) and nanopore sequencing technologies have enabled high-quality assemblies from long and inaccurate reads. However, these approaches require high coverage by long reads and remain expensive. On the other hand, the inexpensive short reads technologies produce accurate but fragmented assemblies. Thus, a hybrid approach that assembles long reads (with low coverage) and short reads has a potential to generate high-quality assemblies at reduced cost. Results: We describe hybrid SPA des algorithm for assembling short and long reads and benchmark it on a variety of bacterial assembly projects. Our results demonstrate that hybrid SPA des generates accurate assemblies (even in projects with relatively low coverage by long reads) thus reducing the overall cost of genome sequencing. We further present the first complete assembly of a genome from single cells using SMRT reads. Availability and implementation:hybrid SPA des is implemented in C++ as a part of SPAdes genome assembler and is publicly available at http://bioinf.spbau.ru/en/spades Contact:d.antipov@spbu.ru Supplementary information:supplementary data are available at Bioinformatics online.}}, 
-pages = {1009--1015}, 
-number = {7}, 
-volume = {32}
+    author = {Antipov, Dmitry and Korobeynikov, Anton and McLean, Jeffrey S. and Pevzner, Pavel A.},
+    title = "{hybridSPAdes: an algorithm for hybrid assembly of short and long reads}",
+    journal = {Bioinformatics},
+    volume = {32},
+    number = {7},
+    pages = {1009-1015},
+    year = {2015},
+    month = {11},
+    issn = {1367-4803},
+    doi = {10.1093/bioinformatics/btv688},
+    url = {https://doi.org/10.1093/bioinformatics/btv688},
+    eprint = {https://academic.oup.com/bioinformatics/article-pdf/32/7/1009/19568450/btv688.pdf},
 }
 
 @article{li2018, 
@@ -852,14 +852,13 @@ number = {8},
 volume = {27}
 }
 
-@article{li2013, 
-year = {2013}, 
-keywords = {algorithms,alignment,software,illumina}, 
-title = {{Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM}}, 
-author = {Li, Heng}, 
-journal = {arXiv}, 
-eprint = {1303.3997}, 
-abstract = {{Summary: BWA-MEM is a new alignment algorithm for aligning sequence reads or long query sequences against a large reference genome such as human. It automatically chooses between local and end-to-end alignments, supports paired-end reads and performs chimeric alignment. The algorithm is robust to sequencing errors and applicable to a wide range of sequence lengths from 70bp to a few megabases. For mapping 100bp sequences, BWA-MEM shows better performance than several state-of-art read aligners to date. Availability and implementation: BWA-MEM is implemented as a component of BWA, which is available at http://github.com/lh3/bwa. Contact: hengli@broadinstitute.org}}
+@misc{li2013,
+    title={Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM},
+    author={Heng Li},
+    year={2013},
+    eprint={1303.3997},
+    archivePrefix={arXiv},
+    primaryClass={q-bio.GN}
 }
 
 @article{katoh2012, 
@@ -1524,7 +1523,8 @@ volume = {18}
   title={Conditional random fields: Probabilistic models for segmenting and labeling sequence data},
   author={Lafferty, John and McCallum, Andrew and Pereira, Fernando CN},
   year={2001},
-    booktitle = {In International Conference on Machine Learning}
+    booktitle = {In International Conference on Machine Learning},
+    isbn={1558607781}
 }
 
 @article{Loman2015, 
@@ -1564,8 +1564,7 @@ title = {{BasecRAWller: Streaming Nanopore Basecalling Directly from Raw Signal}
 author = {Stoiber, Marcus and Brown, James}, 
 journal = {bioRxiv}, 
 doi = {10.1101/133058}, 
-abstract = {{All current nanopore basecalling applications begin with the segmentation of raw signal into discrete events, which are ultimately processed into called bases. We propose the basecRAWller algorithm, a pair of unidirectional recurrent neural networks that enables the calling of DNA bases in real time directly from the rawest form of nanopore output. This shift in nanopore basecalling provides a number of advantages over current processing pipelines including: 1) streaming basecalling, 2) tunable ratio of insertions to deletions, and 3) potential for streaming detection of modified bases. Key to the streaming basecalling capability is sequence prediction at a delay of less than 1/100th of a second, allowing future signal to continuously modulate sequence prediction. BasecRAWller is computationally efficient enabling basecalling at speeds faster than current nanopore instrument measurement speeds on a single core. Further, basecalling can be paused and resumed without any change in the resulting predicted sequence, transforming the potential applications for dynamic read rejection capabilities. The basecRAWller algorithm provides an alternative approach to nanopore basecalling at comparable accuracy and provides the community with the capacity to train their own basecRAWller neural networks with minimal effort.}}, 
-pages = {133058}
+abstract = {{All current nanopore basecalling applications begin with the segmentation of raw signal into discrete events, which are ultimately processed into called bases. We propose the basecRAWller algorithm, a pair of unidirectional recurrent neural networks that enables the calling of DNA bases in real time directly from the rawest form of nanopore output. This shift in nanopore basecalling provides a number of advantages over current processing pipelines including: 1) streaming basecalling, 2) tunable ratio of insertions to deletions, and 3) potential for streaming detection of modified bases. Key to the streaming basecalling capability is sequence prediction at a delay of less than 1/100th of a second, allowing future signal to continuously modulate sequence prediction. BasecRAWller is computationally efficient enabling basecalling at speeds faster than current nanopore instrument measurement speeds on a single core. Further, basecalling can be paused and resumed without any change in the resulting predicted sequence, transforming the potential applications for dynamic read rejection capabilities. The basecRAWller algorithm provides an alternative approach to nanopore basecalling at comparable accuracy and provides the community with the capacity to train their own basecRAWller neural networks with minimal effort.}}
 }
 
 @article{Boza2020, 
@@ -1630,7 +1629,8 @@ eprint = {/oup/backfile/content_public/journal/nar/46/1/10.1093_nar_gkx977/1/gkx
   volume={6},
   number={4},
   year={2017},
-  publisher={Oxford University Press}
+  publisher={Oxford University Press},
+  doi={10.1093/gigascience/gix010}
 }
 
 @misc{brinda2018,
@@ -1711,14 +1711,13 @@ number = {4},
 volume = {7}
 }
 
-@article{Garrison2012, 
-year = {2012}, 
-keywords = {variant-calling,software,algorithms}, 
-title = {{Haplotype-based variant detection from short-read sequencing}}, 
-author = {Garrison, Erik and Marth, Gabor}, 
-journal = {arXiv}, 
-eprint = {1207.3907}, 
-abstract = {{The direct detection of haplotypes from short-read DNA sequencing data requires changes to existing small-variant detection methods. Here, we develop a Bayesian statistical framework which is capable of modeling multiallelic loci in sets of individuals with non-uniform copy number. We then describe our implementation of this framework in a haplotype-based variant detector, FreeBayes.}}
+@misc{Garrison2012, 
+      title={Haplotype-based variant detection from short-read sequencing}, 
+      author={Erik Garrison and Gabor Marth},
+      year={2012},
+      eprint={1207.3907},
+      archivePrefix={arXiv},
+      primaryClass={q-bio.GN}
 }
 
 @article{Poplin2018, 
@@ -1907,7 +1906,7 @@ volume = {12}
    year = "2021",
    volume = "7",
    number = "9",
-   doi = "https://doi.org/10.1099/mgen.0.000670",
+   doi = "10.1099/mgen.0.000670",
    url = "https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000670",
    publisher = "Microbiology Society",
    issn = "2057-5858",
@@ -2098,7 +2097,7 @@ volume = {21}
 @article{Taylor2015, 
 year = {2015}, 
 keywords = {outbreak,surveillance,variant-calling}, 
-title = {{Characterization of Foodborne Outbreaks of Salmonella enterica Serovar Enteritidis with Whole-Genome Sequencing Single Nucleotide Polymorphism-Based Analysis for Surveillance and Outbreak Detection}}, 
+title = {{Characterization of foodborne outbreaks of Salmonella enterica Serovar Enteritidis with whole-genome sequencing single nucleotide polymorphism-based analysis for surveillance and outbreak detection}}, 
 author = {Taylor, Angela J. and Lappi, Victoria and Wolfgang, William J. and Lapierre, Pascal and Palumbo, Michael J. and Medus, Carlota and Boxrud, David}, 
 journal = {Journal of Clinical Microbiology}, 
 issn = {0095-1137}, 
@@ -2327,7 +2326,7 @@ publisher = {eLife Sciences Publications, Ltd},
    year = "2017",
    volume = "3",
    number = "1",
-   doi = "https://doi.org/10.1099/mgen.0.000103",
+   doi = "10.1099/mgen.0.000103",
    url = "https://www.microbiologyresearch.org/content/journal/mgen/10.1099/mgen.0.000103",
    publisher = "Microbiology Society",
    issn = "2057-5858",
@@ -2474,15 +2473,16 @@ volume = {36}
 }
 
 @article{Novak2017, 
-year = {2017}, 
-keywords = {genome-graphs,pangenome,variant-calling,algorithms}, 
-title = {{Genome Graphs}}, 
-author = {Novak, Adam M. and Hickey, Glenn and Garrison, Erik and Blum, Sean and Connelly, Abram and Dilthey, Alexander and Eizenga, Jordan and Elmohamed, M. A. Saleh and Guthrie, Sally and Kahles, André and Keenan, Stephen and Kelleher, Jerome and Kural, Deniz and Li, Heng and Lin, Michael F. and Miga, Karen and Ouyang, Nancy and Rakocevic, Goran and Smuga-Otto, Maciek and Zaranek, Alexander Wait and Durbin, Richard and McVean, Gil and Haussler, David and Paten, Benedict}, 
-journal = {bioRxiv}, 
-doi = {10.1101/101378}, 
-abstract = {{There is increasing recognition that a single, monoploid reference genome is a poor universal reference structure for human genetics, because it represents only a tiny fraction of human variation. Adding this missing variation results in a structure that can be described as a mathematical graph: a genome graph. We demonstrate that, in comparison to the existing reference genome (GRCh38), genome graphs can substantially improve the fractions of reads that map uniquely and perfectly. Furthermore, we show that this fundamental simplification of read mapping transforms the variant calling problem from one in which many non-reference variants must be discovered de-novo to one in which the vast majority of variants are simply re-identified within the graph. Using standard benchmarks as well as a novel reference-free evaluation, we show that a simplistic variant calling procedure on a genome graph can already call variants at least as well as, and in many cases better than, a state-of-the-art method on the linear human reference genome. We anticipate that graph-based references will supplant linear references in humans and in other applications where cohorts of sequenced individuals are available.}}, 
-pages = {101378}, 
-note = {This preprint describes the vg variant calling component (as referenced in the vg nature biotech paper)}
+	author = {Novak, Adam M. and Hickey, Glenn and Garrison, Erik and Blum, Sean and Connelly, Abram and Dilthey, Alexander and Eizenga, Jordan and Elmohamed, M. A. Saleh and Guthrie, Sally and Kahles, Andr{\'e} and Keenan, Stephen and Kelleher, Jerome and Kural, Deniz and Li, Heng and Lin, Michael F. and Miga, Karen and Ouyang, Nancy and Rakocevic, Goran and Smuga-Otto, Maciek and Zaranek, Alexander Wait and Durbin, Richard and McVean, Gil and Haussler, David and Paten, Benedict},
+	title = {Genome Graphs},
+	elocation-id = {101378},
+	year = {2017},
+	doi = {10.1101/101378},
+	publisher = {Cold Spring Harbor Laboratory},
+	abstract = {There is increasing recognition that a single, monoploid reference genome is a poor universal reference structure for human genetics, because it represents only a tiny fraction of human variation. Adding this missing variation results in a structure that can be described as a mathematical graph: a genome graph. We demonstrate that, in comparison to the existing reference genome (GRCh38), genome graphs can substantially improve the fractions of reads that map uniquely and perfectly. Furthermore, we show that this fundamental simplification of read mapping transforms the variant calling problem from one in which many non-reference variants must be discovered de-novo to one in which the vast majority of variants are simply re-identified within the graph. Using standard benchmarks as well as a novel reference-free evaluation, we show that a simplistic variant calling procedure on a genome graph can already call variants at least as well as, and in many cases better than, a state-of-the-art method on the linear human reference genome. We anticipate that graph-based references will supplant linear references in humans and in other applications where cohorts of sequenced individuals are available.},
+	URL = {https://www.biorxiv.org/content/early/2017/01/18/101378},
+	eprint = {https://www.biorxiv.org/content/early/2017/01/18/101378.full.pdf},
+	journal = {bioRxiv}
 }
 
 @article{strainflair2021,
@@ -2530,7 +2530,7 @@ title = {{Algorithms in Bioinformatics, 16th International Workshop, WABI 2016, 
 author = {Maciuca, Sorina and Elias, Carlos del Ojo and McVean, Gil and Iqbal, Zamin}, 
 journal = {Lecture Notes in Computer Science}, 
 issn = {0302-9743}, 
-doi = {10.1007/978-3-319-43681-4\_18}, 
+doi = {10.1007/978-3-319-43681-4}, 
 abstract = {{We show how positional markers can be used to encode genetic variation within a Burrows-Wheeler Transform (BWT), and use this to construct a generalisation of the traditional “reference genome”, incorporating known variation within a species. Our goal is to support the inference of the closest mosaic of previously known sequences to the genome(s) under analysis. Our scheme results in an increased alphabet size, and by using a wavelet tree encoding of the BWT we reduce the performance impact on rank operations. We give a specialised form of the backward search that allows variation-aware exact matching. We implement this, and demonstrate the cost of constructing an index of the whole human genome with 8 million genetic variants is 25 GB of RAM. We also show that inferring a closer reference can close large kilobase-scale coverage gaps in P. falciparum.}}, 
 pages = {222--233}
 }
@@ -2631,7 +2631,7 @@ volume = {3}
     author = {{The HDF Group}},
     title = "{Hierarchical Data Format, version 5}",
     year = {2021},
-    note = {https://www.hdfgroup.org/HDF5/}
+    url = {https://www.hdfgroup.org/HDF5/}
 }
 
 @article{Rang2018, 
@@ -2754,7 +2754,7 @@ volume = {87}
 @article{Cao2016, 
 year = {2016}, 
 keywords = {real-time,algorithms,streaming,bacterial-genomics,nanopore,amr}, 
-title = {{Streaming algorithms for identification of pathogens and antibiotic resistance potential from real-time MinIONTM sequencing}}, 
+title = {{Streaming algorithms for identification of pathogens and antibiotic resistance potential from real-time MinION\textsuperscript{\texttrademark} sequencing}}, 
 author = {Cao, Minh Duc and Ganesamoorthy, Devika and Elliott, Alysha G. and Zhang, Huihui and Cooper, Matthew A. and Coin, Lachlan J.M.}, 
 journal = {GigaScience}, 
 issn = {2047-217X}, 
@@ -2995,7 +2995,7 @@ volume = {54}
 @article{Lipworth2019, 
 year = {2019}, 
 keywords = {lineage,speciation,strain-identification,MTBC}, 
-title = {{Ahead of Print - SNP-IT Tool for Identifying Subspecies and Associated Lineages of <em>Mycobacterium tuberculosis</em> Complex - Volume 25, Number 3—March 2019 - Emerging Infectious Diseases journal - CDC}}, 
+title = {{SNP-IT Tool for Identifying Subspecies and Associated Lineages of Mycobacterium tuberculosis Complex}}, 
 author = {Lipworth, Samuel and Jajou, Rana and Neeling, Albert de and Bradley, Phelim and Hoek, Wim van der and Maphalala, Gugu and Bonnet, Maryline and Sanchez-Padilla, Elizabeth and Diel, Roland and Niemann, Stefan and Iqbal, Zamin and Smith, Grace and Peto, Tim and Crook, Derrick and Walker, Timothy and Soolingen, Dick van}, 
 journal = {Emerging Infectious Diseases}, 
 issn = {1080-6040}, 
@@ -3159,14 +3159,16 @@ volume = {53}
 }
 
 @article{Freschi2020, 
-year = {2020}, 
-keywords = {MTBC,lineage,strain-identification}, 
+year = {2021}, 
+keywords = {MTBC,lineage}, 
 title = {{Population structure, biogeography and transmissibility of Mycobacterium tuberculosis}}, 
-author = {Freschi, Luca and Vargas, Roger and Hussain, Ashek and Kamal, S M Mostofa and Skrahina, Alena and Tahseen, Sabira and Ismail, Nazir and Barbova, Anna and Niemann, Stefan and Cirillo, Daniela Maria and Dean, Anna S and Zignol, Matteo and Farhat, Maha Reda}, 
-journal = {bioRxiv}, 
-doi = {10.1101/2020.09.29.293274}, 
-abstract = {{Mycobacterium tuberculosis is a clonal pathogen proposed to have co-evolved with its human host for millennia, yet our understanding of its genomic diversity and biogeography remains incomplete. Here we use a combination of phylogenetics and dimensionality reduction to reevaluate the population structure of M. tuberculosis, providing the first in-depth analysis of the ancient East African Indian Lineage 1 and the modern Central Asian Lineage 3 and expanding our understanding of Lineages 2 and 4. We assess sub-lineages using genomic sequences from 4,939 pan-susceptible strains and find 30 new genetically distinct clades that we validate in a dataset of 4,645 independent isolates. We characterize sub-lineage geographic distributions and demonstrate a consistent geographically restricted and unrestricted pattern for 20 groups, including three groups of Lineage 1. We assess the transmissibility of the four major lineages by examining the distribution of terminal branch lengths across the M. tuberculosis phylogeny and identify evidence supporting higher transmissibility in Lineages 2 and 4 than 3 and 1 on a global scale. We define a robust expanded barcode of 95 single nucleotide substitutions (SNS) that allows for the rapid identification of 69 Mtb sub-lineages and 26 additional internal groups. Our results paint a higher resolution picture of the Mtb phylogeny and biogeography.}}, 
-pages = {2020.09.29.293274}
+author = {Freschi, Luca and Vargas, Roger and Husain, Ashaque and Kamal, S. M. Mostofa and Skrahina, Alena and Tahseen, Sabira and Ismail, Nazir and Barbova, Anna and Niemann, Stefan and Cirillo, Daniela Maria and Dean, Anna S. and Zignol, Matteo and Farhat, Maha Reda}, 
+journal = {Nature Communications}, 
+doi = {10.1038/s41467-021-26248-1}, 
+abstract = {{Mycobacterium tuberculosis is a clonal pathogen proposed to have co-evolved with its human host for millennia, yet our understanding of its genomic diversity and biogeography remains incomplete. Here we use a combination of phylogenetics and dimensionality reduction to reevaluate the population structure of M. tuberculosis, providing an in-depth analysis of the ancient Indo-Oceanic Lineage 1 and the modern Central Asian Lineage 3, and expanding our understanding of Lineages 2 and 4. We assess sub-lineages using genomic sequences from 4939 pan-susceptible strains, and find 30 new genetically distinct clades that we validate in a dataset of 4645 independent isolates. We find a consistent geographically restricted or unrestricted pattern for 20 groups, including three groups of Lineage 1. The distribution of terminal branch lengths across the M. tuberculosis phylogeny supports the hypothesis of a higher transmissibility of Lineages 2 and 4, in comparison with Lineages 3 and 1, on a global scale. We define an expanded barcode of 95 single nucleotide substitutions that allows rapid identification of 69 M. tuberculosis sub-lineages and 26 additional internal groups. Our results paint a higher resolution picture of the M. tuberculosis phylogeny and biogeography. Mycobacterium tuberculosis is a clonal pathogen that has co-evolved with humans for millennia. Here, Freschi et al. reevaluate the population structure of M. tuberculosis, providing an in-depth analysis of the ancient Indo-Oceanic Lineage 1 and the modern Central Asian Lineage 3, and expanding our understanding of Lineages 2 and 4.}}, 
+pages = {6099}, 
+number = {1}, 
+volume = {12}
 }
 
 @article{vanEmbden1993,
@@ -3204,8 +3206,7 @@ title = {{A data compendium of Mycobacterium tuberculosis antibiotic resistance}
 author = {Brankin, Alice and Malone, Kerri M and Barilar, Ivan and Battaglia, Simone and Borroni, Emanuele and Brandao, Angela Pires and Cabibbe, Andrea Maurizio and Carter, Joshua and Cirillo, Daniela Maria and Claxton, Pauline and Clifton, David A and Cohen, Ted and Coronel, Jorge and Crook, Derrick W and Dreyer, Viola and Earle, Sarah G and Escuyer, Vincent and Ferrazoli, Lucilaine and Fowler, Philip W and Gao, George Fu and Gardy, Jennifer and Gharbia, Saheer and Ghisi, Kelen Teixeira and Ghodousi, Arash and Cruz, Ana Luíza Gibertoni and Grandjean, Louis and Grazian, Clara and Groenheit, Ramona and Guthrie, Jennifer L and He, Wencong and Hoffmann, Harald and Hoosdally, Sarah J and Hunt, Martin and Iqbal, Zamin and Ismail, Nazir Ahmed and Jarrett, Lisa and Joseph, Lavania and Jou, Ruwen and Kambli, Priti and Khot, Rukhsar and Knaggs, Jeff and Koch, Anastasia and Kohlerschmidt, Donna and Kouchaki, Samaneh and Lachapelle, Alexander S and Lalvani, Ajit and Lapierre, Simon Grandjean and Laurenson, Ian F and Letcher, Brice and Lin, Wan-Hsuan and Liu, Chunfa and Liu, Dongxin and Mandal, Ayan and Mansjö, Mikael and Matias, Daniela and Meintjes, Graeme and Mendes, Flávia de Freitas and Merker, Matthias and Mihalic, Marina and Millard, James and Miotto, Paolo and Mistry, Nerges and Moore, David and Musser, Kimberlee A and Ngcamu, Dumisani and Nhung, Hoang Ngoc and Niemann, Stefan and Nilgiriwala, Kayzad Soli and Nimmo, Camus and Okozi, Nana and Oliveira, Rosangela Siqueira and Omar, Shaheed Vally and Paton, Nicholas and Peto, Timothy EA and Pinhata, Juliana Maira Watanabe and Plesnik, Sara and Puyen, Zully M and Rabodoarivelo, Marie Sylvianne and Rakotosamimanana, Niaina and Rancoita, Paola MV and Rathod, Priti and Robinson, Esther and Rodger, Gillian and Rodrigues, Camilla and Rodwell, Timothy C and Roohi, Aysha and Santos-Lazaro, David and Shah, Sanchi and Kohl, Thomas Andreas and Smith, Grace and Solano, Walter and Spitaleri, Andrea and Supply, Philip and Surve, Utkarsha and Tahseen, Sabira and Thuong, Nguyen Thuy Thuong and Thwaites, Guy and Todt, Katharina and Trovato, Alberto and Utpatel, Christian and Rie, Annelies Van and Vijay, Srinivasan and Walker, Timothy M and Walker, A Sarah and Warren, Robin and Werngren, Jim and Wijkander, Maria and Wilkinson, Robert J and Wilson, Daniel J and Wintringer, Penelope and Xiao, Yu-Xin and Yang, Yang and Yanlin, Zhao and Yao, Shen-Yuan and Zhu, Baoli}, 
 journal = {bioRxiv}, 
 doi = {10.1101/2021.09.14.460274}, 
-abstract = {{The Comprehensive Resistance Prediction for Tuberculosis: an International Consortium (CRyPTIC) presents here a global collection of 15,211 Mycobacterium tuberculosis clinical isolates, all of which have undergone whole genome sequencing and have had their minimum inhibitory concentrations to 13 antitubercular drugs measured. The isolates represent five major M. tuberculosis lineages originating from 23 countries across four continents. 6,814 isolates were found resistant to at least one drug, including 2,129 samples fully satisfy the clinical definitions of RR/MDR, pre-XDR or XDR. Resistance status to eight antitubercular drugs can be accurately predicted using a genetic mutation catalogue for over 90\% of the isolates. Furthermore, we show the presence of suspected resistance conferring mutations for isolates resistant to the newly introduced drugs bedaquiline, clofazimine, delamanid and linezolid. Finally, a case study of rifampicin mono-resistance is presented to showcase how this compendium could be used to advance our genetic understanding of rare resistance phenotypes and evaluate the likely performance of a widely used molecular diagnostic tool. It is hoped that this compendium, the largest M. tuberculosis matched phenotypic and genotypic dataset to date, will facilitate and inspire new research projects for years to come.}}, 
-pages = {2021.09.14.460274}
+abstract = {{The Comprehensive Resistance Prediction for Tuberculosis: an International Consortium (CRyPTIC) presents here a global collection of 15,211 Mycobacterium tuberculosis clinical isolates, all of which have undergone whole genome sequencing and have had their minimum inhibitory concentrations to 13 antitubercular drugs measured. The isolates represent five major M. tuberculosis lineages originating from 23 countries across four continents. 6,814 isolates were found resistant to at least one drug, including 2,129 samples fully satisfy the clinical definitions of RR/MDR, pre-XDR or XDR. Resistance status to eight antitubercular drugs can be accurately predicted using a genetic mutation catalogue for over 90\% of the isolates. Furthermore, we show the presence of suspected resistance conferring mutations for isolates resistant to the newly introduced drugs bedaquiline, clofazimine, delamanid and linezolid. Finally, a case study of rifampicin mono-resistance is presented to showcase how this compendium could be used to advance our genetic understanding of rare resistance phenotypes and evaluate the likely performance of a widely used molecular diagnostic tool. It is hoped that this compendium, the largest M. tuberculosis matched phenotypic and genotypic dataset to date, will facilitate and inspire new research projects for years to come.}}
 }
 
 @article{minos, 
@@ -3215,15 +3216,14 @@ title = {{Minos: variant adjudication and joint genotyping of cohorts of bacteri
 author = {Hunt, Martin and Letcher, Brice and Malone, Kerri M and Nguyen, Giang and Hall, Michael B and Colquhoun, Rachel M and Lima, Leandro and Schatz, Michael and Ramakrishnan, Srividya and Consortium, The CRyPTIC and Iqbal, Zamin}, 
 journal = {bioRxiv}, 
 doi = {10.1101/2021.09.15.460475}, 
-abstract = {{Short-read variant calling for bacterial genomics is a mature field, and there are many widely-used software tools. Different underlying approaches (eg pileup, local or global assembly, paired-read use, haplotype use) lend each tool different strengths, especially when considering non-SNP (single nucleotide polymorphism) variation or potentially distant reference genomes. It would therefore be valuable to be able to integrate the results from multiple variant callers, using a robust statistical approach to “adjudicate” at loci where there is disagreement between callers. To this end, we present a tool, Minos, for variant adjudication by mapping reads to a genome graph of variant calls. Minos allows users to combine output from multiple variant callers without loss of precision. Minos also addresses a second problem of joint genotyping SNPs and indels in bacterial cohorts, which can also be framed as an adjudication problem. We benchmark on 62 samples from 3 species (Mycobacterium tuberculosis, Staphylococcus aureus, Klebsiella pneumoniae) and an outbreak of 385 M. tuberculosis samples. Finally, we joint genotype a large M. tuberculosis cohort (N≈15k) for which the rifampicin phenotype is known. We build a map of non-synonymous variants in the RRDR (rifampicin resistance determining region) of the rpoB gene and extend current knowledge relating RRDR SNPs to heterogeneity in rifampicin resistance levels. We replicate this finding in a second M. tuberculosis cohort (N≈13k). Minos is released under the MIT license, available at https://github.com/iqbal-lab-org/minos.}}, 
-pages = {2021.09.15.460475}
+abstract = {{Short-read variant calling for bacterial genomics is a mature field, and there are many widely-used software tools. Different underlying approaches (eg pileup, local or global assembly, paired-read use, haplotype use) lend each tool different strengths, especially when considering non-SNP (single nucleotide polymorphism) variation or potentially distant reference genomes. It would therefore be valuable to be able to integrate the results from multiple variant callers, using a robust statistical approach to “adjudicate” at loci where there is disagreement between callers. To this end, we present a tool, Minos, for variant adjudication by mapping reads to a genome graph of variant calls. Minos allows users to combine output from multiple variant callers without loss of precision. Minos also addresses a second problem of joint genotyping SNPs and indels in bacterial cohorts, which can also be framed as an adjudication problem. We benchmark on 62 samples from 3 species (Mycobacterium tuberculosis, Staphylococcus aureus, Klebsiella pneumoniae) and an outbreak of 385 M. tuberculosis samples. Finally, we joint genotype a large M. tuberculosis cohort (N≈15k) for which the rifampicin phenotype is known. We build a map of non-synonymous variants in the RRDR (rifampicin resistance determining region) of the rpoB gene and extend current knowledge relating RRDR SNPs to heterogeneity in rifampicin resistance levels. We replicate this finding in a second M. tuberculosis cohort (N≈13k). Minos is released under the MIT license, available at https://github.com/iqbal-lab-org/minos.}}
 }
 
 @article{Wang1994, 
 year = {1994}, 
 keywords = {msa,algorithms}, 
 title = {{On the Complexity of Multiple Sequence Alignment}}, 
-author = {WANG, LUSHENG and JIANG, TAO}, 
+author = {Wang, Lusheng and Jiang, Tao}, 
 journal = {Journal of Computational Biology}, 
 issn = {1066-5277}, 
 doi = {10.1089/cmb.1994.1.337}, 
@@ -3258,7 +3258,8 @@ volume = {1}
   number={1},
   pages={1--11},
   year={2012},
-  publisher={Springer}
+  publisher={Springer},
+  doi={10.1186/1471-2164-13-666}
 }
 
 @article{Zhang2014, 
@@ -3342,7 +3343,7 @@ volume = {76},
 pages = {1-46},
 year = {1995},
 issn = {0962-8479},
-doi = {https://doi.org/10.1016/0962-8479(95)90591-X},
+doi = {10.1016/0962-8479(95)90591-X},
 url = {https://www.sciencedirect.com/science/article/pii/096284799590591X},
 author = {L.M. O'Reilly and C.J. Daborn},
 abstract = {Tuberculosis is primarily a respiratory disease and transmission of infection within and between species is mainly by the airborne route. Mycobacterium bovis, the cause of bovine-type tuberculosis, has an exceptionally wide host range. Susceptible species include cattle, humans, non-human primates, goats, cats, dogs, pigs, buffalo, badgers, possums, deer and bison. Many susceptible species, including man, are spillover hosts in which infection is not self-maintaining. In countries where there is transmission of infection from endemically infected wildlife populations to cattle or other farmed animals, eradication is not feasible and control measures must be applied indefinitely. Possible methods of limiting spread of infection from wildlife to cattle including the use of vaccines are outlined. The usefulness of DNA fingerprinting of M. bovis strains as an epidemiological tool and of BCG vaccination of humans and cattle as a control measure are reviewed. The factors determining susceptibility to infection and clinical disease, and the infectiousness of infected hosts and transmission of infection, are detailed. Reports of the epidemiology of M. bovis infections in man and a variety of animal species are reviewed. M. bovis infection was recognised as a major public health problem when this organism was transmitted to man via milk from infected cows. The introduction of pasteurization helped eliminate this problem. Those occupational groups working with M. bovis infected cattle or deer, on the farm or in the slaughter house, are more likely to develop pulmonary disease than alimentary disease. In recent years, tuberculosis in farmed cervidae has become a disease of economic as well as public health importance in several countries. Nowadays, the human immunodeficiency virus (HIV) is associated with a greatly increased risk of overt disease in humans infected with Myobacterium tuberculosis. It is believed this increased risk also occurs in the case of M. bovis infections in humans.}
@@ -3369,8 +3370,7 @@ title = {{Quantitative measurement of antibiotic resistance in Mycobacterium tub
 author = {Consortium, The CRyPTIC and Carter, Joshua J}, 
 journal = {bioRxiv}, 
 doi = {10.1101/2021.09.14.460353}, 
-abstract = {{The World Health Organization goal of universal drug susceptibility testing for patients with tuberculosis is most likely to be achieved through molecular diagnostics; however, to date these have focused largely on first-line drugs, and always on predicting binary susceptibilities. Here, we used whole genome sequencing and a quantitative microtiter plate assay to relate genomic mutations to minimum inhibitory concentration in 15,211 Mycobacterium tuberculosis patient isolates from 27 countries across five continents. This work identifies 449 unique MIC-elevating genetic determinants across thirteen drugs, as well as 91 mutations resulting in hypersensitivity for eleven drugs. Our results provide a guide for further implementation of personalized medicine for the treatment of tuberculosis using genetics-based diagnostics and can serve as a training set for novel approaches to predict drug resistance.}}, 
-pages = {2021.09.14.460353}
+abstract = {{The World Health Organization goal of universal drug susceptibility testing for patients with tuberculosis is most likely to be achieved through molecular diagnostics; however, to date these have focused largely on first-line drugs, and always on predicting binary susceptibilities. Here, we used whole genome sequencing and a quantitative microtiter plate assay to relate genomic mutations to minimum inhibitory concentration in 15,211 Mycobacterium tuberculosis patient isolates from 27 countries across five continents. This work identifies 449 unique MIC-elevating genetic determinants across thirteen drugs, as well as 91 mutations resulting in hypersensitivity for eleven drugs. Our results provide a guide for further implementation of personalized medicine for the treatment of tuberculosis using genetics-based diagnostics and can serve as a training set for novel approaches to predict drug resistance.}}
 }
 
 @article{cryptic2021gwas, 
@@ -3380,8 +3380,7 @@ title = {{Genome-wide association studies of global Mycobacterium tuberculosis r
 author = {Consortium, The CRyPTIC and Earle, Sarah G and Wilson, Daniel J}, 
 journal = {bioRxiv}, 
 doi = {10.1101/2021.09.14.460272}, 
-abstract = {{The emergence of drug resistant tuberculosis is a major global public health concern that threatens the ability to control the disease. Whole genome sequencing as a tool to rapidly diagnose resistant infections can transform patient treatment and clinical practice. While resistance mechanisms are well understood for some drugs, there are likely many mechanisms yet to be uncovered, particularly for new and repurposed drugs. We sequenced 10,228 Mycobacterium tuberculosis (MTB) isolates worldwide and determined the minimum inhibitory concentration (MIC) on a grid of twofold concentration dilutions for 13 antimicrobials using quantitative microtiter plate assays. We performed oligopeptide- and oligonucleotide-based genome-wide association studies using linear mixed models to discover resistance-conferring mechanisms not currently catalogued. Use of MIC over binary resistance phenotypes increased heritability for the new and repurposed drugs by 26-37\%, increasing our ability to detect novel associations. For all drugs, we discovered uncatalogued variants associated with MIC, including in the Rv1218c promoter binding site of the transcriptional repressor Rv1219c (isoniazid), upstream of the vapBC20 operon that cleaves 23S rRNA (linezolid) and in the region encoding an α-helix lining the active site of Cyp142 (clofazimine, all p<10-7.7). We observed that artefactual signals of cross resistance could be unravelled based on the relative effect size on MIC. Our study demonstrates the ability of very large-scale studies to substantially improve our knowledge of genetic variants associated with antimicrobial resistance in M. tuberculosis.}}, 
-pages = {2021.09.14.460272}
+abstract = {{The emergence of drug resistant tuberculosis is a major global public health concern that threatens the ability to control the disease. Whole genome sequencing as a tool to rapidly diagnose resistant infections can transform patient treatment and clinical practice. While resistance mechanisms are well understood for some drugs, there are likely many mechanisms yet to be uncovered, particularly for new and repurposed drugs. We sequenced 10,228 Mycobacterium tuberculosis (MTB) isolates worldwide and determined the minimum inhibitory concentration (MIC) on a grid of twofold concentration dilutions for 13 antimicrobials using quantitative microtiter plate assays. We performed oligopeptide- and oligonucleotide-based genome-wide association studies using linear mixed models to discover resistance-conferring mechanisms not currently catalogued. Use of MIC over binary resistance phenotypes increased heritability for the new and repurposed drugs by 26-37\%, increasing our ability to detect novel associations. For all drugs, we discovered uncatalogued variants associated with MIC, including in the Rv1218c promoter binding site of the transcriptional repressor Rv1219c (isoniazid), upstream of the vapBC20 operon that cleaves 23S rRNA (linezolid) and in the region encoding an α-helix lining the active site of Cyp142 (clofazimine, all p<10-7.7). We observed that artefactual signals of cross resistance could be unravelled based on the relative effect size on MIC. Our study demonstrates the ability of very large-scale studies to substantially improve our knowledge of genetic variants associated with antimicrobial resistance in M. tuberculosis.}}
 }
 
 @article{Gorrie2021, 

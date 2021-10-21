@@ -151,7 +151,19 @@
 
 % numeric-comp compressed and sorts in-text citation numbers. sorting=none sorts the bibliograph based on when the citation first appears in the text
 \usepackage[backend=biber, style=numeric-comp, sorting=none]{biblatex}
+
+\DeclareSourcemap{
+  \maps[datatype=bibtex]{
+    \map[overwrite]{
+      \step[fieldsource=doi, final]
+      \step[fieldset=url, null]
+      \step[fieldset=eprint, null]
+    }  
+  }
+}
+
  \addbibresource{References/references.bib}
+
 \bibliography{References/references} %Location of references.bib only for biblatex
 
 \fi
