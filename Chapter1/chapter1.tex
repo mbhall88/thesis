@@ -44,7 +44,7 @@ When given a set of Illumina or \ont{} sequencing reads, \pandora{} identifies w
 
 While \pandora{} - before the work in this chapter - enables the comparison of genomes to a level of detail provided by no other tool, there is still a significant shortcoming: it cannot discover novel mutations. As such, before the work presented in this chapter, \pandora{} was effectively a genotyping tool. If a sample contains a variant not present in a \prg{}, the best \pandora{} can do is select the path closest to that variant. Therefore, we begin this chapter by describing a method for performing \denovo{} variant discovery in a genome graph and implement it in \pandora{} - turning \pandora{} into a two-stage approximation method.
 
-We use a simulated genome and associated \ont{} dataset to show that without this discovery capability, \pandora{} cannot detect variants absent from a \prg{}. In addition, we explore the impact of various parameters on the \denovo{} discovery method and find read depth to have a vital influence.
+We use a simulated genome and associated \ont{} dataset to explore the impact of various parameters on the \denovo{} discovery method and find read depth to have a vital influence.
 
 Finally, we use an empirical dataset consisting of 20 diverse \ecoli{} samples to show that with our new variant discovery approach, \pandora{} has higher recall than all single-reference tools tested for both Illumina and \ont{} data. In addition, we identify methylation sites as a major source of our errors on \ont{} data and provide a solution for removing many of these errors. In the process of performing this analysis, we outline a coordinate-free method for evaluating variant caller precision and recall, facilitating the comparison of linear- and graph-based methods. 
 
@@ -61,16 +61,16 @@ The first step of \denovo{} variant discovery in genome graphs is finding the ca
 \subsection{Finding candidate regions}
 \label{sec:denovo-candidate-regions}
 
-After quasi-mapping the sample reads to the \panrg{} and inferring the maximum likelihood path (a path of minimizing \kmer{}s; $kmlp_n$) for each locus \prg{}, $n$ - as explained previously in \autoref{sec:pandora-map-intro} - we discover candidate regions in this path. To do so, we transform $kmlp_n$ into a sequence, $mlp_n$, and use the \kmer{} coverage in $kmlp_n$ as an approximation to the read coverage of each base in $mlp_n$.
+After quasi-mapping the sample reads to the \panrg{} and inferring the maximum likelihood path (a path of minimizing \kmer{}s; $K_n$) for each locus \prg{}, $n$ - as explained previously in \autoref{sec:pandora-map-intro} - we discover candidate regions in this path. To do so, we transform $K_n$ into a sequence, $M_n$, and use the \kmer{} coverage in $K_n$ as an approximation to the read coverage of each base in $M_n$.
 
-We define a candidate region, $r$, as an interval within $mlp_n$ where read depth (coverage) is less than a given threshold for less than $m$ consecutive positions. $m$ acts to restrict the size of variants we can detect. If set too large, the following steps become much slower due to the combinatorial expansion of possible paths. 
+We define a candidate region, $r$, as an interval within $M_n$ where read depth (coverage) is less than a given threshold for less than $m$ consecutive positions. The coverage for each position is calculated as the maximum \kmer{} depth of all \kmer{}s overlapping it. Thus, $m$ acts to restrict the size of variants we can detect. If set too large, the following steps become much slower due to the combinatorial expansion of possible paths. 
 
 \subsection{Enumerating paths through candidate regions}
 \label{sec:path-enum}
 
 For each candidate region, $r$, we construct a \dbg{} $G_r$ from the subsequences of the reads that overlap $r$, using the GATB library \cite{gatb2014}. The \kmer{} size, $k$, used to construct $G_r$ is specified separately to the \kmer{} size used for all other \pandora{} operations - although it can be the same. 
 
-We define $a_L$ and $a_R$ as two anchor \kmer{}s within $k$ bases of the left and right, respectively, of $r$ in the maximum likelihood path, $mlp_n$. They are anchors between which valid paths in $G_r$ are enumerated. As such, both $a_L$ and $a_R$ must exist in $G_r$; otherwise, \denovo{} discovery is abandoned for $r$. In addition, they allow for easy insertion of new sequences found by \denovo{} discovery into the \prg{}. Now that we have two anchor \kmer{}s, $a_L$ and $a_R$, our goal is to enumerate all valid paths between these anchors in $G_r$.
+We define $a_L$ and $a_R$ as two anchor \kmer{}s within $k$ bases of the left and right, respectively, of $r$ in the maximum likelihood path, $M_n$. They are anchors between which valid paths in $G_r$ are enumerated. As such, both $a_L$ and $a_R$ must exist in $G_r$; otherwise, \denovo{} discovery is abandoned for $r$. In addition, they allow for easy insertion of new sequences found by \denovo{} discovery into the \prg{}. Now that we have two anchor \kmer{}s, $a_L$ and $a_R$, our goal is to enumerate all valid paths between these anchors in $G_r$.
 
 To enumerate valid paths, we perform depth-first search (DFS) on $G_r$, beginning from $a_L$, to obtain a spanning tree, $T_r$. $p_r$ is defined as a path from the root node $a_L$ of $T_r$ and ending at node $a_R$, which fulfils the following two conditions: i) $p_r$ is shorter than the maximum allowed path length; ii) no more than $k$ nodes along $p_r$ have coverage $< (0.1 n_r e_r)$, where $e_r$ is the expected \kmer{} coverage for $r$ and $n_r$ is the number of iterations of path enumeration for $r$ (see below).
 
@@ -85,7 +85,7 @@ As \pandora{} operates on both accurate and error-prone sequencing reads, the nu
 
 In order to reduce the path-space within $G_r$, we prune paths based on multiple criteria. Critically, this pruning happens at each step of the graph walk (path enumeration; \autoref{sec:path-enum}).
 
-In addition to $T_r$, obtained by performing DFS on $G_r$, we produce a distance map $D_r$ that results from running reversed breadth-first search (BFS) on $G_r$, beginning from the \emph{end} anchor ($a_R$). We say reversed BFS as we explore the \emph{predecessors} of each node, rather than the successors. $D_r$ is a binary search tree where each node in the tree represents a \kmer{} in $G_r$ that is reachable from $a_R$ via reversed BFS. Each node additionally has an integer that describes the shortest path from that node to $a_R$.
+In addition to $T_r$, obtained by performing DFS on $G_r$, we produce a distance map, $D_r$, that results from running reversed breadth-first search (BFS) on $G_r$, beginning from the \emph{end} anchor ($a_R$). We say reversed BFS as we explore the \emph{predecessors} of each node, rather than the successors. $D_r$ maps each \kmer{} in $G_r$, that is reachable from $a_R$ via reversed BFS, to an integer that describes the shortest path from that \kmer{} to $a_R$.
 
 We use $D_r$ to prune the path-space as follows. As we walk the candidate path ($p_r$) in \autoref{sec:path-enum}, for each node (\kmer{}; $v$) in the \dbg{} $G_r$, starting at $a_L$, we lookup $v$ in $D_r$ to see if $a_R$ can be reached in a maximum of $i$ nodes, where $i$ is defined as the maximum allowed path length minus the number of nodes walked to reach $v$. If this condition is not met, we abandon $p_r$. 
 
@@ -105,7 +105,7 @@ To illustrate the benefit of this pruning algorithm, we present an example in \a
 \hspace{0.75cm}
 
 \noindent
-In the end, for each candidate region ($r$), we are left with a collection of paths ($V_r$) between two \kmer{}s ($a_L$ and $a_R$). We create the final candidate paths by replacing the sequence between $a_L$ and $a_R$ in the maximum likelihood path ($mlp_n$) with each path ($p_r$) in $V_r$. These are written to file - with one file per candidate region. Padding the candidate paths in this way ensures they are inserted into the \prg{} in the correct location (see \autoref{sec:denovo-insert}). 
+In the end, for each candidate region ($r$), we are left with a collection of paths ($V_r$) between two \kmer{}s ($a_L$ and $a_R$). We create the final candidate paths by replacing the sequence between $a_L$ and $a_R$ in the maximum likelihood path ($M_n$) with each path ($p_r$) in $V_r$. These are written to file - with one file per candidate region. Padding the candidate paths in this way ensures they are inserted into the \prg{} in the correct location (see \autoref{sec:denovo-insert}). 
 
 
 \subsection{Updating a \panrg{} with candidate paths}
@@ -129,7 +129,7 @@ Having described an extension of the \pandora{} program that allows for \denovo{
 
 The first step in evaluating the effect of adding \denovo{} variant calling to \pandora{} is with a simulated dataset. We aim to show that the addition of \denovo{} discovery allows \pandora{} to improve its capacity for variant detection (recall) with minimal impact on the quality of the calls (precision). 
 
-To construct our simulated dataset, we randomly select 100 gene MSAs from a pool of 29,702 obtained for \ecoli{} from the panX database \cite{panx}. Next, a \prg{} is constructed for each MSA with \makeprg{} (\autoref{sec:make_prg}). We used a range of \makeprg{} maximum nesting levels - 1, 3, 5, and 10 - to investigate whether \prg{} nesting has an impact on our ability to discover novel variants. The \prg{}s are combined into a single \panrg{} for each nesting level. A random path through each \prg{} is selected using \pandora{}, and these sequences are concatenated together to form a single "genome" sequence. 
+To construct our simulated dataset, we randomly select 100 gene MSAs from a pool of 29,702 obtained for \ecoli{} from the panX database \cite{panx}. Next, a \prg{} is constructed for each MSA with \makeprg{} (\autoref{sec:make_prg}). We used a range of \makeprg{} maximum nesting levels - 1, 3, 5, and 10 - to investigate whether \prg{} nesting has an impact on our ability to discover novel variants (see \autoref{fig:make-prg-rcc} for an illustration of nesting level). The \prg{}s are combined into a single \panrg{} for each nesting level. A random path through each \prg{} is selected using \pandora{}, and these sequences are concatenated together to form a single "genome" sequence. 
 
 We subsequently add single nucleotide polymorphisms (SNPs) to the simulated genome at different per-gene rates using \vrb{snp-mutator} \cite{snpmutator}. For this work, we introduce 100, 400, and 1,000 SNPs to the simulated genome, which equate to approximately 1, 4, and 10 SNPs per gene, respectively. \vrb{snp-mutator} produces a VCF of the SNPs that were introduced, along with the mutated genome sequence.
 
@@ -227,7 +227,7 @@ Recall    & 0.674 (5)    & 0.671 (13)                                           
 
 For the final analysis of the simulation data, we look at how the precision and recall change with an increasing genotype confidence threshold. We select the data point with the optimal maximum nesting level (5) and \denovo{} \kmer{} size (13), along with 4 SNPs per gene, as this is within the range expected for an \ecoli{} genome. Next, starting at 0 and increasing by 10 until 700, we filter out any variant with a genotype confidence score below the current threshold. The purpose of this analysis is to illustrate what the cost on recall is for requiring more confident variant calls at different read depths.
 
-\autoref{fig:denovo-sims-roc} shows the same relationship we saw earlier: coverage has a significant impact on precision and recall. Most importantly, though, it shows that the inclusion of \denovo{} discovery is vital for finding novel variants. Precision and recall for \pandora{} \emph{without} variant discovery are not shown in \autoref{fig:denovo-sims-roc}, as the best recall achievable for this set of parameters was only 1.0\% (indicating that 4 SNPs were incidentally in the \panrg{}). This is compared to a maximum of 81.5\% when using \denovo{} discovery. Focusing on the 100x coverage data point with \denovo{} discovery, the best recall (81.5\%) leads to a precision of 97.0\%, but the cost of increasing precision to 99\% is decreasing recall to 25\%. 
+\autoref{fig:denovo-sims-roc} shows the same relationship we saw earlier: coverage has a significant impact on precision and recall. Precision and recall for \pandora{} \emph{without} variant discovery are not shown in \autoref{fig:denovo-sims-roc}, as the best recall achievable for this set of parameters was only 1.0\% (indicating that 4 SNPs were incidentally in the \panrg{}). This is compared to a maximum of 81.5\% when using \denovo{} discovery. Focusing on the 100x coverage data point with \denovo{} discovery, the best recall (81.5\%) leads to a precision of 97.0\%, but the cost of increasing precision to 99\% is decreasing recall to 25\%. 
 
 \begin{figure}
     \centering
@@ -294,7 +294,7 @@ We determine precision in a somewhat similar manner. First, we create probes for
 \subsection{Effect of different \ont{} basecalling models}
 \label{sec:denovo-methylation}
 
-Previous work from Wick \etal{} has shown that for Enterobacteriaceae, the majority of \ont{} sequencing errors are related to Dcm methylation sites \cite{wick2019}. In version 3.2.1 of \guppy{} (the ONT-provided basecalling software) a new \emph{methylation-aware} model was made available. However, this new model is considerably slower to basecall reads than the default model. As \ecoli{} is a member of this family, we set out to test a subset of 4 samples from our dataset to see whether a methylation-aware model indeed has a noticeable impact on the precision and recall from \pandora{} - with and without \denovo{} variant discovery.
+Previous work from Wick \etal{} has shown that for Enterobacteriaceae, the majority of \ont{} sequencing errors are related to Dcm methylation sites \cite{wick2019}. In version 3.2.1 of \guppy{} (the ONT-provided basecalling software) a new \emph{methylation-aware} model was made available. As \ecoli{} is a member of this family, we set out to test a subset of 4 samples from our dataset to see whether a methylation-aware model indeed has a noticeable impact on the precision and recall from \pandora{} - with and without \denovo{} variant discovery.
 
 We basecalled the raw data for four samples from our dataset with both the default and methylation-aware models from \guppy{} version 3.4.5. Precision and recall (AvgAR) are calculated as per \autoref{sec:denovo-empirical-eval} and presented in \autoref{fig:denovo-methylation}. 
 
@@ -345,19 +345,20 @@ The most striking result from this work, though, is the error rate of \pandora{}
 Equally impressive is the improvement in recall over \vrb{snippy} using \pandora{} with variant discovery on Illumina data, leading to 47/1000 more variants being discovered. However, this does come at the expense of a higher error rate than \vrb{snippy}.
 
 \begin{figure}
-     \begin{subfigure}[b]{0.475\textwidth}
-        \includegraphics[width=1\linewidth]{Chapter1/Figs/illumina_roc.png}
+    \centering
+     \begin{subfigure}[b]{0.9\textwidth}
         \centering
-        \caption{Illumina}
+        \caption[position=above]{Illumina}
         \label{fig:pandora-roc-illumina}
+        \includegraphics[width=\textwidth]{Chapter1/Figs/illumina_roc.png}
      \end{subfigure}
-     \begin{subfigure}[b]{0.475\textwidth}
+     \begin{subfigure}[b]{0.9\textwidth}
          \centering
-        \includegraphics[width=1\linewidth]{Chapter1/Figs/nanopore_roc.png}
-         \caption{\ont{}}
+         \caption[position=above]{\ont{}}
          \label{fig:pandora-roc-ont}
+        \includegraphics[width=\textwidth]{Chapter1/Figs/nanopore_roc.png}
      \end{subfigure}
-    \caption{Precision-recall curve for variant calls from Illumina (left; \textbf{(a)}) and \ont{} (right; \textbf{(b)}) data for different variant calling tools (colours). Each curve represents increasing genotype confidence thresholds, starting with no filtering in the top-right of each curve and increasing towards the bottom-left. \pandora{} has a single line with (blue) and without (red) \denovo{} variant discovery, which represents the error rate and recall across all 20 samples. The other variant callers are traditional single-reference tools; therefore, each line represents the use of 1/24 reference genomes from across five major \ecoli{} phylogroups. Inset windows are used to give more granularity for error rate in the best performing tools.}
+    \caption{Precision-recall curve for variant calls from Illumina (left; \textbf{(a)}) and \ont{} (right; \textbf{(b)}) data for different variant calling tools (colours). Each curve represents increasing genotype confidence thresholds, starting with no filtering in the top-right of each curve and increasing towards the bottom-left. \pandora{} has a single line with (blue) and without (red) \denovo{} variant discovery, which represents the error rate and recall across all 20 samples. The other variant callers are traditional single-reference tools; therefore, each line represents the use of 1/24 reference genomes from across five major \ecoli{} phylogroups. Inset windows are used to give more granularity for error rate in the best performing tools. Note, the x-axes are different between \textbf{(a)} and \textbf{(b)}.}
         \label{fig:pandora-roc}
     \source{Adapted from \cite{pandora} under the terms of the \href{https://creativecommons.org/licenses/}{Creative Commons CC BY license}. The colour scheme has been altered, along with the wording of some labels, and the inclusion of inset windows. However, none of these changes in any way alters the underlying data or interpretation of that data.}
 \end{figure}
