@@ -1,0 +1,37 @@
+%!TEX root = ../thesis.tex
+%*******************************************************************************
+%******************************   Fifth Chapter   ***************************
+%*******************************************************************************
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion} \markboth{Conclusion}{}
+\label{chap:conclusion}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In this case we are not going to ask for any changes other than to add a concluding discussion section. This should address the wider implications of the methods and technologies described in the thesis, not only in the context of current practice but also the potential for new approaches based on an understanding of the biology and genetics of TB and drug resistance. We would like you to take a step back from the focus on current monitoring and clinical methodologies, and discuss how the deeper aims of the field might be advanced using the technologies and computational approaches your work is based on.
+% You have 3 months to complete this, but we expect that it should take much less than that - a few pages is what we have in mind. Hopefully it should be a useful exercise to go through in terms of where you see your research going in future.
+
+
+% scaling pandora up to thousands of genomes
+
+% PanRGs that extend beyond the concept of species - metaPanRGs?
+
+% investigating pe/ppe genes with genome graphs. improve our knowledge of host-pathogen interactions, virulence, and other unknown functions/relationships - AMR?
+
+% mixtures, along with resistance calls in these mixtures
+
+% real-time analysis of mtb samples on the ground. Go beyond the theory and have direct from sputum DST in remote areas - i.e., Madagascar drone stuff?  Novel variants help determine which samples need to be sent back to the reference lab and which can be started on treatment immediately. Clustering could also help identify where further empidemiological investigation is warranted for superspreaders etc. How does flongle feed into this - The  release  of  the  Flongle  adapter  in  2019  provides  a  low-output 327sequencing solution(2 Gb) at 90 USD per Flongle flow cell, which is the lowestset-328up cost of any sequencing platform currently available. Read-until can be used for articifical sample/region depletion/enrichment
+
+% epigenetic modifications have  been  associated  with  drug  resistance,  virulence,and regulation  of gene 69expression  profiles - Phelan  J,  de  Sessions  PF,  Tientcheu  L,  Perdigao  J,  MachadoD,  Hasan  R,  Hasan  Z, 422Bergval  IL,  Anthony  R,  McNerney  R,  Antonio  M,  Portugal  I,  Viveiros  M,  Campino  S, 423Hibberd  ML,  Clark  TG.2018.  Methylation  in  Mycobacterium  tuberculosis  is  lineage 424specific with associated mutations present globally. Sci Rep 8:160.4255.Gomez-Gonzalez  PJ,  Andreu  N,  Phelan  JE,  de  Sessions  PF,  Glynn  JR,  Crampin  AC, 426Campino  S,  Butcher  PD,  Hibberd  ML,  Clark  TG.2019.  An  integrated  whole  genome 427analysis of Mycobacterium tuberculosis reveals insights into relationship between its 428genome, transcriptome and methylome. Sci Rep 9:520
+
+% https://journals.asm.org/doi/epdf/10.1128/JCM.00646-21 Nanopore/Mtb review from Anzaan
+
+% expanding drprg to predict new and repurposed drugs   
+
+This thesis shows that genome graphs and Nanopore sequencing can be combined to provide valuable insight into genomic variation within bacteria. In particular, we have demonstrated how these two techniques can be combined to improve public health applications for M. tuberculosis.
+
+We began this work by describing a method for novel variation discovery in bacterial genome graphs with Pandora (Chapter 2). We then showcased how Pandora's genome graph approach improves variant recall (Illumina and Nanopore) and precision (Nanopore) compared to traditional linear genome methods.
+
+Chapter 3 demonstrated that, for M. tuberculosis, Nanopore sequencing data produces SNP calls of equal precision to Illumina, with a slight decrease in recall. We then established that Nanopore SNP calls from BCFtools lead to putative transmission clusters consistent with those from Illumina. That is, Nanopore-based clusters do not miss any samples from clustering - no false negatives - and have a small number of (false positive) additional clustered samples. While Pandora was able to provide clusters with no false negatives, the rate of false positives was much higher than BCFtools. However, we outlined some avenues for future work to improve this poor false positive performance, including a different approach to constructing the loci reference graphs. 
+
+In Chapter 4, we established the concordance of antimicrobial resistance predictions between Illumina and Nanopore sequencing data with the tool Mykrobe. Predictions from the two technologies were consistent, except for isoniazid, where we found a high false-positive rate in Nanopore data - driven by systematic indel errors. In addition, we implemented a new software program, DRPRG, which uses Pandora to predict drug resistance. DPRG predictions were consistent with Mykrobe for both sequencing technologies, albeit with a slight increase in the false-negative rate for isoniazid. Most importantly, DRPRG can identify off-catalogue mutations and return unknown predictions for the relevant drug(s). These novel mutations are precise and reduce the number of missed resistance calls.
+
+Finally, we trained a species-specific Nanopore basecalling model that produces more accurate M. tuberculosis reads and assemblies than the default model. This improvement in accuracy coincides with a decrease in homopolymer insertions and deletions - two known systematic issues with Nanopore data.
