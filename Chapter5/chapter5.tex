@@ -6,9 +6,19 @@
 \addcontentsline{toc}{chapter}{Conclusion} \markboth{Conclusion}{}
 \label{chap:conclusion}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+This thesis shows that genome graphs and Nanopore sequencing can be combined to provide valuable insight into genomic variation within bacteria. In particular, we have demonstrated how these two techniques can be combined to improve public health applications for M. tuberculosis.
+
+We began this work by describing a method for novel variation discovery in bacterial genome graphs with Pandora (Chapter 2). We then showcased how Pandora's genome graph approach improves variant recall (Illumina and Nanopore) and precision (Nanopore) compared to traditional linear genome methods.
+
+Chapter 3 demonstrated that, for M. tuberculosis, Nanopore sequencing data produces SNP calls of equal precision to Illumina, with a slight decrease in recall. We then established that Nanopore SNP calls from BCFtools lead to putative transmission clusters consistent with those from Illumina. That is, Nanopore-based clusters do not miss any samples from clustering - no false negatives - and have a small number of (false positive) additional clustered samples. While Pandora was able to provide clusters with no false negatives, the rate of false positives was much higher than BCFtools. However, we outlined some avenues for future work to improve this poor false positive performance, including a different approach to constructing the loci reference graphs. 
+
+In Chapter 4, we established the concordance of antimicrobial resistance predictions between Illumina and Nanopore sequencing data with the tool Mykrobe. Predictions from the two technologies were consistent, except for isoniazid, where we found a high false-positive rate in Nanopore data - driven by systematic indel errors. In addition, we implemented a new software program, DRPRG, which uses Pandora to predict drug resistance. DPRG predictions were consistent with Mykrobe for both sequencing technologies, albeit with a slight increase in the false-negative rate for isoniazid. Most importantly, DRPRG can identify off-catalogue mutations and return unknown predictions for the relevant drug(s). These novel mutations are precise and reduce the number of missed resistance calls.
+
+Finally, we trained a species-specific Nanopore basecalling model that produces more accurate M. tuberculosis reads and assemblies than the default model. This improvement in accuracy coincides with a decrease in homopolymer insertions and deletions - two known systematic issues with Nanopore data.
+
 % In this case we are not going to ask for any changes other than to add a concluding discussion section. This should address the wider implications of the methods and technologies described in the thesis, not only in the context of current practice but also the potential for new approaches based on an understanding of the biology and genetics of TB and drug resistance. We would like you to take a step back from the focus on current monitoring and clinical methodologies, and discuss how the deeper aims of the field might be advanced using the technologies and computational approaches your work is based on.
 % You have 3 months to complete this, but we expect that it should take much less than that - a few pages is what we have in mind. Hopefully it should be a useful exercise to go through in terms of where you see your research going in future.
-
 
 % scaling pandora up to thousands of genomes
 
@@ -26,12 +36,27 @@
 
 % expanding drprg to predict new and repurposed drugs   
 
-This thesis shows that genome graphs and Nanopore sequencing can be combined to provide valuable insight into genomic variation within bacteria. In particular, we have demonstrated how these two techniques can be combined to improve public health applications for M. tuberculosis.
 
-We began this work by describing a method for novel variation discovery in bacterial genome graphs with Pandora (Chapter 2). We then showcased how Pandora's genome graph approach improves variant recall (Illumina and Nanopore) and precision (Nanopore) compared to traditional linear genome methods.
+\noindent
+The methods and technologies described in this thesis have the potential to advance existing approaches and enable new ones. 
 
-Chapter 3 demonstrated that, for M. tuberculosis, Nanopore sequencing data produces SNP calls of equal precision to Illumina, with a slight decrease in recall. We then established that Nanopore SNP calls from BCFtools lead to putative transmission clusters consistent with those from Illumina. That is, Nanopore-based clusters do not miss any samples from clustering - no false negatives - and have a small number of (false positive) additional clustered samples. While Pandora was able to provide clusters with no false negatives, the rate of false positives was much higher than BCFtools. However, we outlined some avenues for future work to improve this poor false positive performance, including a different approach to constructing the loci reference graphs. 
+In the context of bacterial genomics in general, pan-genome reference graphs, as used by Pandora, will eventually facilitate the simultaneous analysis of thousands to tens-of-thousands samples. Such population-scale analyses will open the door for a multitude of novel insights into the bacterial pan-genome. Some of these future applications include fine-grained analysis of the accessory genome at scale. Being able to investigate the accessory genome at this scale, with resolution Pandora enables, will allow for 
 
-In Chapter 4, we established the concordance of antimicrobial resistance predictions between Illumina and Nanopore sequencing data with the tool Mykrobe. Predictions from the two technologies were consistent, except for isoniazid, where we found a high false-positive rate in Nanopore data - driven by systematic indel errors. In addition, we implemented a new software program, DRPRG, which uses Pandora to predict drug resistance. DPRG predictions were consistent with Mykrobe for both sequencing technologies, albeit with a slight increase in the false-negative rate for isoniazid. Most importantly, DRPRG can identify off-catalogue mutations and return unknown predictions for the relevant drug(s). These novel mutations are precise and reduce the number of missed resistance calls.
+\todo[inline]{What new insights will population-scale accessory pan-genome analysis allow?}
 
-Finally, we trained a species-specific Nanopore basecalling model that produces more accurate M. tuberculosis reads and assemblies than the default model. This improvement in accuracy coincides with a decrease in homopolymer insertions and deletions - two known systematic issues with Nanopore data.
+Genome-wide association studies (GWAS) are another application that will benefit from such pan-genome graph methods. GWAS has traditionally been difficult to perform in bacteria due to XXX (reference variability?). Current GWAS approaches, termed pan-GWAS only correlate accessory genes to phenotypic traits. However, we foresee Pandora enabling the correlation of individual variants to traits - a dramatic improvement in scale. 
+
+\todo[inline]{Are there bacterial GWAS methods that already do SNP-GWAS?}
+\todo[inline]{How/will pandora allow SNP-scale GWAS? What is it that enables this?}
+\todo[inline]{Maha has some TB GWAS papers - check these out}
+
+Looking even further ahead, the pan-genomic model we have described in this thesis - where we let go of gene ordering - lends itself to allowing for the relaxation if species requirements. An ongoing question within microbiology is that of what defines a species? We know that many bacterial species share common genes, and can even share genes. Indeed, many metagenomic applications disregard species definitions and focus purely on loci. In an environmental context, one may only care about the presence or absence of particular loci such as AMR genes, or even unique genes the indicate the presence of microbes of interest. Pandora can even go one step further and provide resolution within these loci of interest. An example of this could be that species A and B have gene X, but the sequence of gene X differs slightly been the two - say one SNP. 
+
+\todo[inline]{Check out some recent Eduardo Rocha papers on the bacterial species question}
+\todo[inline]{Look up some environmental applications which only care about loci - not species}
+\todo[inline]{Read up on TB mixed inference}
+
+While not a current ability of Pandora, we believe that it will be possible to use Pandora to determine the abundance of different paths in a reference graph. This capability will allow inference of mixed samples. Not only would this be useful in the environmental example just outlined, but also in clinical applications. Multiple infections are known to happen in TB. This can become quite insidious when a minor clone has resistance to a drug, or drugs, that the major clone is susceptible to. If a patient is put on a regimen without the knowledge of the minor clone, it is likely that the minor clone will sweep to dominance, placing the patient back at the beginning of treatment.
+
+\todo[inline]{discuss how nanopore feeds into aiding mixed inference as long reads capture longer range haplotype information}
+
