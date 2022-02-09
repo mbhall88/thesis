@@ -1113,6 +1113,11 @@ wish to left align your text}
   \cleardoublepage
   \setsinglecolumn
   \chapter*{\centering \Large Abstract}
+  \begin{center}
+    { \Large {\bfseries {\@title}} \par}
+    {{\large \vspace*{1em} \@author} \par}
+  \end{center}
+    \vspace*{1em}
   \thispagestyle{empty}
 \fi
 }

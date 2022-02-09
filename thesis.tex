@@ -1,7 +1,7 @@
 % ******************************* PhD Thesis Template **************************
 % Please have a look at the README.md file for info on how to use the template
 
-\documentclass[a4paper,12pt,times,custombib,PageStyleII,custommargin]{Classes/PhDThesisPSnPDF}
+\documentclass[print,a4paper,12pt,times,custombib,PageStyleII,custommargin]{Classes/PhDThesisPSnPDF}
 
 % ******************************************************************************
 % ******************************* Class Options ********************************
@@ -113,10 +113,13 @@
 
 \maketitle
 
+% abstract must come directly after decalration in hardbound copy
+% https://www.cambridgestudents.cam.ac.uk/your-course/examinations/graduate-exam-information/after-examination/degree-approval-and-1
 \include{Declaration/declaration}
+\include{Abstract/abstract}
 \include{Dedication/dedication}
 \include{Acknowledgement/acknowledgement}
-\include{Abstract/abstract}
+
 
 % *********************** Adding TOC and List of Figures ***********************
 
