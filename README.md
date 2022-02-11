@@ -1,5 +1,7 @@
 ### Examining bacterial variation with genome graphs and Nanopore sequencing
 
+[![CC BY 4.0][cc-by-shield]][cc-by]
+
 <!-- todo insert link to online version -->
 
 This PhD thesis was completed under the supervision of Zamin Iqbal at the [European Bioinformatics Institute (EMBL-EBI)][EBI]. The degree is conferred by the University of Cambridge. Funding was provided by the [EMBL International PhD Programme][EIPP].
@@ -7,6 +9,7 @@ This PhD thesis was completed under the supervision of Zamin Iqbal at the [Europ
 - [Abstract](#abstract)
 - [Executive summary](#executive-summary)
 - [Chapters](#chapters)
+- [License](#license)
 
 ## Abstract
 
@@ -40,6 +43,15 @@ Chapter 4: Predicting *M. tuberculosis* drug resistance
 
 Chapter 5: Improving Nanopore sequencing accuracy for *M. tuberculosis*
 
+## License
+
+This work is licensed under a
+[Creative Commons Attribution 4.0 International License][cc-by].
+
+[![CC BY 4.0][cc-by-image]][cc-by]
+
+
+
 ---
 
 > This thesis was built on top of the [CUED latex template][template], with alterations.
@@ -50,3 +62,6 @@ Chapter 5: Improving Nanopore sequencing accuracy for *M. tuberculosis*
 [pandora]: https://github.com/rmcolq/pandora
 [drprg]: https://github.com/mbhall88/drprg
 [mykrobe]: https://github.com/Mykrobe-tools/mykrobe
+[cc-by]: http://creativecommons.org/licenses/by/4.0/
+[cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
+[cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
