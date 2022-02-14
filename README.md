@@ -1,10 +1,10 @@
 ### Examining bacterial variation with genome graphs and Nanopore sequencing
 
+[![DOI][doi-shield]][doi]
 [![CC BY 4.0][cc-by-shield]][cc-by]
 
-<!-- todo insert link to online version -->
 
-This PhD thesis was completed under the supervision of Zamin Iqbal at the [European Bioinformatics Institute (EMBL-EBI)][EBI]. The degree is conferred by the University of Cambridge. Funding was provided by the [EMBL International PhD Programme][EIPP].
+This PhD thesis was completed under the supervision of Zamin Iqbal at the [European Bioinformatics Institute (EMBL-EBI)][EBI]. The degree is conferred by the University of Cambridge. Funding was provided by the [EMBL International PhD Programme][EIPP]. A copy of the thesis can be found on the university's [Apollo repository][doi].
 
 - [Abstract](#abstract)
 - [Executive summary](#executive-summary)
@@ -65,3 +65,5 @@ This work is licensed under a
 [cc-by]: http://creativecommons.org/licenses/by/4.0/
 [cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
 [cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
+[doi-shield]: https://img.shields.io/badge/DOI-10.17863%2FCAM.81350-brightgreen.svg
+[doi]: https://doi.org/10.17863/CAM.81350
